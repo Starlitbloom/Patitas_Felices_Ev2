@@ -1,0 +1,151 @@
+/* =========================================================
+   PATITAS FELICES — estilo-equipo.css
+   Vista nueva de la EP2: "Nuestro equipo" (/equipo y /equipo/:id).
+   Usa la misma paleta de styles.css (--rosa, --celeste, --morado…).
+========================================================= */
+
+.equipo-pagina {
+    padding: 70px 0 90px;
+    background:
+        radial-gradient(circle at 8% 10%, rgba(214, 236, 250, 0.7) 0%, transparent 35%),
+        radial-gradient(circle at 92% 30%, rgba(255, 214, 231, 0.6) 0%, transparent 35%),
+        #F8F3EA;
+}
+
+/* ---------- Filtros ---------- */
+
+.equipo-filtros {
+    background-color: var(--blanco);
+    border-radius: 24px;
+    padding: 22px 24px 26px;
+    margin: 10px 0 18px;
+    box-shadow: 0 10px 28px rgba(46, 46, 56, 0.07);
+}
+
+.equipo-filtros input,
+.equipo-filtros select {
+    width: 100%;
+}
+
+.equipo-limpiar {
+    
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 2px solid var(--morado);
+    background: transparent;
+    font-weight: bold;
+    color: var(--texto);
+}
+
+.equipo-limpiar:hover {
+    background-color: var(--morado);
+}
+
+.equipo-resumen {
+    color: var(--gris-suave);
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.equipo-vacio {
+    text-align: center;
+    padding: 50px 20px;
+    border-radius: 24px;
+    background-color: var(--blanco);
+    color: var(--gris-suave);
+}
+
+/* ---------- Tarjeta ---------- */
+
+.equipo-tarjeta {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 24px;
+    background-color: var(--blanco);
+    box-shadow: 0 10px 28px rgba(46, 46, 56, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.equipo-tarjeta:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 34px rgba(46, 46, 56, 0.13);
+}
+
+.equipo-tarjeta-imagen {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    background-color: var(--celeste);
+}
+
+.equipo-tarjeta-cuerpo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px 22px 24px;
+}
+
+.equipo-tarjeta-cuerpo .seccion-etiqueta {
+    align-self: flex-start;
+}
+
+.equipo-tarjeta-cuerpo h3 {
+    margin: 6px 0 0;
+    font-size: 20px;
+}
+
+.equipo-tarjeta-dato {
+    color: var(--gris-suave);
+    font-size: 14px;
+    margin: 0;
+}
+
+.equipo-especies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 16px;
+}
+
+.equipo-especies li {
+    padding: 4px 12px;
+    border-radius: 50px;
+    background-color: var(--morado);
+    font-size: 12.5px;
+    font-weight: bold;
+}
+
+/* ---------- Detalle ---------- */
+
+.equipo-detalle {
+    background-color: var(--blanco);
+    border-radius: 28px;
+    padding: 28px;
+    box-shadow: 0 12px 32px rgba(46, 46, 56, 0.08);
+}
+
+.equipo-detalle h1 {
+    margin: 12px 0 14px;
+}
+
+.equipo-detalle-imagen {
+    width: 100%;
+    max-height: 380px;
+    object-fit: cover;
+    border-radius: 22px;
+}
+
+.equipo-detalle-datos {
+    list-style: none;
+    padding: 0;
+    margin: 18px 0 0;
+}
+
+.equipo-detalle-datos li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(46, 46, 56, 0.08);
+}

@@ -1,0 +1,305 @@
+/* =========================================================
+   PATITAS FELICES — ajustes-react.css
+   Estilos NUEVOS de la versión React. Se carga al final para:
+   - adaptar los estilos de la EP1 a los componentes de Bootstrap
+     (Navbar colapsable, Offcanvas, grilla)
+   - dar estilo a elementos que antes no existían
+     (avisos, botón de menú móvil, badge "inactivo", etc.)
+   Los archivos de la EP1 quedaron casi intactos.
+========================================================= */
+
+/* ---------- Correcciones de Bootstrap sobre la EP1 ---------- */
+
+/* Bootstrap subraya los enlaces y cambia la fuente de los botones */
+a {
+    text-decoration: none;
+}
+
+button {
+    font-family: inherit;
+}
+
+.pagina {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.pagina > main {
+    flex: 1;
+}
+
+/* ---------- Encabezado con Navbar de Bootstrap ---------- */
+
+.contenedor-header.navbar {
+    flex-wrap: wrap;
+}
+
+.menu-principal {
+    justify-content: flex-end;
+}
+
+/* Botón hamburguesa con los colores del sitio */
+.boton-menu {
+    border: 2px solid var(--morado);
+    border-radius: 12px;
+    padding: 6px 10px;
+}
+
+.boton-menu:focus {
+    box-shadow: 0 0 0 3px var(--celeste);
+}
+
+/* Entre 992px y 1050px la EP1 ponía el header en columna; con Bootstrap se mantiene en fila */
+@media (min-width: 992px) and (max-width: 1050px) {
+    .contenedor-header {
+        flex-direction: row;
+    }
+
+    nav ul {
+        gap: 18px;
+    }
+}
+
+/* Tablet y móvil: el menú se despliega en columna bajo el logo */
+@media (max-width: 991.98px) {
+    .contenedor-header {
+        flex-direction: row;
+        align-items: center;
+        gap: 0;
+    }
+
+    .menu-principal nav {
+        width: 100%;
+        padding-top: 14px;
+    }
+
+    .menu-principal nav ul {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+    }
+
+    .menu-principal nav li {
+        justify-content: center;
+    }
+
+    .menu-principal nav a {
+        padding: 10px 0;
+    }
+
+    .menu-principal .btn-cita {
+        margin-top: 8px;
+        width: 100%;
+    }
+
+    /* En inicio el header es transparente: al abrir el menú se le da fondo para que se lea */
+    .pagina--inicio .header-principal--abierto {
+        background: rgba(252, 252, 252, 0.97);
+    }
+}
+
+@media (max-width: 550px) {
+    .logo {
+        width: 140px;
+    }
+}
+
+/* ---------- Formularios ---------- */
+
+.formulario-pie--demo {
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+.boton-secundario {
+    background: transparent;
+    color: var(--texto);
+    border: 2px solid var(--morado);
+    box-shadow: none;
+}
+
+.perfil-avatar {
+    padding: 0;
+    cursor: pointer;
+}
+
+.perfil-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.perfil-avatar-error {
+    color: #C0392B;
+    text-align: center;
+    font-size: 14px;
+    margin-top: -20px;
+}
+
+/* Bug de la EP1: la clase existía en el HTML pero no en el CSS */
+.perfil-card--ancha {
+    grid-column: 1 / -1;
+    margin-top: 26px;
+}
+
+.pagina-pendiente {
+    padding: 120px 20px;
+}
+
+/* ---------- Panel admin ---------- */
+
+.admin-body {
+    min-height: 100vh;
+}
+
+.admin-contenido {
+    min-width: 0; /* permite que las tablas anchas hagan scroll dentro del contenido */
+}
+
+/* Offcanvas responsive (Bootstrap): en computador se ve como la barra fija de la EP1 */
+@media (min-width: 992px) {
+    .admin-sidebar.offcanvas-lg {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        background: linear-gradient(180deg, #2A2440 0%, #201B33 100%);
+    }
+}
+
+/* En tablet/móvil el menú lateral se abre como panel deslizable */
+@media (max-width: 991.98px) {
+    .admin-sidebar.offcanvas-lg {
+        width: 260px;
+        padding: 24px 20px;
+        background: linear-gradient(180deg, #2A2440 0%, #201B33 100%);
+    }
+
+    .admin-contenido {
+        padding: 20px 16px 50px;
+    }
+}
+
+.admin-boton-menu {
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background-color: #2A2440;
+    color: var(--blanco);
+    font-weight: bold;
+}
+
+/* El "Cerrar sesión" ahora es <button>: se le quitan los estilos nativos */
+button.admin-nav-item {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+}
+
+/* Accesos rápidos que abren un modal (son <button>) */
+.admin-acceso--boton {
+    width: 100%;
+    text-align: left;
+    color: inherit;
+    font: inherit;
+}
+
+.admin-badge--inactivo {
+    background-color: rgba(226, 75, 74, 0.15);
+    color: #F0A0A0;
+}
+
+.admin-filtros-resumen {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 13px;
+}
+
+.admin-filtros .admin-buscador {
+    min-width: 0;
+}
+
+/* Aviso de operación exitosa (crear / editar / eliminar) */
+.admin-aviso {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding: 12px 18px;
+    border-radius: 14px;
+    background-color: rgba(139, 214, 160, 0.14);
+    border: 1px solid rgba(139, 214, 160, 0.3);
+    color: #BFEACB;
+}
+
+.admin-aviso button {
+    background: none;
+    border: none;
+    color: inherit;
+}
+
+.admin-modal-mensaje {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 10px 0 22px;
+}
+
+/* La ficha de detalle reutiliza la tarjeta del modal, pero dentro de la página */
+.admin-detalle-tarjeta {
+    max-width: 720px;
+    width: 100%;
+}
+
+.admin-volver {
+    display: inline-block;
+    margin-bottom: 18px;
+    color: var(--celeste);
+}
+
+.admin-volver:hover {
+    color: var(--blanco);
+}
+
+/* Los modales deben poder hacer scroll en pantallas bajas */
+.admin-modal-fondo {
+    overflow-y: auto;
+    padding: 20px 12px;
+}
+
+.admin-modal-form .row {
+    --bs-gutter-x: 16px;
+}
+
+/* En pantallas de notebook (≤1440px) el desplazamiento de -120px de la EP1
+   sacaba el texto del hero fuera de la pantalla */
+@media (min-width: 901px) and (max-width: 1440px) {
+    .hero-corte-texto {
+        transform: translate(0, -60px);
+    }
+}
+
+/* Evita scroll horizontal por las decoraciones de fondo (perfil, footer) */
+.pagina {
+    overflow-x: clip;
+}
+
+/* Tabla: en pantallas angostas hace scroll horizontal en vez de apretar las columnas */
+.admin-tabla-wrap.table-responsive {
+    overflow-x: auto;
+}
+
+.admin-tabla th,
+.admin-tabla td {
+    white-space: nowrap;
+}
+
+.admin-acciones-fila {
+    flex-wrap: nowrap;
+}
+
+/* La barra de filtros ahora usa la grilla de Bootstrap: el gap de la EP1 rompía las columnas */
+.admin-filtros.row {
+    gap: 0;
+}
