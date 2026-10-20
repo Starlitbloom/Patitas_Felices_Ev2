@@ -1,0 +1,931 @@
+/* =========================================================
+   PATITAS FELICES — estilo-usuarios.css
+   Para login.html, registro.html y perfil.html.
+   Se carga DESPUÉS de styles.css. Reutiliza las variables de
+   :root (--beige, --rosa, --celeste, --morado, --texto,
+   --blanco, --gris-suave, --celeste-fuerte).
+========================================================= */
+
+/* Color de error propio de este archivo (validación de formularios), no viene de styles.css */
+:root {
+    --error: #D9694B;
+}
+
+/* ================= FORMULARIO GENÉRICO (registro, y base para login) ================= */
+
+/* Contenedor con la foto de fondo del login/registro (fondo-login.jpg) */
+.seccion-formulario {
+    position: relative;
+    overflow: hidden;
+    background-image: url(../img/fondo-login.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 70px 0 110px;
+}
+
+/* El contenido va por encima de la imagen de fondo */
+.seccion-formulario .contenedor {
+    position: relative;
+    z-index: 1;
+}
+
+.formulario-cabecera {
+    text-align: center;
+    max-width: 560px;
+    margin: 0 auto 36px;
+}
+
+.formulario-cabecera .seccion-etiqueta {
+    display: inline-block;
+    margin-bottom: 14px;
+}
+
+.formulario-cabecera h1 {
+    font-size: clamp(1.8rem, 3vw, 2.3rem);
+    margin-bottom: 10px;
+}
+
+.formulario-cabecera p {
+    color: var(--gris-suave);
+}
+
+/* Tarjeta blanca donde vive el formulario (registro.html usa esta versión "flotante" sobre el fondo) */
+.tarjeta-formulario {
+    background-color: var(--blanco);
+
+    max-width: 480px;
+    margin: 0 auto;
+
+    padding: 44px 40px;
+
+    border-radius: 28px;
+
+    box-shadow: 0 10px 30px rgba(46, 46, 56, 0.08);
+}
+
+/* Variante más ancha, para formularios con más campos (ej. registro con dirección) */
+.tarjeta-formulario--ancha {
+    max-width: 680px;
+}
+
+/* Combinación ancha + plana (sin sombra flotante), usada en el layout split del login */
+.tarjeta-formulario--ancha.tarjeta-formulario--plana {
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.campo {
+    margin-bottom: 22px;
+}
+
+/* =========================================================
+   INPUTS EN PASTILLA CON ÍCONO
+========================================================= */
+
+/* Envoltorio relativo para poder posicionar el ícono encima del input */
+.campo-icono-wrap {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+}
+
+/* El símbolo/emoji del ícono queda flotando dentro del input, a la izquierda */
+.campo-icono-simbolo {
+    position: absolute;
+    left: 18px;
+
+    font-size: 16px;
+    color: var(--gris-suave);
+    pointer-events: none; /* para que el clic pase al input y no quede "atrapado" en el ícono */
+
+    z-index: 1;
+}
+
+/* El input agranda su padding-left para que el texto no quede tapado por el ícono, */
+/* y se vuelve totalmente redondeado (forma "pastilla") solo cuando tiene ícono */
+.campo-icono .campo-icono-wrap input {
+    border-radius: 50px !important;
+    padding-left: 46px !important;
+    width: 100%;
+}
+
+/* =========================================================
+   FOOTER — foto de fondo + redes sociales (igual que index)
+========================================================= */
+
+/* Mismo patrón que estilo-index.css: footer con foto de fondo oscurecida (multiply) */
+.footer-principal {
+    background-image: url(../img/footer.jpg);
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-blend-mode: multiply;
+
+    position: relative;
+    overflow: hidden;
+}
+
+/* Fuerza el color de texto para que se lea bien encima de la foto, sin importar su tono */
+.footer-principal .footer-marca p,
+.footer-principal .footer-info h3,
+.footer-principal .footer-info p,
+.footer-principal .footer-inferior p,
+.footer-principal .footer-frase {
+    color: var(--texto) !important;
+    font-size: 15px;
+}
+
+.footer-principal .footer-info h3 {
+    font-size: 19px;
+}
+
+.footer-principal .footer-inferior p {
+    font-size: 13px;
+}
+
+/* Círculos decorativos muy tenues sobre la foto del footer */
+.footer-decoracion {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.10;
+}
+
+.footer-decoracion-1 {
+    width: 260px;
+    height: 260px;
+    top: -100px;
+    left: -60px;
+    background-color: var(--celeste);
+}
+
+.footer-decoracion-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -140px;
+    right: -80px;
+    background-color: var(--rosa);
+}
+
+/* El logo del footer no necesita fondo/padding extra en estas páginas */
+.footer-principal .footer-logo {
+    background-color: transparent;
+    padding: 0;
+}
+
+.footer-contenido--index {
+    align-items: start;
+    padding-top: 8px;
+}
+
+/* Fila de íconos de redes sociales (mismo bloque que en estilo-index.css) */
+.footer-social {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.footer-social-icono {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(46, 46, 56, 0.08);
+    border-radius: 50%;
+
+    transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+.footer-social-icono:hover {
+    background-color: var(--rosa);
+    transform: translateY(-3px);
+}
+
+.footer-social-icono img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+.footer-principal .footer-inferior {
+    border-top: 1px solid rgba(46, 46, 56, 0.15);
+}
+
+/* ================= CAMPOS DE FORMULARIO (genérico, reutilizado en todo el archivo) ================= */
+
+/* Dos campos lado a lado en la misma fila (ej. Nombre + Apellidos) */
+.fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.campo label {
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.campo input,
+.campo select {
+    width: 100%;
+
+    padding: 12px 16px;
+
+    border: 1.5px solid #ECE5D8;
+    border-radius: 14px;
+
+    background-color: var(--beige);
+    color: var(--texto);
+
+    font-family: inherit;
+    font-size: 15px;
+}
+
+.campo input:focus,
+.campo select:focus {
+    outline: none;
+    border-color: var(--celeste-fuerte);
+    background-color: var(--blanco); /* el fondo se aclara al enfocar, para resaltar el campo activo */
+}
+
+/* Texto de ayuda gris debajo del campo (ej. "4 a 10 caracteres") */
+.campo__ayuda {
+    font-size: 12.5px;
+    color: var(--gris-suave);
+    margin-top: 6px;
+}
+
+/* Mensaje de error, oculto por defecto — JS lo muestra agregando la clase .campo--invalido al contenedor */
+.campo__error {
+    display: none;
+    font-size: 12.5px;
+    color: var(--error);
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+/* Estado inválido: borde rojo + aparece el mensaje de error (usuarios.js: marcarCampo()) */
+.campo.campo--invalido input,
+.campo.campo--invalido select {
+    border-color: var(--error);
+}
+
+.campo.campo--invalido .campo__error {
+    display: block;
+}
+
+/* Estado válido: borde celeste como confirmación visual de que el campo pasó la validación */
+.campo.campo--valido input,
+.campo.campo--valido select {
+    border-color: var(--celeste-fuerte);
+}
+
+.tarjeta-formulario .boton-principal {
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+/* Texto tipo "¿No tienes cuenta? Regístrate" debajo del formulario */
+.formulario-pie {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 14.5px;
+    color: var(--gris-suave);
+}
+
+.formulario-pie a {
+    color: var(--celeste-fuerte);
+    font-weight: bold;
+}
+
+/* Accesos rápidos dentro de perfil.html (ej. "Ver mis mascotas", "Ver mis citas") */
+.perfil-accesos {
+    max-width: 680px;
+    margin: 28px auto 0;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.perfil-acceso {
+    background-color: var(--beige);
+    border-radius: 18px;
+    padding: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    font-weight: bold;
+}
+
+.perfil-acceso span {
+    font-size: 22px;
+}
+
+/* Responsive general de formularios: campos en fila pasan a 1 columna, tarjetas reducen padding */
+@media (max-width: 640px) {
+    .fila-campos {
+        grid-template-columns: 1fr;
+    }
+
+    .tarjeta-formulario,
+    .tarjeta-formulario--ancha {
+        padding: 32px 24px;
+    }
+
+    .perfil-accesos {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   LOGIN SPLIT — foto a un lado, formulario al otro
+   (mismo lenguaje visual que el hero del index)
+========================================================= */
+
+/* Fondo de la mitad del formulario en login.html (mismo fondo-login.jpg, reutilizado aquí) */
+.login-split-formulario {
+    position: relative;
+    background-image: url(../img/fondo-login.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Aseguran que la tarjeta y el pie queden por encima del fondo con imagen */
+.tarjeta-formulario--plana,
+.formulario-pie {
+    position: relative;
+    z-index: 1;
+}
+
+/* Layout de 2 columnas: mitad imagen, mitad formulario. Resta 108px asumiendo la altura del header */
+.login-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: calc(100vh - 108px);
+}
+
+.login-split-imagen {
+    position: relative;
+    overflow: hidden;
+}
+
+.login-split-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Degradado oscuro sobre la foto del lado izquierdo, para que el texto blanco encima se lea bien */
+.login-split-overlay {
+    position: absolute;
+    inset: 0;
+
+    background: linear-gradient(
+        180deg,
+        rgba(46, 46, 56, 0.274) 0%,
+        rgba(46, 46, 56, 0.13) 35%,
+        rgba(46, 46, 56, 0.75) 100%
+    );
+}
+
+/* Texto/frase motivacional posicionado sobre la foto, pegado abajo a la izquierda */
+.login-split-texto {
+    position: absolute;
+    left: 40px;
+    bottom: 50px;
+    right: 40px;
+
+    color: var(--blanco);
+}
+
+.login-split-texto .hero-etiqueta {
+    background-color: rgba(255, 255, 255, 0.16);
+    color: var(--blanco);
+}
+
+.login-split-texto h2 {
+    color: var(--blanco);
+    font-size: 2.1rem;
+    margin: 14px 0 10px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35); /* sombra para mantener legibilidad sobre zonas claras de la foto */
+}
+
+.login-split-texto p {
+    color: rgba(255, 255, 255, 0.92);
+    max-width: 580px;
+    font-size: 16.5px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Sombra superior sobre la imagen del login, mismo recurso que .header-sombra en index.html */
+.login-split-imagen::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 140px;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(20, 20, 25, 0.55) 0%,
+        rgba(20, 20, 25, 0.28) 55%,
+        rgba(20, 20, 25, 0) 100%
+    );
+
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Nota: este selector se repite (ver bloque de arriba), aquí se le agregan las reglas de layout del lado del formulario */
+.login-split-formulario {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 60px 70px;
+}
+
+/* Cabecera alineada a la izquierda (a diferencia de .formulario-cabecera que es centrada) */
+.formulario-cabecera--izq {
+    text-align: left;
+    max-width: 100%;
+    margin-bottom: 30px;
+}
+
+/* Versión "plana" de la tarjeta del formulario: fondo morado en vez de blanco, usada en el login split */
+.tarjeta-formulario--plana {
+    max-width: 440px;
+    margin: 0;
+
+    padding: 44px 40px;
+
+    background-color: var(--morado);
+    border-radius: 28px;
+
+    box-shadow: 0 14px 34px rgba(46, 46, 56, 0.10);
+}
+
+/* Sobre el fondo morado, los inputs se vuelven blancos para mantener el contraste */
+.tarjeta-formulario--plana .campo input,
+.tarjeta-formulario--plana .campo select {
+    background-color: var(--blanco);
+    border-color: transparent;
+}
+
+.tarjeta-formulario--plana .campo input:focus,
+.tarjeta-formulario--plana .campo select:focus {
+    border-color: var(--celeste-fuerte);
+}
+
+/* Botón de login: rosa, redondeado tipo píldora, centrado dentro de la tarjeta morada */
+.tarjeta-formulario--plana .boton-principal {
+    background-color: var(--rosa);
+    color: var(--texto);
+
+    border-radius: 50px;
+    padding: 13px 26px;
+
+    box-shadow: 0 6px 16px rgba(46, 46, 56, 0.25),
+                0 2px 6px rgba(255, 182, 211, 0.35);
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+
+    display: flex;
+    width: fit-content; /* el botón se ajusta a su contenido en vez de ocupar todo el ancho */
+    margin: 8px auto 0;
+    border: none;
+}
+
+.tarjeta-formulario--plana .boton-principal:hover {
+    background: linear-gradient(135deg, #FFC5DE, var(--celeste));
+    color: var(--texto);
+
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 182, 211, 0.45);
+}
+
+/* En tablet/mobile el split se apila: primero la imagen (con alto mínimo), luego el formulario */
+@media (max-width: 900px) {
+    .login-split {
+        grid-template-columns: 1fr;
+    }
+
+    .login-split-imagen {
+        min-height: 280px;
+    }
+
+    .login-split-formulario {
+        padding: 40px 28px;
+    }
+}
+
+/* =========================================================
+   PERFIL — cabecera con foto + tarjeta blanca + franja
+========================================================= */
+
+.perfil-pagina {
+    padding: 0 0 100px;
+    background: linear-gradient(160deg, #FFFDFB 0%, var(--beige) 55%, #FCF3F7 100%);
+}
+
+/* Contenedor del bloque superior de perfil: imagen de fondo con patrón + tarjeta blanca encima */
+.perfil-header {
+    max-width: 700px;
+    margin: 0 auto 24px;
+
+    position: relative;
+    overflow: hidden;
+
+    border-radius: 28px;
+
+    padding: 140px 22px 22px; /* padding-top grande: deja espacio para que el avatar "flote" sobre la imagen */
+    min-height: 80px;
+}
+
+/* Capa de fondo con el patrón de patitas (fondo-perfil.png), el color/imagen exacta se define inline en el HTML */
+.perfil-header-imagen {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-size: 20px 20px;
+}
+
+/* Tarjeta blanca inferior, con padding-top de solo 1px */
+/* (ese 1px es intencional: evita el colapso de márgenes para que el margin-top negativo del avatar funcione) */
+.perfil-header-tarjeta {
+    position: relative;
+    z-index: 1;
+
+    background-color: var(--blanco);
+    border-radius: 24px;
+
+    padding: 1px 32px 24px;
+
+    box-shadow: 0 10px 26px rgba(46, 46, 56, 0.10);
+
+    text-align: center;
+}
+/* Avatar circular que se superpone entre la imagen de fondo y la tarjeta blanca (margin-top negativo) */
+.perfil-avatar {
+    width: 150px;
+    height: 150px;
+
+    margin: -100px auto 34px;
+
+    border-radius: 50%;
+    background-color: var(--blanco);
+    border: 3px solid var(--celeste);
+
+    box-shadow: 0 8px 20px rgba(46, 46, 56, 0.15);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px; /* tamaño de las iniciales cuando no hay foto de perfil */
+}
+/* Segundo bloque de reglas para el mismo avatar: lo prepara para ser clicable (subir foto) */
+.perfil-avatar {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.perfil-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Capa oscura con ícono de cámara/editar que aparece solo al pasar el mouse sobre el avatar */
+.perfil-avatar-overlay {
+    position: absolute;
+    inset: 0;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(46, 46, 56, 0.45);
+    color: var(--blanco);
+    font-size: 24px;
+
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.perfil-avatar:hover .perfil-avatar-overlay {
+    opacity: 1;
+}
+
+.perfil-header-tarjeta h1 {
+    font-size: 1.5rem;
+    color: var(--texto);
+    padding-bottom: 24px;
+}
+
+/* Franja degradada al pie de la tarjeta, con los datos rápidos del usuario (comuna, mascotas, etc.) */
+/* El margin negativo hace que la franja "escape" del padding de la tarjeta y llegue de borde a borde */
+.perfil-header-franja {
+    background: linear-gradient(135deg, var(--celeste) 0%, var(--rosa) 50%, var(--morado) 100%);
+    border-radius: 0 0 24px 24px;
+
+    padding: 16px 24px;
+    margin: 0 -32px -24px;
+
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+.perfil-dato {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--texto);
+}
+
+.perfil-dato-icono {
+    font-size: 15px;
+}
+
+/* Grilla principal de perfil.html: columna izquierda más ancha (info) + columna derecha (mascotas/citas, etc.) */
+.perfil-grid {
+    max-width: 900px;
+    margin: 0 auto 24px;
+
+    position: relative;
+    z-index: 2;
+
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+/* Tarjeta que se puede editar (ej. "Sobre mí"): borde transparente que se resalta al pasar el mouse */
+.perfil-card--editable {
+    position: relative;
+
+    border: 2px solid transparent;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.perfil-card--editable:hover {
+    border-color: var(--celeste);
+    box-shadow: 0 12px 30px rgba(46, 46, 56, 0.10);
+}
+
+/* El formulario de edición está oculto por defecto: solo se muestra en modo edición */
+.perfil-sobre-formulario {
+    display: none;
+}
+
+/* Modo edición activado (clase agregada por JS): oculta la vista de solo lectura... */
+.perfil-card--editando .perfil-sobre-vista {
+    display: none;
+}
+
+/* ...y muestra el formulario editable en su lugar */
+.perfil-card--editando .perfil-sobre-formulario {
+    display: block;
+}
+
+/* Mientras se edita, el borde queda fijo en celeste (no depende del hover) */
+.perfil-card--editando.perfil-card--editable {
+    border-color: var(--celeste-fuerte);
+    box-shadow: 0 12px 30px rgba(46, 46, 56, 0.10);
+}
+
+/* El botón "Editar" se oculta mientras el formulario de edición está abierto */
+.perfil-card--editando .perfil-card-editar {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Cada fila de dato en modo solo-lectura: label a la izquierda, valor a la derecha */
+.perfil-dato-fila {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 14px 0;
+    border-bottom: 1px solid var(--beige);
+
+    text-align: left;
+}
+
+.perfil-dato-fila:last-child {
+    border-bottom: none;
+}
+
+.perfil-dato-fila-label {
+    font-weight: bold;
+    font-size: 14px;
+    color: var(--texto);
+}
+
+.perfil-dato-fila-valor {
+    font-size: 14px;
+    color: var(--gris-suave);
+    text-align: right;
+}
+/* Botón "Editar" flotante en la esquina superior derecha de la tarjeta, oculto hasta hacer hover */
+.perfil-card-editar {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 7px 16px;
+    border: none;
+    border-radius: 50px;
+
+    background-color: var(--beige);
+    color: var(--texto);
+
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.25s ease;
+}
+
+.perfil-card--editable:hover .perfil-card-editar {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.perfil-card-editar:hover {
+    background-color: var(--celeste);
+}
+
+/* Tarjeta blanca base, reutilizada por todas las secciones de perfil.html (Sobre mí, mascotas, citas, etc.) */
+.perfil-card {
+    background-color: var(--blanco);
+    border-radius: 24px;
+    padding: 32px;
+
+    box-shadow: 0 10px 26px rgba(46, 46, 56, 0.06);
+
+    max-width: 900px;
+    margin: 0 auto 24px;
+}
+
+/* Dentro del grid de 2 columnas, la tarjeta pierde su max-width/margin propios (los hereda de la celda del grid) */
+.perfil-grid .perfil-card {
+    margin: 0;
+    max-width: none;
+}
+
+.perfil-card h2 {
+    font-size: 17px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 22px;
+    color: var(--texto);
+}
+
+.perfil-card h2 span {
+    font-size: 20px;
+}
+
+.perfil-card .boton-principal {
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+/* Mensaje cuando una sección no tiene datos aún (ej. "Aún no tienes mascotas registradas") */
+.perfil-lista-vacia {
+    text-align: center;
+    padding: 30px 10px;
+    color: var(--gris-suave);
+    font-size: 14.5px;
+}
+
+.perfil-card-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--celeste-fuerte);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Aviso naranja (ej. "cambios pendientes de aprobación") dentro de la sección de mascotas */
+.perfil-mascota-alerta {
+    margin: 4px 0;
+    font-size: 12.5px;
+    color: #C97A2B;
+}
+
+/* Variante informativa (celeste) del mismo aviso */
+.perfil-mascota-alerta--info {
+    color: var(--celeste-fuerte);
+}
+
+.perfil-mascota-formulario {
+    margin-top: 12px;
+}
+
+/* Filas de lista para mascotas y citas: mismo look de "tarjetita" beige */
+.perfil-mascota-item,
+.perfil-cita-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    background-color: var(--beige);
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+
+    text-align: left;
+}
+
+.perfil-mascota-item:last-child,
+.perfil-cita-item:last-child {
+    margin-bottom: 0;
+}
+
+/* En mobile/tablet, la grilla de 2 columnas de perfil se apila en 1 */
+@media (max-width: 750px) {
+    .perfil-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Nota: .perfil-portada no aparece definida en ningún otro lugar de este archivo — */
+    /* puede ser una clase de una versión anterior del diseño que ya no se usa */
+    .perfil-portada {
+        height: 160px;
+    }
+
+    .perfil-header-franja {
+        gap: 16px;
+    }
+}
+
+/* Enlace tipo "¿Cambiar contraseña?" que despliega el formulario de contraseña */
+.perfil-password-toggle {
+    margin-top: 18px;
+    text-align: center;
+}
+
+.perfil-password-formulario {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--beige);
+}
+
+.perfil-cerrar-sesion-wrap {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* Botón "Guardar" del formulario de edición de "Sobre mí", mismo estilo que el botón del login */
+.perfil-sobre-formulario .boton-principal {
+    border: none;
+    box-shadow: 0 6px 16px rgba(46, 46, 56, 0.12),
+                0 2px 6px rgba(255, 182, 211, 0.35);
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.perfil-sobre-formulario .boton-principal:hover {
+    background: linear-gradient(135deg, #FFC5DE, var(--celeste));
+    color: var(--texto);
+
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 182, 211, 0.45);
+}

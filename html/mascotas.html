@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nuestras Mascotas | Patitas Felices</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/estilo-mascotas.css">
+</head>
+
+
+<body>
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header class="header-principal">
+
+        <div class="fondo-header fondo-izquierdo"></div>
+        <div class="fondo-header fondo-derecho"></div>
+
+        <div class="contenedor-header">
+
+            <a href="index.html" class="logo-enlace">
+                <img
+                    src="../img/logo-patitas.png"
+                    alt="Logo Veterinaria Patitas Felices"
+                    class="logo"
+                >
+            </a>
+
+
+            <nav>
+
+                <ul>
+
+                    <li>
+                        <a href="index.html">
+                            Inicio
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="nosotros.html">
+                            Nosotros
+                        </a>
+                    </li>
+
+                    <li
+                        class="nav-solo-sesion"
+                        id="nav-mascotas"
+                    >
+                        <a
+                            href="mascotas.html"
+                            class="activo"
+                        >
+                            Mascotas
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="novedades.html">
+                            Novedades
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="contacto.html">
+                            Contacto
+                        </a>
+                    </li>
+
+                    <li
+                        class="nav-solo-sesion"
+                        id="nav-perfil"
+                    >
+                        <a href="perfil.html">
+                            Mi perfil
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="login.html"
+                            id="nav-cuenta"
+                        >
+                            Iniciar sesión
+                        </a>
+                    </li>
+
+                    <li>
+
+                        <a
+                            href="solicitar-cita.html"
+                            class="btn-cita"
+                        >
+
+                            <img
+                                src="../img/calendario.png"
+                                alt=""
+                                class="icono-calendario"
+                            >
+
+                            <span>
+                                Solicitar cita
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+
+    <main class="seccion-mascotas">
+
+
+        <!-- =========================================================
+             HERO MASCOTAS
+             Nueva sección visual.
+             No modifica ninguna función existente.
+        ========================================================== -->
+
+        <section class="hero-mascotas">
+
+            <div class="contenedor hero-mascotas-contenido">
+
+
+                <!-- TEXTO -->
+
+                <div class="hero-mascotas-texto">
+
+                    <span class="hero-mascotas-etiqueta">
+                        🐾 Tus mascotas
+                    </span>
+
+
+                    <h1>
+                        Todo sobre tus mascotas
+                        <span>en un solo lugar</span>
+                    </h1>
+
+
+                    <p>
+                        Revisa las mascotas que has registrado y accede a su información clínica,
+                        controles, vacunas e historial cuando lo necesites.
+                    </p>
+
+
+                    <div class="hero-mascotas-acciones">
+
+                        <a
+                            href="#catalogo-mascotas"
+                            class="hero-mascotas-boton"
+                        >
+                            Ver mis mascotas
+                            <span aria-hidden="true">→</span>
+                        </a>
+
+
+                        <div class="hero-mascotas-mini">
+
+                            <span class="hero-mascotas-mini-icono">
+                                ♡
+                            </span>
+
+                            <span>
+                                Su información siempre a tu alcance
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ILUSTRACIÓN -->
+
+                <div class="hero-mascotas-ilustracion">
+
+                    <div class="hero-mascotas-forma hero-mascotas-forma--rosa"></div>
+                    <div class="hero-mascotas-forma hero-mascotas-forma--celeste"></div>
+
+                    <img
+                        src="../img/mascotas-cita.png"
+                        alt="Ilustración de mascotas de Patitas Felices"
+                    >
+
+                    <div class="hero-mascotas-decoracion hero-mascotas-decoracion--1">
+                        ♡
+                    </div>
+
+                    <div class="hero-mascotas-decoracion hero-mascotas-decoracion--2">
+                        🐾
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =========================================================
+             CATÁLOGO DE MASCOTAS
+             Mantiene la funcionalidad original.
+        ========================================================== -->
+
+        <section
+            class="contenedor catalogo-mascotas"
+            id="catalogo-mascotas"
+            aria-labelledby="titulo-mascotas"
+        >
+
+
+            <div class="titulo-seccion titulo-seccion-mascotas">
+
+                <span class="seccion-etiqueta">
+                    Tus mascotas
+                </span>
+
+
+                <h2 id="titulo-mascotas">
+                    Mascotas registradas
+                </h2>
+
+
+                <p>
+                    Aquí encontrarás las mascotas asociadas a tu cuenta.
+                    Revisa su ficha clínica, historial, vacunas y controles.
+                </p>
+
+            </div>
+
+
+
+            <!-- ================= FILTROS ================= -->
+
+            <div class="contenedor-filtros-mascotas">
+
+                <span class="filtros-mascotas-titulo">
+                    Filtrar por
+                </span>
+
+
+                <div class="filtros-mascotas">
+
+                    <button
+                        type="button"
+                        class="filtro-especie activo"
+                        data-especie="todas"
+                    >
+                        Todas
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="filtro-especie"
+                        data-especie="Perro"
+                    >
+                        Perros
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="filtro-especie"
+                        data-especie="Gato"
+                    >
+                        Gatos
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="filtro-especie filtro-favoritos"
+                        data-especie="favoritos"
+                    >
+                        ★ Favoritos
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================= GRID ================= -->
+
+            <div
+                class="grid-mascotas"
+                id="grid-mascotas"
+            >
+
+                <!--
+                    Las tarjetas se generan dinámicamente
+                    desde js/mascotas.js
+                -->
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================================
+             CUIDADOS BÁSICOS POR ESPECIE
+        ========================================================== -->
+
+        <section class="contenedor seccion-cuidados" aria-labelledby="titulo-cuidados">
+            <div class="titulo-seccion">
+                <span class="seccion-etiqueta">Guía rápida</span>
+                <h2 id="titulo-cuidados">Cuidados básicos por especie</h2>
+                <p>Algunas recomendaciones generales para mantener a tu mascota sana entre visita y visita</p>
+            </div>
+
+            <div class="grid-embebido">
+                <article class="tarjeta-cuidado">
+                    <img src="../img/perritoinfografia.png" alt="Infografía cuidados de perro" class="img-cuidados">
+                </article>
+
+                <article class="tarjeta-cuidado">
+                    <img src="../img/gatitoinfografia.png" alt="Infografía cuidados de gato" class="img-cuidados">
+                </article>
+
+                <article class="tarjeta-cuidado">
+                    <img src="../img/conejosinfografia.png" alt="Infografía cuidados de conejo" class="img-cuidados">
+                </article>
+
+                <article class="tarjeta-cuidado">
+                    <img src="../img/avesinfografia.png" alt="Infografía cuidados de aves" class="img-cuidados">
+                </article>
+            </div>
+        </section>
+
+
+
+        <!-- =========================================================
+             VIDEO DE CUIDADOS
+             Mantiene el iframe y su funcionalidad original.
+        ========================================================== -->
+
+        <section
+            class="contenedor seccion-video-cuidados"
+            aria-labelledby="titulo-video-cuidados"
+        >
+
+
+            <div class="video-cuidados-tarjeta">
+
+
+                <!-- TEXTO -->
+
+                <div class="video-cuidados-texto">
+
+                    <span class="seccion-etiqueta">
+                        Guía rápida
+                    </span>
+
+
+                    <h2 id="titulo-video-cuidados">
+                        Cómo cuidamos a tu mascota
+                    </h2>
+
+
+                    <p>
+                        Conoce un poco más sobre nuestra rutina
+                        de control, vacunación y seguimiento clínico.
+                    </p>
+
+
+                    <div class="video-cuidados-puntos">
+
+                        <div>
+                            <span>✓</span>
+                            Control preventivo
+                        </div>
+
+                        <div>
+                            <span>✓</span>
+                            Vacunación
+                        </div>
+
+                        <div>
+                            <span>✓</span>
+                            Seguimiento clínico
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- VIDEO -->
+
+                <div class="video-embebido">
+
+                    <iframe
+                        width="560"
+                        height="315"
+                        src="https://www.youtube.com/embed/8G7ACda1JhY"
+                        title="Cómo cuidamos a tu mascota - Veterinaria Patitas Felices"
+                        loading="lazy"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =========================================================
+         FOOTER
+         Se conserva el contenido original.
+    ========================================================== -->
+
+    <footer class="footer-principal">
+
+        <div class="footer-linea"></div>
+
+
+        <div class="footer-contenido">
+
+
+            <div class="footer-marca">
+
+                <img
+                    src="../img/logo-patitas.png"
+                    alt="Logo Veterinaria Patitas Felices"
+                    class="footer-logo"
+                >
+
+                <p>
+                    Cuidamos la salud y bienestar de tu mascota
+                    con cariño, compromiso y atención cercana.
+                </p>
+
+            </div>
+
+
+
+            <div class="footer-info">
+
+                <h3>
+                    Contacto
+                </h3>
+
+                <p>
+                    <span class="footer-icono">✉</span>
+                    contacto@patitasfelices.cl
+                </p>
+
+                <p>
+                    <span class="footer-icono">📍</span>
+                    Rancagua, Región de O'Higgins
+                </p>
+
+            </div>
+
+
+
+            <div class="footer-info">
+
+                <h3>
+                    Horario
+                </h3>
+
+                <p>
+                    <span class="footer-icono">🕘</span>
+                    Lunes a viernes
+                </p>
+
+                <p>
+                    <span class="footer-icono">♡</span>
+                    09:00 - 19:00 hrs
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="footer-inferior">
+
+            <p>
+                © 2026 Veterinaria Patitas Felices
+            </p>
+
+            <p class="footer-frase">
+                Cuidando cada huellita con cariño 🐾
+            </p>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- =========================================================
+         VISOR AMPLIADO DE INFOGRAFÍAS (lightbox)
+         Se abre al hacer clic en una imagen de "Cuidados básicos".
+    ========================================================== -->
+
+    <div class="visor-infografia" id="visor-infografia">
+        <button type="button" class="visor-infografia-cerrar" id="visor-infografia-cerrar" aria-label="Cerrar imagen ampliada">
+            ✕
+        </button>
+        <img src="" alt="" id="visor-infografia-imagen">
+    </div>
+
+
+
+    <!-- =========================================================
+         JAVASCRIPT ORIGINAL
+    ========================================================== -->
+
+    <script src="../js/mascotas.js"></script>
+    <script src="../js/nav-sesion.js"></script>
+
+</body>
+
+</html>

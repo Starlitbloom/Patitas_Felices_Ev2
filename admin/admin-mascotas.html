@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mantenedor de mascotas | Patitas Felices</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/estilo-admin.css">
+</head>
+<body class="admin-body">
+
+    <div class="admin-layout">
+
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-logo">
+                <img src="../img/logo-patitas.png" alt="Logo Patitas Felices">
+                <span>Patitas Felices</span>
+            </div>
+
+            <p class="admin-sidebar-rol">Admin</p>
+
+            <nav class="admin-nav">
+
+                <a href="dashboard.html" class="admin-nav-item">
+                    <img src="../img/icono-admin-dashboard.png" alt="" class="admin-nav-icono">
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="usuarios.html" class="admin-nav-item">
+                    <img src="../img/icono-admin-usuarios.png" alt="" class="admin-nav-icono">
+                    <span>Usuarios</span>
+                </a>
+
+                <a href="admin-mascotas.html" class="admin-nav-item admin-nav-item--activo">
+                    <span class="admin-nav-icono admin-nav-icono--emoji">🐾</span>
+                    <span>Mascotas</span>
+                </a>
+
+                <a href="admin-citas.html" class="admin-nav-item">
+                    <img src="../img/icono-admin-citas.png" alt="" class="admin-nav-icono">
+                    <span>Citas</span>
+                </a>
+
+                <a href="reportes.html" class="admin-nav-item">
+                    <img src="../img/icono-admin-reportes.png" alt="" class="admin-nav-icono">
+                    <span>Reportes</span>
+                </a>
+
+                <a href="../html/index.html" class="admin-nav-item">
+                    <img src="../img/icono-admin-ver-sitio.png" alt="" class="admin-nav-icono">
+                    <span>Ver sitio</span>
+                </a>
+
+                <a href="#" id="btn-cerrar-sesion-admin" class="admin-nav-item admin-nav-item--salir">
+                    <img src="../img/icono-admin-cerrar-sesion.png" alt="" class="admin-nav-icono">
+                    <span>Cerrar sesión</span>
+                </a>
+
+            </nav>
+        </aside>
+
+        <main class="admin-contenido">
+
+            <header class="admin-topbar">
+                <div class="admin-topbar-fondo"></div>
+                <div class="admin-topbar-contenido">
+                    <p class="admin-topbar-etiqueta">Panel de administración</p>
+                    <h1>Mantenedor de mascotas 🐾</h1>
+                </div>
+            </header>
+
+            <!-- SOLICITUDES DE CAMBIO -->
+            <section class="admin-tabla-seccion">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                    <div>
+                        <h2 style="color:var(--blanco); font-size:16px; margin-bottom:4px;">Solicitudes de cambio pendientes</h2>
+                        <p style="color:rgba(255,255,255,0.5); font-size:13px;">Cambios que un dueño propuso sobre una mascota ya registrada.</p>
+                    </div>
+                </div>
+
+                <div class="admin-tabla-wrap">
+                    <table class="admin-tabla">
+                        <thead>
+                            <tr>
+                                <th>Mascota</th>
+                                <th>Solicitado por</th>
+                                <th>Cambios propuestos</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpo-tabla-solicitudes-mascotas">
+                            <!-- se llena por JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- MASCOTAS -->
+            <section class="admin-tabla-seccion">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                    <div>
+                        <h2 style="color:var(--blanco); font-size:16px; margin-bottom:4px;">Mascotas registradas</h2>
+                        <p style="color:rgba(255,255,255,0.5); font-size:13px;">Administra los pacientes registrados en Patitas Felices.</p>
+                    </div>
+                    <button type="button" class="admin-btn-exportar" id="boton-nueva-mascota">+ Nueva mascota</button>
+                </div>
+
+                <div class="admin-tabla-wrap">
+                    <table class="admin-tabla">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Especie</th>
+                                <th>Raza</th>
+                                <th>Dueño/a</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpo-tabla-mascotas">
+                            <!-- se llena por JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ================= MODAL CREAR / EDITAR MASCOTA ================= -->
+    <div class="admin-modal-fondo" id="modal-mascota-fondo" style="display:none;">
+        <div class="admin-modal admin-modal--ancho">
+            <button type="button" class="admin-modal-cerrar" id="modal-mascota-cerrar">✕</button>
+            <h2 id="titulo-formulario-mascota">Registrar nueva mascota</h2>
+
+            <form id="form-mascota" class="admin-modal-form" novalidate>
+
+                <div class="admin-modal-fila">
+                    <div class="campo" id="campo-nombre-m">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" maxlength="40" autocomplete="off">
+                        <p class="campo__error">El nombre es obligatorio (máx. 40 caracteres).</p>
+                    </div>
+                    <div class="campo" id="campo-especie-m">
+                        <label for="especie">Especie</label>
+                        <select id="especie" name="especie">
+                            <option value="">Selecciona la especie</option>
+                            <option value="Perro">Perro</option>
+                            <option value="Gato">Gato</option>
+                            <option value="Conejo">Conejo</option>
+                            <option value="Ave">Ave</option>
+                        </select>
+                        <p class="campo__error">Selecciona una especie.</p>
+                    </div>
+                </div>
+
+                <div class="admin-modal-fila">
+                    <div class="campo" id="campo-raza-m">
+                        <label for="raza">Raza</label>
+                        <input type="text" id="raza" name="raza" maxlength="40" autocomplete="off">
+                        <p class="campo__error">La raza es obligatoria (máx. 40 caracteres).</p>
+                    </div>
+                    <div class="campo" id="campo-edad-m">
+                        <label for="edad">Edad</label>
+                        <input type="text" id="edad" name="edad" maxlength="20" placeholder="Ej: 2 años" autocomplete="off">
+                        <p class="campo__error">La edad es obligatoria (máx. 20 caracteres).</p>
+                    </div>
+                </div>
+
+                <div class="admin-modal-fila">
+                    <div class="campo" id="campo-dueno-m">
+                        <label for="dueno">Dueño/a</label>
+                        <input type="text" id="dueno" name="dueno" maxlength="60" autocomplete="name">
+                        <p class="campo__error">El nombre del dueño/a es obligatorio (máx. 60 caracteres).</p>
+                    </div>
+                    <div class="campo" id="campo-estado-m">
+                        <label for="estado">Estado</label>
+                        <select id="estado" name="estado">
+                            <option value="">Selecciona un estado</option>
+                            <option value="al-dia">Control al día</option>
+                            <option value="tratamiento">En tratamiento</option>
+                            <option value="pendiente">Vacunas pendientes</option>
+                        </select>
+                        <p class="campo__error">Selecciona un estado.</p>
+                    </div>
+                </div>
+
+                <div class="campo" id="campo-imagen-m">
+                    <label for="imagen-archivo">Foto de la mascota</label>
+                    <div class="admin-imagen-campo">
+                        <img id="imagen-vista-previa" class="admin-imagen-vista-previa" src="../img/cuidado.png" alt="Vista previa">
+                        <div class="admin-imagen-campo-controles">
+                            <input type="file" id="imagen-archivo" accept="image/*">
+                            <input type="text" id="imagen-url" placeholder="O pega una URL: ../img/nombre-mascota.jpg" autocomplete="off">
+                            <input type="hidden" id="imagen" name="imagen">
+                        </div>
+                    </div>
+                    <p class="campo__ayuda">Sube una foto desde tu equipo o pega el enlace de una imagen. Si la dejas vacía, se usará una foto genérica.</p>
+                </div>
+
+                <div class="admin-panel-editar-botones">
+                    <button type="submit" class="boton-principal">
+                        <span>Guardar mascota</span>
+                        <span class="flecha-boton" aria-hidden="true">⟶</span>
+                    </button>
+                    <button type="button" id="boton-cancelar-mascota" class="admin-btn-limpiar">Cancelar</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/usuarios.js"></script>
+    <script src="../js/mascotas.js"></script>
+    <script src="../js/admin.js"></script>
+    <script src="../js/admin-mascotas.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial Clínico | Patitas Felices</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/estilo-clinico.css">
+
+</head>
+
+<body>
+    
+    <header class="header-principal">
+
+        <div class="fondo-header fondo-izquierdo"></div>
+        <div class="fondo-header fondo-derecho"></div>
+
+        <div class="contenedor-header">
+
+            <a href="index.html" class="logo-enlace">
+                <img src="../img/logo-patitas.png" alt="Logo Veterinaria Patitas Felices" class="logo">
+            </a>
+
+            <nav>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li class="nav-solo-sesion" id="nav-mascotas"><a href="mascotas.html" class="activo">Mascotas</a></li>
+                    <li><a href="novedades.html">Novedades</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                    <li class="nav-solo-sesion" id="nav-perfil"><a href="perfil.html">Mi perfil</a></li>
+                    <li><a href="login.html" id="nav-cuenta">Iniciar sesión</a></li>
+                    <li>
+                        <a href="solicitar-cita.html" class="btn-cita">
+                            <img src="../img/calendario.png" alt="" class="icono-calendario">
+                            <span>Solicitar cita</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <main class="seccion-clinica" id="seccion-historial">
+        <section class="contenedor" aria-label="Historial clínico de la mascota">
+
+            <a href="#" class="volver-listado" id="enlace-volver-detalle">← Volver a la ficha de la mascota</a>
+
+            <div class="clinica-cabecera" id="clinica-cabecera">
+                <!-- Se completa dinámicamente según ?id= -->
+            </div>
+
+            <div class="titulo-seccion titulo-seccion--clinico">
+                <span class="seccion-etiqueta">Historial clínico</span>
+                <h2>Todas las atenciones registradas</h2>
+            </div>
+
+            <div class="lista-registros" id="lista-historial">
+                <!-- Se genera dinámicamente desde js/clinico.js -->
+            </div>
+
+        </section>
+    </main>
+
+
+    <footer class="footer-principal">
+
+        <div class="footer-linea"></div>
+
+        <div class="footer-contenido">
+
+            <div class="footer-marca">
+                <img src="../img/logo-patitas.png" alt="Logo Veterinaria Patitas Felices" class="footer-logo">
+                <p>Cuidamos la salud y bienestar de tu mascota con cariño, compromiso y atención cercana.</p>
+            </div>
+
+            <div class="footer-info">
+                <h3>Contacto</h3>
+                <p><span class="footer-icono">✉</span> contacto@patitasfelices.cl</p>
+                <p><span class="footer-icono">📍</span> Rancagua, Región de O'Higgins</p>
+            </div>
+
+            <div class="footer-info">
+                <h3>Horario</h3>
+                <p><span class="footer-icono">🕘</span> Lunes a viernes</p>
+                <p><span class="footer-icono">♡</span> 09:00 - 19:00 hrs</p>
+            </div>
+
+        </div>
+
+        <div class="footer-inferior">
+            <p>© 2026 Veterinaria Patitas Felices</p>
+            <p class="footer-frase">Cuidando cada huellita con cariño 🐾</p>
+        </div>
+
+    </footer>
+
+    <script src="../js/mascotas.js"></script>
+    <script src="../js/clinico.js"></script>
+    <script src="../js/nav-sesion.js"></script>
+
+</body>
+
+</html>

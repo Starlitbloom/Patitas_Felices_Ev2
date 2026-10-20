@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gestión de citas | Patitas Felices</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/estilo-admin.css">
+    <link rel="stylesheet" href="../css/estilo-admin-citas.css">
+</head>
+
+<body class="admin-body">
+
+    <div class="admin-layout">
+
+        <!-- ================= SIDEBAR ================= -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-sidebar-logo">
+
+                <img
+                    src="../img/logo-patitas.png"
+                    alt="Logo Patitas Felices"
+                >
+
+                <span>Patitas Felices</span>
+
+            </div>
+
+            <p class="admin-sidebar-rol">
+                Admin
+            </p>
+
+
+            <nav class="admin-nav">
+
+                <!-- DASHBOARD -->
+                <a
+                    href="dashboard.html"
+                    class="admin-nav-item"
+                >
+                    <img
+                        src="../img/icono-admin-dashboard.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Dashboard</span>
+                </a>
+
+
+                <!-- USUARIOS -->
+                <a
+                    href="usuarios.html"
+                    class="admin-nav-item"
+                >
+                    <img
+                        src="../img/icono-admin-usuarios.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Usuarios</span>
+                </a>
+
+
+                <!-- MASCOTAS -->
+                <a
+                    href="admin-mascotas.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icono admin-nav-icono--emoji">🐾</span>
+                    <span>Mascotas</span>
+                </a>
+
+
+                <!-- CITAS ACTIVO -->
+                <a
+                    href="admin-citas.html"
+                    class="admin-nav-item admin-nav-item--activo"
+                >
+                    <img
+                        src="../img/icono-admin-citas.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Citas</span>
+                </a>
+
+
+                <!-- REPORTES -->
+                <a
+                    href="reportes.html"
+                    class="admin-nav-item"
+                >
+                    <img
+                        src="../img/icono-admin-reportes.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Reportes</span>
+                </a>
+
+
+                <!-- VER SITIO -->
+                <a
+                    href="../html/index.html"
+                    class="admin-nav-item"
+                >
+                    <img
+                        src="../img/icono-admin-ver-sitio.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Ver sitio</span>
+                </a>
+
+
+                <!-- CERRAR SESIÓN -->
+                <a
+                    href="#"
+                    id="btn-cerrar-sesion-admin"
+                    class="admin-nav-item admin-nav-item--salir"
+                >
+                    <img
+                        src="../img/icono-admin-cerrar-sesion.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Cerrar sesión</span>
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- ================= CONTENIDO ================= -->
+        <main class="admin-contenido">
+
+
+            <!-- ================= ENCABEZADO ================= -->
+            <header class="admin-topbar">
+
+                <div class="admin-topbar-fondo"></div>
+
+                <div class="admin-topbar-contenido">
+
+                    <p class="admin-topbar-etiqueta">
+                        Panel de administración
+                    </p>
+
+                    <h1>
+                        Gestión de citas 🐾
+                    </h1>
+
+                    <p class="admin-citas-subtitulo">
+                        Revisa y administra las solicitudes de
+                        atención de Patitas Felices.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <!-- ================= INDICADORES ================= -->
+            <section class="admin-kpis admin-citas-kpis">
+
+
+                <!-- TOTAL DE CITAS -->
+                <div
+                    class="
+                        admin-kpi
+                        admin-cita-kpi
+                        admin-cita-kpi--total
+                    "
+                >
+
+                    <div class="admin-kpi-cabecera">
+
+                        <div class="admin-citas-icono-contenedor">
+
+                            <img
+                                src="../img/icono-admin-citas.png"
+                                alt="Total de citas"
+                                class="admin-citas-kpi-icono"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <span
+                        class="admin-kpi-numero"
+                        id="citas-kpi-total"
+                    >
+                        0
+                    </span>
+
+                    <span class="admin-kpi-label">
+                        Total de citas
+                    </span>
+
+                </div>
+
+
+                <!-- PENDIENTES -->
+                <div
+                    class="
+                        admin-kpi
+                        admin-cita-kpi
+                        admin-cita-kpi--pendiente
+                    "
+                >
+
+                    <div class="admin-kpi-cabecera">
+
+                        <div class="admin-citas-icono-contenedor">
+
+                            <img
+                                src="../img/pendientes.png"
+                                alt="Citas pendientes"
+                                class="admin-citas-kpi-icono"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <span
+                        class="admin-kpi-numero"
+                        id="citas-kpi-pendientes"
+                    >
+                        0
+                    </span>
+
+                    <span class="admin-kpi-label">
+                        Pendientes
+                    </span>
+
+                </div>
+
+
+                <!-- CONFIRMADAS -->
+                <div
+                    class="
+                        admin-kpi
+                        admin-cita-kpi
+                        admin-cita-kpi--confirmada
+                    "
+                >
+
+                    <div class="admin-kpi-cabecera">
+
+                        <div class="admin-citas-icono-contenedor">
+
+                            <img
+                                src="../img/confirmadas.png"
+                                alt="Citas confirmadas"
+                                class="admin-citas-kpi-icono"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <span
+                        class="admin-kpi-numero"
+                        id="citas-kpi-confirmadas"
+                    >
+                        0
+                    </span>
+
+                    <span class="admin-kpi-label">
+                        Confirmadas
+                    </span>
+
+                </div>
+
+
+                <!-- CANCELADAS -->
+                <div
+                    class="
+                        admin-kpi
+                        admin-cita-kpi
+                        admin-cita-kpi--cancelada
+                    "
+                >
+
+                    <div class="admin-kpi-cabecera">
+
+                        <div class="admin-citas-icono-contenedor">
+
+                            <img
+                                src="../img/canceladas.png"
+                                alt="Citas canceladas"
+                                class="admin-citas-kpi-icono"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <span
+                        class="admin-kpi-numero"
+                        id="citas-kpi-canceladas"
+                    >
+                        0
+                    </span>
+
+                    <span class="admin-kpi-label">
+                        Canceladas
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= PANEL DE FILTROS ================= -->
+            <section class="admin-citas-panel">
+
+                <div class="admin-citas-panel-titulo">
+
+                    <div>
+
+                        <span class="admin-citas-etiqueta">
+                            Agenda veterinaria
+                        </span>
+
+                        <h2>
+                            Solicitudes de citas
+                        </h2>
+
+                        <p>
+                            Busca una solicitud o filtra la agenda
+                            para encontrarla rápidamente.
+                        </p>
+
+                    </div>
+
+                    <span
+                        class="admin-citas-contador"
+                        id="citas-contador-resultados"
+                    >
+                        0 citas
+                    </span>
+
+                </div>
+
+
+                <!-- FILTROS -->
+                <div class="admin-citas-filtros">
+
+
+                    <!-- BUSCAR -->
+                    <div
+                        class="
+                            admin-citas-campo
+                            admin-citas-campo--buscar
+                        "
+                    >
+
+                        <label for="citas-buscador">
+                            Buscar
+                        </label>
+
+                        <div class="admin-citas-input-icono">
+
+                            <span>⌕</span>
+
+                            <input
+                                type="text"
+                                id="citas-buscador"
+                                placeholder="Cliente, mascota, correo o servicio..."
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ESTADO -->
+                    <div class="admin-citas-campo">
+
+                        <label for="citas-filtro-estado">
+                            Estado
+                        </label>
+
+                        <select id="citas-filtro-estado">
+
+                            <option value="">
+                                Todos los estados
+                            </option>
+
+                            <option value="pendiente">
+                                Pendientes
+                            </option>
+
+                            <option value="confirmada">
+                                Confirmadas
+                            </option>
+
+                            <option value="cancelada">
+                                Canceladas
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- FECHA -->
+                    <div class="admin-citas-campo">
+
+                        <label for="citas-filtro-fecha">
+                            Fecha
+                        </label>
+
+                        <input
+                            type="date"
+                            id="citas-filtro-fecha"
+                        >
+
+                    </div>
+
+
+                    <!-- ORDEN -->
+                    <div
+                        class="
+                            admin-citas-campo
+                            admin-citas-campo--orden
+                        "
+                    >
+
+                        <label for="citas-orden">
+                            Orden
+                        </label>
+
+                        <select id="citas-orden">
+
+                            <option value="proximas">
+                                Próximas primero
+                            </option>
+
+                            <option value="recientes">
+                                Más recientes
+                            </option>
+
+                            <option value="antiguas">
+                                Más antiguas
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- LIMPIAR -->
+                    <button
+                        type="button"
+                        id="citas-btn-limpiar"
+                        class="admin-citas-btn-limpiar"
+                    >
+                        Limpiar
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= TABLA DE CITAS ================= -->
+            <section
+                class="
+                    admin-tabla-seccion
+                    admin-citas-tabla-seccion
+                "
+            >
+
+                <div class="admin-citas-tabla-cabecera">
+
+                    <div>
+
+                        <h2>
+                            Agenda de citas
+                        </h2>
+
+                        <p>
+                            Gestiona el estado de cada
+                            solicitud registrada.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-tabla-wrap">
+
+                    <table
+                        class="
+                            admin-tabla
+                            admin-citas-tabla
+                        "
+                    >
+
+                        <thead>
+
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Mascota</th>
+                                <th>Servicio</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="admin-citas-tabla-body">
+
+                            <!-- Se llena desde admin-citas.js -->
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- SIN CITAS -->
+                <div
+                    class="admin-citas-vacio"
+                    id="admin-citas-vacio"
+                    hidden
+                >
+
+                    <span>🐾</span>
+
+                    <h3>
+                        No encontramos citas
+                    </h3>
+
+                    <p id="admin-citas-vacio-texto">
+                        Aún no hay solicitudes de citas registradas.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- ================= MODAL DETALLE ================= -->
+    <div
+        class="admin-citas-modal-fondo"
+        id="modal-cita-fondo"
+        hidden
+    >
+
+        <section
+            class="admin-citas-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-cita-titulo"
+        >
+
+            <button
+                type="button"
+                class="admin-citas-modal-cerrar"
+                id="modal-cita-cerrar"
+                aria-label="Cerrar"
+            >
+                ✕
+            </button>
+
+
+            <div class="admin-citas-modal-encabezado">
+
+                <span class="admin-citas-modal-icono">
+                    📅
+                </span>
+
+                <div>
+
+                    <span class="admin-citas-etiqueta">
+                        Detalle de solicitud
+                    </span>
+
+                    <h2 id="modal-cita-titulo">
+                        Información de la cita
+                    </h2>
+
+                    <span
+                        id="modal-cita-estado"
+                        class="admin-cita-badge"
+                    >
+                        Pendiente
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="admin-citas-modal-contenido"
+                id="modal-cita-contenido"
+            >
+                <!-- Se llena con JavaScript -->
+            </div>
+
+
+            <div
+                class="admin-citas-modal-acciones"
+                id="modal-cita-acciones"
+            >
+                <!-- Se llena con JavaScript -->
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- ================= MODAL CONFIRMACIÓN ================= -->
+    <div
+        class="admin-citas-modal-fondo"
+        id="modal-confirmacion-fondo"
+        hidden
+    >
+
+        <section
+            class="
+                admin-citas-modal
+                admin-citas-modal--confirmacion
+            "
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-confirmacion-titulo"
+        >
+
+            <span
+                class="admin-citas-confirmacion-icono"
+                id="modal-confirmacion-icono"
+            >
+                ✓
+            </span>
+
+
+            <h2 id="modal-confirmacion-titulo">
+                Confirmar cita
+            </h2>
+
+
+            <p id="modal-confirmacion-texto">
+                ¿Deseas confirmar esta solicitud?
+            </p>
+
+
+            <div class="admin-citas-confirmacion-botones">
+
+                <button
+                    type="button"
+                    id="modal-confirmacion-volver"
+                    class="admin-citas-btn-secundario"
+                >
+                    Volver
+                </button>
+
+                <button
+                    type="button"
+                    id="modal-confirmacion-aceptar"
+                    class="admin-citas-btn-confirmar"
+                >
+                    Confirmar
+                </button>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="../js/usuarios.js"></script>
+    <script src="../js/admin.js"></script>
+    <script src="../js/admin-citas.js"></script>
+
+</body>
+
+</html>

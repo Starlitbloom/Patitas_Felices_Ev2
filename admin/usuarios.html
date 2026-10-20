@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de usuarios | Patitas Felices</title>
+
+    <!-- styles.css: base del sitio. estilo-usuarios.css: overrides propios de esta página -->
+    <!-- estilo-admin.css: layout del panel (sidebar, KPIs, tabla), igual que en dashboard/reportes -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/estilo-usuarios.css">
+    <link rel="stylesheet" href="../css/estilo-admin.css">
+</head>
+<body class="admin-body">
+
+    <div class="admin-layout">
+
+        <!-- ================= SIDEBAR ================= -->
+        <!-- Mismo menú lateral que dashboard.html y reportes.html; aquí "Usuarios" es el activo -->
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-logo">
+                <img src="../img/logo-patitas.png" alt="Logo Patitas Felices">
+                <span>Patitas Felices</span>
+            </div>
+
+            <p class="admin-sidebar-rol">Admin</p>
+
+            <nav class="admin-nav">
+
+    <a href="dashboard.html" class="admin-nav-item">
+        <img
+            src="../img/icono-admin-dashboard.png"
+            alt=""
+            class="admin-nav-icono"
+        >
+        <span>Dashboard</span>
+    </a>
+
+    <!-- Página actual: lleva la clase --activo -->
+    <a href="usuarios.html" class="admin-nav-item admin-nav-item--activo">
+        <img
+            src="../img/icono-admin-usuarios.png"
+            alt=""
+            class="admin-nav-icono"
+        >
+        <span>Usuarios</span>
+    </a>
+
+    <a href="admin-mascotas.html" class="admin-nav-item">
+        <span class="admin-nav-icono admin-nav-icono--emoji">🐾</span>
+        <span>Mascotas</span>
+    </a>
+
+    <a href="admin-citas.html" class="admin-nav-item">
+        <img
+            src="../img/icono-admin-citas.png"
+            alt=""
+            class="admin-nav-icono"
+        >
+        <span>Citas</span>
+    </a>
+
+    <a href="reportes.html" class="admin-nav-item">
+        <img
+            src="../img/icono-admin-reportes.png"
+            alt=""
+            class="admin-nav-icono"
+        >
+        <span>Reportes</span>
+    </a>
+
+    <a href="../html/index.html" class="admin-nav-item">
+        <img
+            src="../img/icono-admin-ver-sitio.png"
+            alt=""
+            class="admin-nav-icono"
+        >
+        <span>Ver sitio</span>
+    </a>
+
+    <!-- href="#" porque el cierre de sesión lo maneja JS (admin.js) -->
+    <a
+        href="#"
+        id="btn-cerrar-sesion-admin"
+        class="admin-nav-item admin-nav-item--salir"
+    >
+        <img
+            src="../img/icono-admin-cerrar-sesion.png"
+            alt=""
+            class="admin-nav-icono"
+        >
+        <span>Cerrar sesión</span>
+    </a>
+
+</nav>
+        </aside>
+
+        <main class="admin-contenido">
+
+            <!-- ENCABEZADO -->
+            <header class="admin-topbar">
+                <div class="admin-topbar-fondo"></div>
+                <div class="admin-topbar-contenido">
+                    <p class="admin-topbar-etiqueta">Panel de administración</p>
+                    <h1>Gestión de usuarios 🐾</h1>
+                </div>
+            </header>
+
+            <!-- ================= ACCESOS RÁPIDOS ================= -->
+            <!-- No navegan a otra página: son anclas (#) dentro de esta misma vista -->
+            <!-- "Nuevo usuario" y "Editar usuario" los intercepta admin.js con JS para abrir los modales de abajo -->
+            <section class="admin-accesos admin-accesos--usuarios">
+
+    <!-- NUEVO USUARIO -->
+    <!-- admin.js escucha el click sobre este id y abre el modal #panel-crear -->
+    <a href="#" class="admin-acceso" id="acceso-nuevo">
+
+        <div class="admin-acceso-icono">
+            <img
+                src="../img/icono-nuevo-usuario.png"
+                alt="Nuevo usuario"
+                class="admin-usuarios-accion-icono"
+            >
+        </div>
+
+        <div>
+            <h3>Nuevo usuario</h3>
+            <p>Crea una cuenta con datos completos.</p>
+        </div>
+
+        <span class="admin-acceso-flecha">→</span>
+
+    </a>
+
+
+    <!-- EDITAR USUARIO -->
+    <!-- Ancla real: hace scroll hasta el buscador para que el admin ubique al usuario que quiere editar -->
+    <a href="#admin-buscador" class="admin-acceso" id="acceso-editar">
+
+        <div class="admin-acceso-icono">
+            <img
+                src="../img/icono-editar-usuario.png"
+                alt="Editar usuario"
+                class="admin-usuarios-accion-icono"
+            >
+        </div>
+
+        <div>
+            <h3>Editar usuario</h3>
+            <p>Busca uno y edita sus datos existentes.</p>
+        </div>
+
+        <span class="admin-acceso-flecha">→</span>
+
+    </a>
+
+
+    <!-- MOSTRAR USUARIOS -->
+    <!-- Ancla real: baja directo al cuerpo de la tabla -->
+    <a href="#admin-tabla-body" class="admin-acceso" id="acceso-mostrar">
+
+        <div class="admin-acceso-icono">
+            <img
+                src="../img/icono-mostrar-usuarios.png"
+                alt="Mostrar usuarios"
+                class="admin-usuarios-accion-icono"
+            >
+        </div>
+
+        <div>
+            <h3>Mostrar usuarios</h3>
+            <p>Ver, filtrar y administrar usuarios.</p>
+        </div>
+
+        <span class="admin-acceso-flecha">→</span>
+
+    </a>
+
+</section>
+
+            <!-- ================= FILTROS ================= -->
+            <!-- admin.js reacciona a estos inputs (input/change) y vuelve a pintar admin-tabla-body con los resultados -->
+            <section class="admin-filtros">
+                <!-- Búsqueda libre por texto -->
+                <input type="text" id="admin-buscador" class="admin-buscador" placeholder="Buscar por RUN, nombre o correo...">
+
+                <!-- Filtro por rol -->
+                <select id="admin-filtro-rol" class="admin-select">
+                    <option value="">Todos los roles</option>
+                    <option value="cliente">Cliente</option>
+                    <option value="admin">Administrador</option>
+                </select>
+
+                <!-- Orden del listado -->
+                <select id="admin-orden" class="admin-select">
+                    <option value="recientes">Orden: Recientes</option>
+                    <option value="az">Orden: Nombre A-Z</option>
+                    <option value="za">Orden: Nombre Z-A</option>
+                </select>
+
+                <!-- Resetea buscador, filtro y orden a sus valores por defecto -->
+                <button type="button" id="admin-btn-limpiar" class="admin-btn-limpiar">Limpiar</button>
+
+                <!-- Exporta a Excel (SheetJS) solo las filas marcadas con checkbox en la tabla -->
+                <button type="button" id="admin-btn-exportar-seleccion" class="admin-btn-exportar">📤 Exportar seleccionados</button>
+            </section>
+
+            <!-- ================= TABLA ================= -->
+            <section class="admin-tabla-seccion">
+                <div class="admin-tabla-wrap">
+                    <table class="admin-tabla">
+                        <thead>
+                            <tr>
+                                <!-- Checkbox maestro: selecciona/deselecciona todas las filas visibles -->
+                                <th><input type="checkbox" id="admin-check-todos"></th>
+                                <th>RUN</th>
+                                <th>Nombre</th>
+                                <th>Apellidos</th>
+                                <th>Correo</th>
+                                <th>Comuna</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                                <!-- admin.js pinta aquí, por fila, los botones Ver / Editar / Eliminar -->
+                            </tr>
+                        </thead>
+                        <tbody id="admin-tabla-body">
+                            <!-- se llena por JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Se muestra en vez de la tabla cuando el filtro/búsqueda no encuentra resultados -->
+                <p class="admin-tabla-vacia" id="admin-tabla-vacia" style="display:none;">
+                    No se encontraron usuarios con esos filtros.
+                </p>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ================= MODAL VER ================= -->
+    <!-- Solo lectura: admin.js llena modal-ver-contenido con los datos del usuario al hacer clic en "Ver" -->
+    <div class="admin-modal-fondo" id="modal-ver-fondo" style="display:none;">
+        <div class="admin-modal">
+            <button type="button" class="admin-modal-cerrar" id="modal-ver-cerrar">✕</button>
+            <h2>Detalle del usuario</h2>
+
+            <div class="admin-modal-datos" id="modal-ver-contenido">
+                <!-- se llena por JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL EDITAR ================= -->
+    <!-- admin.js precarga este formulario con los datos del usuario seleccionado desde la tabla -->
+    <div class="admin-modal-fondo" id="panel-editar" style="display:none;">
+    <section class="admin-modal admin-modal--ancho">
+        <button type="button" class="admin-modal-cerrar" id="btn-cerrar-editar">✕</button>
+        <h2>Editar usuario</h2>
+
+        <form id="form-editar-usuario" class="admin-modal-form" novalidate>
+            <!-- Guarda el correo original para poder ubicar/actualizar el registro aunque el admin cambie el correo -->
+            <input type="hidden" id="editar-correo-original">
+
+            <h4 class="admin-modal-seccion">Identificación</h4>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="editar-run">RUN</label>
+                    <!-- El RUN no se edita: es el identificador del usuario -->
+                    <input type="text" id="editar-run" disabled>
+                </div>
+                <div class="campo" id="campo-editar-correo">
+                    <label for="editar-correo">Correo</label>
+                    <input type="email" id="editar-correo" maxlength="100">
+                    <!-- Mensaje de error que muestra admin.js si el correo es inválido o ya existe -->
+                    <p class="campo__error">Correo inválido o ya está en uso.</p>
+                </div>
+            </div>
+
+            <h4 class="admin-modal-seccion">Datos personales</h4>
+            <div class="admin-modal-fila">
+                <div class="campo" id="campo-editar-nombre">
+                    <label for="editar-nombre">Nombre</label>
+                    <input type="text" id="editar-nombre" maxlength="50">
+                    <p class="campo__error">El nombre es obligatorio.</p>
+                </div>
+                <div class="campo" id="campo-editar-apellidos">
+                    <label for="editar-apellidos">Apellidos</label>
+                    <input type="text" id="editar-apellidos" maxlength="100">
+                    <p class="campo__error">Los apellidos son obligatorios.</p>
+                </div>
+            </div>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="editar-telefono">Teléfono</label>
+                    <input type="tel" id="editar-telefono">
+                </div>
+            </div>
+
+            <h4 class="admin-modal-seccion">Dirección</h4>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="editar-region">Región</label>
+                    <!-- Opciones cargadas por JS desde REGIONES (usuarios.js) -->
+                    <select id="editar-region">
+                        <option value="">Selecciona la región</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="editar-comuna">Comuna</label>
+                    <!-- Depende de la región elegida: initRegionComuna() la repuebla al cambiar editar-region -->
+                    <select id="editar-comuna">
+                        <option value="">Primero elige una región</option>
+                    </select>
+                </div>
+            </div>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="editar-direccion">Dirección</label>
+                    <input type="text" id="editar-direccion" maxlength="300">
+                </div>
+            </div>
+
+            <h4 class="admin-modal-seccion">Seguridad</h4>
+            <div class="admin-modal-fila">
+                <div class="campo" id="campo-editar-password">
+                    <!-- Si se deja vacío, admin.js mantiene la contraseña actual del usuario -->
+                    <label for="editar-password">Contraseña (dejar vacío para mantener)</label>
+                    <input type="password" id="editar-password" maxlength="10" placeholder="4-10 caracteres">
+                    <p class="campo__error">Debe tener entre 4 y 10 caracteres.</p>
+                </div>
+                <div class="campo" id="campo-editar-password2">
+                    <label for="editar-password2">Confirmar contraseña</label>
+                    <input type="password" id="editar-password2" maxlength="10" placeholder="Confirmar si cambias">
+                    <p class="campo__error">Las contraseñas no coinciden.</p>
+                </div>
+            </div>
+
+            <h4 class="admin-modal-seccion">Rol y estado</h4>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="editar-rol">Rol</label>
+                    <select id="editar-rol">
+                        <option value="cliente">Cliente</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="admin-modal-checkbox">
+                    <label>
+                        <!-- Permite desactivar una cuenta sin eliminarla -->
+                        <input type="checkbox" id="editar-activo">
+                        Usuario activo
+                    </label>
+                </div>
+            </div>
+
+            <div class="admin-panel-editar-botones">
+                <button type="submit" class="boton-principal">
+                    <span>Guardar cambios</span>
+                    <span class="flecha-boton" aria-hidden="true">⟶</span>
+                </button>
+                <button type="button" id="btn-cancelar-editar" class="admin-btn-limpiar">Cancelar</button>
+            </div>
+        </form>
+    </section>
+    </div>
+
+    <!-- ================= MODAL CREAR ================= -->
+    <!-- Mismo formulario que "Editar", pero vacío y con el RUN habilitado para escribirlo -->
+    <div class="admin-modal-fondo" id="panel-crear" style="display:none;">
+    <section class="admin-modal admin-modal--ancho">
+        <button type="button" class="admin-modal-cerrar" id="btn-cerrar-crear">✕</button>
+        <h2>Nuevo usuario</h2>
+
+        <form id="form-crear-usuario" class="admin-modal-form" novalidate>
+            <h4 class="admin-modal-seccion">Identificación</h4>
+            <div class="admin-modal-fila">
+                <div class="campo" id="campo-crear-run">
+                    <label for="crear-run">RUN</label>
+                    <!-- Aquí sí es editable, porque es un usuario nuevo -->
+                    <input type="text" id="crear-run" maxlength="9" placeholder="19011022K">
+                    <p class="campo__error">Ingresa un RUN válido (7 a 9 caracteres, dígito verificador correcto).</p>
+                </div>
+                <div class="campo" id="campo-crear-correo">
+                    <label for="crear-correo">Correo</label>
+                    <input type="email" id="crear-correo" maxlength="100">
+                    <p class="campo__error">Correo inválido o ya está en uso.</p>
+                </div>
+            </div>
+
+            <h4 class="admin-modal-seccion">Datos personales</h4>
+            <div class="admin-modal-fila">
+                <div class="campo" id="campo-crear-nombre">
+                    <label for="crear-nombre">Nombre</label>
+                    <input type="text" id="crear-nombre" maxlength="50">
+                    <p class="campo__error">El nombre es obligatorio.</p>
+                </div>
+                <div class="campo" id="campo-crear-apellidos">
+                    <label for="crear-apellidos">Apellidos</label>
+                    <input type="text" id="crear-apellidos" maxlength="100">
+                    <p class="campo__error">Los apellidos son obligatorios.</p>
+                </div>
+            </div>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="crear-telefono">Teléfono</label>
+                    <input type="tel" id="crear-telefono">
+                </div>
+            </div>
+
+            <h4 class="admin-modal-seccion">Dirección</h4>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="crear-region">Región</label>
+                    <select id="crear-region">
+                        <option value="">Selecciona la región</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="crear-comuna">Comuna</label>
+                    <select id="crear-comuna">
+                        <option value="">Primero elige una región</option>
+                    </select>
+                </div>
+            </div>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="crear-direccion">Dirección</label>
+                    <input type="text" id="crear-direccion" maxlength="300">
+                </div>
+            </div>
+
+            <h4 class="admin-modal-seccion">Seguridad</h4>
+            <div class="admin-modal-fila">
+                <div class="campo" id="campo-crear-password">
+                    <!-- Aquí la contraseña es obligatoria, a diferencia del modal de editar -->
+                    <label for="crear-password">Contraseña</label>
+                    <input type="password" id="crear-password" maxlength="10" placeholder="4-10 caracteres">
+                    <p class="campo__error">Debe tener entre 4 y 10 caracteres.</p>
+                </div>
+                <div class="campo" id="campo-crear-password2">
+                    <label for="crear-password2">Confirmar contraseña</label>
+                    <input type="password" id="crear-password2" maxlength="10">
+                    <p class="campo__error">Las contraseñas no coinciden.</p>
+                </div>
+            </div>
+
+            <h4 class="admin-modal-seccion">Rol y estado</h4>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="crear-rol">Rol</label>
+                    <select id="crear-rol">
+                        <option value="cliente">Cliente</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="admin-modal-checkbox">
+                    <label>
+                        <!-- Marcado por defecto: un usuario nuevo nace activo -->
+                        <input type="checkbox" id="crear-activo" checked>
+                        Usuario activo
+                    </label>
+                </div>
+            </div>
+
+            <div class="admin-panel-editar-botones">
+                <button type="submit" class="boton-principal">
+                    <span>Crear usuario</span>
+                    <span class="flecha-boton" aria-hidden="true">⟶</span>
+                </button>
+                <button type="button" id="btn-cancelar-crear" class="admin-btn-limpiar">Cancelar</button>
+            </div>
+        </form>
+    </section>
+    </div>
+
+    <!-- SheetJS: usado por "Exportar seleccionados" -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- usuarios.js: capa de datos/validación (RUN, correo, contraseña, regiones/comunas) -->
+    <!-- admin.js: pinta la tabla, maneja filtros, abre/cierra los 3 modales y guarda cambios -->
+    <script src="../js/usuarios.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>

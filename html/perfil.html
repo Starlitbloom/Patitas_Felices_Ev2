@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mi perfil | Patitas Felices</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/estilo-usuarios.css">
+</head>
+
+<body>
+
+    <!-- Mismo header que el resto del sitio público; "Mi perfil" es el ítem activo aquí -->
+    <header class="header-principal">
+
+        <div class="fondo-header fondo-izquierdo"></div>
+        <div class="fondo-header fondo-derecho"></div>
+
+        <div class="contenedor-header">
+
+            <a href="index.html" class="logo-enlace">
+                <img src="../img/logo-patitas.png" alt="Logo Veterinaria Patitas Felices" class="logo">
+            </a>
+
+            <nav>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li class="nav-solo-sesion" id="nav-mascotas"><a href="mascotas.html">Mascotas</a></li>
+                    <li><a href="novedades.html">Novedades</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+
+                    <!-- Página actual -->
+                    <li class="nav-solo-sesion" id="nav-perfil"><a href="perfil.html" class="activo">Mi perfil</a></li>
+
+                    <!-- nav-sesion.js debería cambiar este texto/href a "Cerrar sesión" al detectar que hay sesión activa -->
+                    <li><a href="login.html" id="nav-cuenta">Iniciar sesión</a></li>
+                    <li>
+                        <a href="solicitar-cita.html" class="btn-cita">
+                            <img src="../img/calendario.png" alt="" class="icono-calendario">
+                            <span>Solicitar cita</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <main class="perfil-pagina">
+        <div class="contenedor">
+
+            <!-- =========================================
+                 CABECERA: portada + avatar + nombre
+            ========================================== -->
+
+            <!-- Imagen de patrón de fondo (huellitas) detrás de la tarjeta blanca de la cabecera -->
+            <div class="perfil-header-imagen">
+                <img src="../img/fondo-perfil.png" alt="Fondo para el perfil">
+            </div>
+            
+            <div class="perfil-header">
+                <div class="perfil-header-tarjeta">
+
+                    <!-- Avatar: muestra la foto subida si existe, o si no, un emoji genérico como placeholder -->
+                    <!-- (usuarios.js/perfil.js decide cuál mostrar y hace toggle de sus display) -->
+                    <div class="perfil-avatar" id="perfil-avatar-contenedor">
+                        <img id="perfil-avatar-imagen" src="" alt="Foto de perfil" style="display: none;">
+                        <span id="perfil-avatar-emoji">🐾</span>
+
+                        <!-- Capa que aparece al hacer hover, indicando que se puede hacer clic para cambiar la foto -->
+                        <div class="perfil-avatar-overlay">
+                            <span>📷</span>
+                        </div>
+
+                        <!-- Input de archivo oculto: el clic en el avatar lo dispara por JS; -->
+                        <!-- la imagen se procesa con FileReader + canvas (compresión a 200x200 JPEG) antes de guardarla -->
+                        <input type="file" id="input-avatar" accept="image/*" hidden>
+                    </div>
+
+                    <!-- JS reemplaza "Cargando..." por el nombre real del usuario en sesión -->
+                    <h1 id="perfil-nombre-display">Cargando...</h1>
+
+                    <!-- Franja con datos rápidos (correo y comuna) al pie de la tarjeta de cabecera -->
+                    <div class="perfil-header-franja">
+                        <span class="perfil-dato">
+                            <span class="perfil-dato-icono">✉</span>
+                            <span id="perfil-correo-display"></span>
+                        </span>
+                        <span class="perfil-dato">
+                            <span class="perfil-dato-icono">📍</span>
+                            <span id="perfil-comuna-display">Sin comuna registrada</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =========================================
+                 GRID: Sobre (editable) + Mascotas
+            ========================================== -->
+            <div class="perfil-grid">
+
+                <!-- Tarjeta "Sobre": alterna entre vista de solo lectura y formulario de edición -->
+                <!-- según la clase .perfil-card--editando (agregada/quitada por JS al hacer clic en "Editar") -->
+                <div class="perfil-card perfil-card--editable" id="tarjeta-sobre">
+                    <button type="button" class="perfil-card-editar" id="btn-editar-perfil" aria-label="Editar información">
+                        <span>✏️</span> Editar
+                    </button>
+
+                    <h2><span>👤</span> Sobre</h2>
+
+                    <!-- VISTA DE SOLO LECTURA -->
+                    <!-- JS llena cada valor (vista-nombre, vista-apellidos, etc.) con los datos del usuario en sesión -->
+                    <div class="perfil-sobre-vista" id="perfil-sobre-vista">
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Nombre</span>
+                            <span class="perfil-dato-fila-valor" id="vista-nombre">—</span>
+                        </div>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Apellidos</span>
+                            <span class="perfil-dato-fila-valor" id="vista-apellidos">—</span>
+                        </div>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Correo</span>
+                            <span class="perfil-dato-fila-valor" id="vista-correo">—</span>
+                        </div>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Teléfono</span>
+                            <span class="perfil-dato-fila-valor" id="vista-telefono">—</span>
+                        </div>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Región</span>
+                            <span class="perfil-dato-fila-valor" id="vista-region">—</span>
+                        </div>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Comuna</span>
+                            <span class="perfil-dato-fila-valor" id="vista-comuna">—</span>
+                        </div>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Dirección</span>
+                            <span class="perfil-dato-fila-valor" id="vista-direccion">—</span>
+                        </div>
+                    </div>
+
+                    <!-- FORMULARIO EDITABLE -->
+                    <!-- Oculto por defecto (display:none vía CSS); se muestra al activar el modo edición -->
+                    <!-- initFormPerfil() precarga estos campos con los datos actuales del usuario -->
+                    <form id="form-perfil" class="perfil-sobre-formulario" novalidate>
+
+                        <div class="fila-campos">
+                            <div class="campo" id="campo-nombre">
+                                <label for="nombre">Nombre</label>
+                                <input type="text" id="nombre" name="nombre" maxlength="50">
+                                <p class="campo__error">El nombre es obligatorio (máx. 50 caracteres).</p>
+                            </div>
+                            <div class="campo" id="campo-apellidos">
+                                <label for="apellidos">Apellidos</label>
+                                <input type="text" id="apellidos" name="apellidos" maxlength="100">
+                                <p class="campo__error">Los apellidos son obligatorios (máx. 100 caracteres).</p>
+                            </div>
+                        </div>
+
+                        <div class="campo" id="campo-correo">
+                            <label for="correo">Correo</label>
+                            <input type="email" id="correo" name="correo" maxlength="100">
+                            <p class="campo__ayuda">Solo correos @duoc.cl, @profesor.duoc.cl o @gmail.com.</p>
+                            <p class="campo__error">Ingresa un correo válido de un dominio permitido.</p>
+                        </div>
+
+                        <div class="campo">
+                            <label for="telefono">Teléfono (opcional)</label>
+                            <input type="tel" id="telefono" name="telefono">
+                        </div>
+
+                        <!-- Region/comuna: initRegionComuna() debe ejecutarse ANTES que initFormPerfil() en -->
+                        <!-- DOMContentLoaded, para que estos selects ya estén poblados cuando se precarguen los datos del usuario -->
+                        <div class="fila-campos">
+                            <div class="campo" id="campo-region">
+                                <label for="region">Región</label>
+                                <select id="region" name="region">
+                                    <option value="">Selecciona la región</option>
+                                </select>
+                            </div>
+                            <div class="campo" id="campo-comuna">
+                                <label for="comuna">Comuna</label>
+                                <select id="comuna" name="comuna">
+                                    <option value="">Primero elige una región</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="campo" id="campo-direccion">
+                            <label for="direccion">Dirección</label>
+                            <input type="text" id="direccion" name="direccion" maxlength="300">
+                            <p class="campo__error">La dirección es obligatoria (máx. 300 caracteres).</p>
+                        </div>
+
+                        <!-- Contraseña editable solo si el usuario escribe algo aquí; si se deja vacío, se mantiene la actual -->
+                        <div class="campo" id="campo-password-vista">
+                            <label for="password-actual-vista">Contraseña</label>
+                            <input type="password" id="password-actual-vista" name="password-actual-vista" maxlength="10">
+                            <p class="campo__error">La contraseña debe tener entre 4 y 10 caracteres.</p>
+                        </div>
+
+                        <button type="submit" class="boton-principal">
+                            <span>Guardar cambios</span>
+                            <span class="flecha-boton" aria-hidden="true">⟶</span>
+                        </button>
+
+                    </form>
+
+                </div>
+
+                <!-- Tarjeta "Mis mascotas": mascotas.js llena perfil-mascotas-lista con las mascotas del usuario, -->
+                <!-- reemplazando este estado vacío por defecto -->
+                <div class="perfil-card">
+                    <h2><span>🐾</span> Mis mascotas</h2>
+
+                    <div id="perfil-mascotas-lista" class="perfil-lista-vacia">
+                        <p>Aún no tienes mascotas registradas.</p>
+                        <a href="solicitar-cita.html" class="perfil-card-link">Agregar mascota →</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- =========================================
+                 ANCHO: Mis citas
+            ========================================== -->
+            <!-- Tarjeta a todo el ancho, fuera del grid de 2 columnas de arriba -->
+            <!-- El módulo de citas (teammate 3) es responsable de llenar perfil-citas-lista -->
+            <div class="perfil-card perfil-card--ancha">
+                <h2><span>📅</span> Mis citas</h2>
+
+                <div id="perfil-citas-lista" class="perfil-lista-vacia">
+                    <p>Aún no tienes citas agendadas.</p>
+                    <a href="solicitar-cita.html" class="perfil-card-link">Solicitar una cita →</a>
+                </div>
+            </div>
+
+            <!-- usuarios.js: cerrarSesion() limpia la sesión en localStorage y redirige a index.html -->
+            <p class="perfil-cerrar-sesion-wrap">
+                <a href="#" id="btn-cerrar-sesion" class="boton-principal">
+                    <span>Cerrar sesión</span>
+                    <span class="flecha-boton" aria-hidden="true">⟶</span>
+                </a>
+            </p>
+
+        </div>
+    </main>
+
+
+    <!-- Mismo footer que el resto del sitio público -->
+    <footer class="footer-principal">
+
+        <div class="footer-linea"></div>
+        <div class="footer-decoracion footer-decoracion-1"></div>
+        <div class="footer-decoracion footer-decoracion-2"></div>
+
+        <div class="footer-contenido footer-contenido--index">
+
+            <div class="footer-marca">
+                <a href="index.html">
+                    <img src="../img/logo-patitas.png" alt="Logo Veterinaria Patitas Felices" class="footer-logo">
+                </a>
+                <p>Cuidamos la salud y bienestar de tu mascota con cariño, compromiso y atención cercana.</p>
+
+                <div class="footer-social">
+                    <a href="#" aria-label="Facebook" class="footer-social-icono">
+                        <img src="../img/logo-facebook.png" alt="Facebook">
+                    </a>
+                    <a href="#" aria-label="Instagram" class="footer-social-icono">
+                        <img src="../img/logo-instagram.png" alt="Instagram">
+                    </a>
+                    <a href="#" aria-label="WhatsApp" class="footer-social-icono">
+                        <img src="../img/logo-whatsapp.png" alt="WhatsApp">
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-info">
+                <h3>Contacto</h3>
+                <p><span class="footer-icono">✉</span> contacto@patitasfelices.cl</p>
+                <p><span class="footer-icono">📍</span> Rancagua, Región de O'Higgins</p>
+            </div>
+
+            <div class="footer-info">
+                <h3>Horario</h3>
+                <p><span class="footer-icono">🕘</span> Lunes a viernes</p>
+                <p><span class="footer-icono">♡</span> 09:00 - 19:00 hrs</p>
+            </div>
+
+        </div>
+
+        <div class="footer-inferior">
+            <p>© 2026 Veterinaria Patitas Felices</p>
+            <p class="footer-frase">Cuidando cada huellita con cariño 🐾</p>
+        </div>
+
+    </footer>
+
+    <!-- mascotas.js va primero: perfil.html necesita sus funciones para pintar "Mis mascotas" -->
+    <!-- usuarios.js: sesión, validación y guardado de los datos de "Sobre" -->
+    <!-- nav-sesion.js: ajusta el menú (oculta "Iniciar sesión", muestra "Mascotas"/"Mi perfil") -->
+    <script src="../js/mascotas.js"></script>
+    <script src="../js/usuarios.js"></script>
+    <script src="../js/nav-sesion.js"></script>
+</body>
+</html>

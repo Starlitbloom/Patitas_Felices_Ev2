@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reportes | Patitas Felices</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/estilo-admin.css">
+</head>
+
+<body class="admin-body">
+
+    <div class="admin-layout">
+
+        <!-- ================= SIDEBAR ================= -->
+        <!-- Mismo menú lateral que dashboard.html; aquí "Reportes" es el ítem activo -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-sidebar-logo">
+                <img src="../img/logo-patitas.png" alt="Logo Patitas Felices">
+                <span>Patitas Felices</span>
+            </div>
+
+            <p class="admin-sidebar-rol">Admin</p>
+
+            <nav class="admin-nav">
+
+                <!-- DASHBOARD -->
+                <a href="dashboard.html" class="admin-nav-item">
+                    <img
+                        src="../img/icono-admin-dashboard.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Dashboard</span>
+                </a>
+
+                <!-- USUARIOS -->
+                <a href="usuarios.html" class="admin-nav-item">
+                    <img
+                        src="../img/icono-admin-usuarios.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Usuarios</span>
+                </a>
+
+                <!-- MASCOTAS -->
+                <a href="admin-mascotas.html" class="admin-nav-item">
+                    <span class="admin-nav-icono admin-nav-icono--emoji">🐾</span>
+                    <span>Mascotas</span>
+                </a>
+
+                <!-- CITAS -->
+                <a href="admin-citas.html" class="admin-nav-item">
+                    <img
+                        src="../img/icono-admin-citas.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Citas</span>
+                </a>
+
+                <!-- REPORTES ACTIVO -->
+                <!-- Página actual: lleva la clase --activo para resaltarse en el menú -->
+                <a
+                    href="reportes.html"
+                    class="admin-nav-item admin-nav-item--activo"
+                >
+                    <img
+                        src="../img/icono-admin-reportes.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Reportes</span>
+                </a>
+
+                <!-- VER SITIO -->
+                <a href="../html/index.html" class="admin-nav-item">
+                    <img
+                        src="../img/icono-admin-ver-sitio.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Ver sitio</span>
+                </a>
+
+                <!-- CERRAR SESIÓN -->
+                <!-- href="#" porque el cierre de sesión lo maneja JS (admin.js), no una navegación directa -->
+                <a
+                    href="#"
+                    id="btn-cerrar-sesion-admin"
+                    class="admin-nav-item admin-nav-item--salir"
+                >
+                    <img
+                        src="../img/icono-admin-cerrar-sesion.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Cerrar sesión</span>
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- ================= CONTENIDO ================= -->
+        <main class="admin-contenido">
+
+            <!-- ENCABEZADO -->
+            <header class="admin-topbar">
+
+                <!-- Capa decorativa de fondo, separada del texto -->
+                <div class="admin-topbar-fondo"></div>
+
+                <div class="admin-topbar-contenido">
+                    <p class="admin-topbar-etiqueta">
+                        Panel de administración
+                    </p>
+
+                    <h1>Reportes 🐾</h1>
+                </div>
+
+            </header>
+
+
+            <!-- ================= RESUMEN ================= -->
+            <!-- KPIs generales de usuarios. reportes.js calcula cada valor desde patitasFelices_usuarios -->
+            <section class="admin-kpis">
+
+                <div class="admin-kpi">
+
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">👥</span>
+                    </div>
+
+                    <!-- Total de usuarios registrados (todos los roles) -->
+                    <span
+                        class="admin-kpi-numero"
+                        id="rep-total-usuarios"
+                    >
+                        0
+                    </span>
+
+                    <span class="admin-kpi-label">
+                        Usuarios totales
+                    </span>
+
+                </div>
+
+
+                <div class="admin-kpi">
+
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">🛡️</span>
+                    </div>
+
+                    <!-- Cantidad de usuarios con rol = 'admin' -->
+                    <span
+                        class="admin-kpi-numero"
+                        id="rep-total-admins"
+                    >
+                        0
+                    </span>
+
+                    <span class="admin-kpi-label">
+                        Administradores
+                    </span>
+
+                </div>
+
+
+                <div class="admin-kpi">
+
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">📍</span>
+                    </div>
+
+                    <!-- Cantidad de regiones distintas que tienen al menos un usuario -->
+                    <span
+                        class="admin-kpi-numero"
+                        id="rep-total-regiones"
+                    >
+                        0
+                    </span>
+
+                    <span class="admin-kpi-label">
+                        Regiones con usuarios
+                    </span>
+
+                </div>
+
+
+                <div class="admin-kpi">
+
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">🖼️</span>
+                    </div>
+
+                    <!-- Usuarios que sí subieron avatar (campo con imagen en base64 no vacío) -->
+                    <span
+                        class="admin-kpi-numero"
+                        id="rep-con-avatar"
+                    >
+                        0
+                    </span>
+
+                    <span class="admin-kpi-label">
+                        Con foto de perfil
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= GRÁFICOS ================= -->
+            <!-- Chart.js dibuja estos gráficos dentro de los <canvas> por su id; reportes.js arma los datasets -->
+            <section class="admin-graficos">
+
+                <div class="admin-grafico-card">
+
+                    <h2>
+                        Usuarios por rol
+                    </h2>
+
+                    <!-- Gráfico (torta/dona probablemente) con distribución admin vs cliente -->
+                    <canvas id="grafico-roles"></canvas>
+
+                </div>
+
+
+                <div class="admin-grafico-card">
+
+                    <h2>
+                        Usuarios por región
+                    </h2>
+
+                    <!-- Gráfico de barras con cantidad de usuarios agrupados por región -->
+                    <canvas id="grafico-regiones"></canvas>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= TABLA ================= -->
+            <!-- Ranking de comunas con más usuarios; complementa el gráfico de regiones con más detalle -->
+            <section class="admin-tabla-seccion">
+
+                <h2>
+                    Comunas con más usuarios registrados
+                </h2>
+
+                <div class="admin-tabla-wrap">
+
+                    <table class="admin-tabla">
+
+                        <thead>
+                            <tr>
+                                <th>Comuna</th>
+                                <th>Región</th>
+                                <th>Usuarios</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="rep-tabla-comunas">
+                            <!-- reportes.js inserta aquí las filas ordenadas de mayor a menor -->
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- Se muestra en vez de la tabla cuando aún no hay datos suficientes de comunas -->
+                <p
+                    class="admin-tabla-vacia"
+                    id="rep-comunas-vacia"
+                    style="display:none;"
+                >
+                    Aún no hay suficientes datos de comunas.
+                </p>
+
+            </section>
+
+
+            <!-- ================= REPORTE DE MASCOTAS ================= -->
+            <!-- Sección aparte: los datos vienen de mascotas.js / localStorage de mascotas, no de usuarios -->
+            <h2 class="admin-reportes-subtitulo">Reporte de mascotas 🐾</h2>
+
+            <section class="admin-kpis">
+
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">🐾</span>
+                    </div>
+                    <!-- Total de mascotas registradas en el sistema -->
+                    <span class="admin-kpi-numero" id="rep-total-mascotas">0</span>
+                    <span class="admin-kpi-label">Mascotas registradas</span>
+                </div>
+
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">⚠️</span>
+                    </div>
+                    <!-- Mascotas con campos obligatorios vacíos (ej. sin especie o sin fecha de nacimiento) -->
+                    <span class="admin-kpi-numero" id="rep-mascotas-incompletas">0</span>
+                    <span class="admin-kpi-label">Con datos incompletos</span>
+                </div>
+
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">🔔</span>
+                    </div>
+                    <!-- Mismo dato que el KPI "solicitudes" del dashboard: cambios de mascota sin aprobar -->
+                    <span class="admin-kpi-numero" id="rep-solicitudes-pendientes">0</span>
+                    <span class="admin-kpi-label">Solicitudes de cambio pendientes</span>
+                </div>
+
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">🩺</span>
+                    </div>
+                    <!-- Mascotas cuyo estado clínico está marcado como "en tratamiento" -->
+                    <span class="admin-kpi-numero" id="rep-mascotas-tratamiento">0</span>
+                    <span class="admin-kpi-label">En tratamiento</span>
+                </div>
+
+            </section>
+
+            <section class="admin-graficos">
+
+                <div class="admin-grafico-card">
+                    <h2>Mascotas por especie</h2>
+                    <!-- Distribución perro/gato/otros, etc. -->
+                    <canvas id="grafico-mascotas-especie"></canvas>
+                </div>
+
+                <div class="admin-grafico-card">
+                    <h2>Mascotas por estado clínico</h2>
+                    <!-- Distribución sano/en tratamiento/en observación, etc. -->
+                    <canvas id="grafico-mascotas-estado"></canvas>
+                </div>
+
+            </section>
+
+
+            <!-- ================= REPORTE DE CITAS ================= -->
+            <!-- Datos provenientes del módulo de citas (teammate 3) -->
+            <h2 class="admin-reportes-subtitulo">Reporte de citas 📅</h2>
+
+            <section class="admin-kpis">
+
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">📅</span>
+                    </div>
+                    <!-- Total histórico de citas agendadas -->
+                    <span class="admin-kpi-numero" id="rep-total-citas">0</span>
+                    <span class="admin-kpi-label">Citas totales</span>
+                </div>
+
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">⏰</span>
+                    </div>
+                    <!-- Citas creadas pero aún no confirmadas por un admin -->
+                    <span class="admin-kpi-numero" id="rep-citas-pendientes">0</span>
+                    <span class="admin-kpi-label">Pendientes</span>
+                </div>
+
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">✅</span>
+                    </div>
+                    <!-- Citas ya confirmadas -->
+                    <span class="admin-kpi-numero" id="rep-citas-confirmadas">0</span>
+                    <span class="admin-kpi-label">Confirmadas</span>
+                </div>
+
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">❌</span>
+                    </div>
+                    <!-- Citas canceladas por el cliente o rechazadas por un admin -->
+                    <span class="admin-kpi-numero" id="rep-citas-canceladas">0</span>
+                    <span class="admin-kpi-label">Canceladas</span>
+                </div>
+
+            </section>
+
+            <section class="admin-graficos">
+
+                <div class="admin-grafico-card">
+                    <h2>Citas por estado</h2>
+                    <!-- pendiente / confirmada / cancelada -->
+                    <canvas id="grafico-citas-estado"></canvas>
+                </div>
+
+                <div class="admin-grafico-card">
+                    <h2>Servicios más solicitados</h2>
+                    <!-- Ranking de tipos de atención más pedidos (vacunación, control, etc.) -->
+                    <canvas id="grafico-citas-servicio"></canvas>
+                </div>
+
+            </section>
+
+
+            <!-- ================= EXPORTAR ================= -->
+            <!-- Botón único que exporta TODO el reporte (usuarios + mascotas + citas) a un Excel, vía reportes.js -->
+            <div class="admin-reportes-exportar">
+
+                <button
+                    type="button"
+                    id="btn-exportar-reporte"
+                    class="admin-btn-exportar"
+                >
+                    📤 Exportar reporte completo (Excel)
+                </button>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- ================= LIBRERÍAS ================= -->
+    <!-- SheetJS: genera el archivo Excel del botón "Exportar reporte completo" -->
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+    </script>
+
+    <!-- Chart.js: dibuja los gráficos de torta/barras en los <canvas> de arriba -->
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">
+    </script>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <!-- Orden importa: usuarios.js expone los datos base, admin.js trae utilidades del panel, -->
+    <!-- y reportes.js (al final) es el que arma los KPIs, gráficos y el export -->
+
+    <script src="../js/usuarios.js"></script>
+    <script src="../js/admin.js"></script>
+    <script src="../js/reportes.js"></script>
+
+</body>
+
+</html>
