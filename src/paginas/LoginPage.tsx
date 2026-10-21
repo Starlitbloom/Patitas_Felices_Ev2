@@ -4,7 +4,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { FormularioLogin, type DatosLogin, type ErrorLogin } from '../componentes/organismos/FormularioLogin'
-import { Etiqueta } from '../componentes/atomos/Etiqueta'
 
 export default function LoginPage() {
   const { iniciarSesion } = useAuth()
@@ -15,8 +14,10 @@ export default function LoginPage() {
   const manejarLogin = ({ correo, password }: DatosLogin): ErrorLogin | void => {
     const resultado = iniciarSesion(correo, password)
     if (!resultado.ok) return { campo: resultado.campo as ErrorLogin['campo'], mensaje: resultado.mensaje }
-    // Admin va al panel; cliente vuelve a la página que quería ver o a su perfil
-    navigate(resultado.dato.rol === 'admin' ? '/admin' : (desde ?? '/perfil'), { replace: true })
+    // Personal de la clínica (admin o recepcionista) va al panel;
+    // el dueño de mascota vuelve a la página que quería ver o a su perfil
+    const esPersonal = resultado.dato.rol === 'admin' || resultado.dato.rol === 'recepcionista'
+    navigate(esPersonal ? '/admin' : (desde ?? '/perfil'), { replace: true })
   }
 
   return (
@@ -35,9 +36,6 @@ export default function LoginPage() {
         <FormularioLogin onSubmit={manejarLogin} />
         <p className="formulario-pie">
           ¿No tienes cuenta? <Link to="/registro">Regístrate aquí</Link>
-        </p>
-        <p className="formulario-pie formulario-pie--demo">
-          <Etiqueta>Cuenta demo admin</Etiqueta> ma.calfileo@duoc.cl · 1234
         </p>
       </div>
     </main>

@@ -53,7 +53,8 @@ export interface FormularioUsuarioProps {
 }
 
 const ROLES = [
-  { valor: 'cliente', texto: 'Cliente' },
+  { valor: 'cliente', texto: 'Cliente (dueño/a de mascota)' },
+  { valor: 'recepcionista', texto: 'Recepcionista' },
   { valor: 'admin', texto: 'Administrador' },
 ]
 

@@ -3,6 +3,13 @@
 import { CARGOS, ESPECIES } from '../../data/veterinarios'
 import type { Cargo, Especie, FiltrosEquipo as Filtros } from '../../types/veterinario'
 
+// Texto inclusivo para las opciones del filtro (el valor interno no cambia)
+const TEXTO_CARGO: Record<Cargo, string> = {
+  'Médico veterinario': 'Médico/a veterinario/a',
+  'Técnico veterinario': 'Técnico/a veterinario/a',
+  Recepcionista: 'Recepcionista',
+}
+
 export interface FiltrosEquipoProps {
   filtros: Filtros
   onCambio: (filtros: Filtros) => void
@@ -32,7 +39,7 @@ export function FiltrosEquipo({ filtros, onCambio, onLimpiar }: FiltrosEquipoPro
           <option value="">Todos</option>
           {CARGOS.map((c) => (
             <option key={c} value={c}>
-              {c}
+              {TEXTO_CARGO[c]}
             </option>
           ))}
         </select>

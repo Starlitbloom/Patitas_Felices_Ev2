@@ -9,12 +9,12 @@ export interface TarjetaVeterinarioProps {
 }
 
 export function TarjetaVeterinario({ veterinario }: TarjetaVeterinarioProps) {
-  const { id, nombre, cargo, area, especies, experiencia, imagen } = veterinario
+  const { id, nombre, titulo, area, especies, experiencia, imagen } = veterinario
   return (
     <article className="equipo-tarjeta h-100">
       <img src={imagen} alt="" className="equipo-tarjeta-imagen" />
       <div className="equipo-tarjeta-cuerpo">
-        <span className="seccion-etiqueta">{cargo}</span>
+        <span className="seccion-etiqueta">{titulo}</span>
         <h3>{nombre}</h3>
         <p className="equipo-tarjeta-dato">{area}</p>
         <p className="equipo-tarjeta-dato">{experiencia} años de experiencia</p>

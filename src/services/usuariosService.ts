@@ -16,7 +16,7 @@ import type {
   ResultadoOperacion,
   Usuario,
 } from '../types/usuario'
-import { ADMINS_FIJOS, CLIENTES_EJEMPLO } from '../data/usuariosIniciales'
+import { CUENTAS_FIJAS, CLIENTES_EJEMPLO } from '../data/usuariosIniciales'
 import { CLAVES, guardarColeccion, leerColeccion } from './almacenamiento'
 import { limpiarRun } from '../utils/validaciones'
 
@@ -132,12 +132,12 @@ export function filtrarUsuarios(usuarios: Usuario[], filtros: FiltrosUsuarios): 
  * Se ejecuta al iniciar la app:
  * 1. Si no hay usuarios, carga los datos de ejemplo.
  * 2. Completa campos faltantes de usuarios antiguos de la EP1 (id, activo, fecha).
- * 3. Garantiza que las cuentas admin fijas existan con su rol y contraseña.
+ * 3. Garantiza que las cuentas fijas (admins y recepcionista) existan con su rol y contraseña.
  */
 export function asegurarDatosIniciales(): void {
   let usuarios = listarUsuarios()
   if (usuarios.length === 0) {
-    usuarios = [...ADMINS_FIJOS, ...CLIENTES_EJEMPLO]
+    usuarios = [...CUENTAS_FIJAS, ...CLIENTES_EJEMPLO]
   }
 
   usuarios = usuarios.map((u) => ({
@@ -152,14 +152,14 @@ export function asegurarDatosIniciales(): void {
     direccion: u.direccion ?? '',
   }))
 
-  ADMINS_FIJOS.forEach((admin) => {
-    const existente = usuarios.find((u) => u.correo && mismoCorreo(u.correo, admin.correo))
+  CUENTAS_FIJAS.forEach((cuenta) => {
+    const existente = usuarios.find((u) => u.correo && mismoCorreo(u.correo, cuenta.correo))
     if (existente) {
-      existente.rol = 'admin'
-      existente.password = admin.password
+      existente.rol = cuenta.rol
+      existente.password = cuenta.password
       existente.activo = true
     } else {
-      usuarios.push(admin)
+      usuarios.push({ ...cuenta })
     }
   })
 

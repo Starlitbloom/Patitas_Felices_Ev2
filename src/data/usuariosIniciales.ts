@@ -6,8 +6,8 @@
 ========================================================= */
 import type { Usuario } from '../types/usuario'
 
-/** Cuentas admin fijas de la entrega (siempre deben existir). */
-export const ADMINS_FIJOS: Usuario[] = [
+/** Cuentas fijas de la entrega (siempre deben existir): 2 administradoras y la recepcionista. */
+export const CUENTAS_FIJAS: Usuario[] = [
   {
     id: 'admin-maria',
     run: '11111111-1',
@@ -37,6 +37,22 @@ export const ADMINS_FIJOS: Usuario[] = [
     rol: 'admin',
     activo: true,
     fechaRegistro: '2026-08-01T12:05:00.000Z',
+  },
+  {
+    // Recepcionista de la clínica (la misma persona que aparece en "Nuestro equipo")
+    id: 'recep-josefa',
+    run: '19876543-0',
+    nombre: 'Josefa',
+    apellidos: 'Medina',
+    correo: 'jo.medina@duoc.cl',
+    password: '1234',
+    telefono: '',
+    region: "Región del Libertador General Bernardo O'Higgins",
+    comuna: 'Rancagua',
+    direccion: 'Av. Brasil 1020',
+    rol: 'recepcionista',
+    activo: true,
+    fechaRegistro: '2026-08-01T12:10:00.000Z',
   },
 ]
 

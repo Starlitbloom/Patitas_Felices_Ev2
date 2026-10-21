@@ -8,7 +8,8 @@ import Navbar from 'react-bootstrap/Navbar'
 
 export interface EncabezadoProps {
   sesionActiva: boolean
-  esAdmin: boolean
+  /** Personal de la clínica (admin o recepcionista): ve el acceso al panel. */
+  accesoPanel: boolean
   /** Header transparente que flota sobre el hero (solo en Inicio). */
   flotante?: boolean
 }
@@ -29,7 +30,7 @@ const ENLACES: EnlaceMenu[] = [
   { to: '/perfil', texto: 'Mi perfil', soloSesion: true },
 ]
 
-export function Encabezado({ sesionActiva, esAdmin, flotante = false }: EncabezadoProps) {
+export function Encabezado({ sesionActiva, accesoPanel, flotante = false }: EncabezadoProps) {
   const [menuAbierto, setMenuAbierto] = useState(false)
   const [conSombra, setConSombra] = useState(false)
 
@@ -48,8 +49,8 @@ export function Encabezado({ sesionActiva, esAdmin, flotante = false }: Encabeza
   // "Iniciar sesión" para visitantes; para usuarios conectados, su sección principal
   const cuenta = !sesionActiva
     ? { to: '/login', texto: 'Iniciar sesión' }
-    : esAdmin
-      ? { to: '/admin', texto: 'Panel admin' }
+    : accesoPanel
+      ? { to: '/admin', texto: 'Panel' }
       : { to: '/mis-citas', texto: 'Mis citas' }
 
   return (

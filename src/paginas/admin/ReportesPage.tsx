@@ -79,11 +79,15 @@ export default function ReportesPage() {
           <Doughnut
             options={opcionesDona}
             data={{
-              labels: ['Clientes', 'Administradores'],
+              labels: ['Clientes', 'Recepcionistas', 'Administradores'],
               datasets: [
                 {
-                  data: [usuarios.filter((u) => u.rol === 'cliente').length, usuarios.filter((u) => u.rol === 'admin').length],
-                  backgroundColor: ['#D6ECFA', '#FFD6E7'],
+                  data: [
+                    usuarios.filter((u) => u.rol === 'cliente').length,
+                    usuarios.filter((u) => u.rol === 'recepcionista').length,
+                    usuarios.filter((u) => u.rol === 'admin').length,
+                  ],
+                  backgroundColor: ['#D6ECFA', '#C8F0D8', '#FFD6E7'],
                   borderColor: '#2A2440',
                   borderWidth: 3,
                 },

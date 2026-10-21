@@ -1,5 +1,5 @@
 /* ÁTOMO — Insignia (badge) de rol o estado. */
-export type TipoInsignia = 'admin' | 'cliente' | 'activo' | 'inactivo'
+export type TipoInsignia = 'admin' | 'recepcionista' | 'cliente' | 'activo' | 'inactivo'
 
 export interface InsigniaProps {
   tipo: TipoInsignia

@@ -303,3 +303,9 @@ button.admin-nav-item {
 .admin-filtros.row {
     gap: 0;
 }
+
+/* Insignia del rol nuevo de la EP2 */
+.admin-badge--recepcionista {
+    background-color: rgba(139, 214, 160, 0.16);
+    color: #A8E6BC;
+}

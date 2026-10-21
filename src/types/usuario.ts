@@ -5,7 +5,20 @@
    avise si falta un campo o se usa uno que no existe.
 ========================================================= */
 
-export type Rol = 'cliente' | 'admin'
+/**
+ * Roles del sistema (control de acceso basado en roles, según el caso):
+ * - admin: gestiona todo el sistema, incluidos usuarios y reportes
+ * - recepcionista: personal de la clínica; gestiona citas y fichas, NO usuarios
+ * - cliente: dueño/a de mascota
+ */
+export type Rol = 'cliente' | 'recepcionista' | 'admin'
+
+/** Texto para mostrar cada rol en pantalla. */
+export const NOMBRE_ROL: Record<Rol, string> = {
+  admin: 'Administrador',
+  recepcionista: 'Recepcionista',
+  cliente: 'Dueño/a de mascota',
+}
 
 /** Usuario tal como se guarda en la fuente de datos (localStorage). */
 export interface Usuario {

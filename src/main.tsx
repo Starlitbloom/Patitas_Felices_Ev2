@@ -12,6 +12,9 @@ import './styles/estilo-equipo.css'
 import './styles/ajustes-react.css'
 
 import App from './App'
+import { asegurarDatosIniciales } from './services/usuariosService'
+
+asegurarDatosIniciales() // carga los usuarios de ejemplo y las cuentas fijas (admins y recepcionista)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

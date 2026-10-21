@@ -42,6 +42,7 @@ export function FiltrosUsuarios({
         >
           <option value="">Todos los roles</option>
           <option value="cliente">Cliente</option>
+          <option value="recepcionista">Recepcionista</option>
           <option value="admin">Administrador</option>
         </select>
       </div>

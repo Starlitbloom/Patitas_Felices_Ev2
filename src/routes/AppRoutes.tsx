@@ -4,6 +4,7 @@
    Las páginas de mascotas, citas y contenido usan
    PaginaPendiente hasta que cada integrante migre la suya.
 ========================================================= */
+import type { ReactNode } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { PlantillaPublica } from '../componentes/plantillas/PlantillaPublica'
 import { PlantillaAdmin } from '../componentes/plantillas/PlantillaAdmin'
@@ -20,6 +21,11 @@ import DashboardPage from '../paginas/admin/DashboardPage'
 import UsuariosPage from '../paginas/admin/UsuariosPage'
 import DetalleUsuarioPage from '../paginas/admin/DetalleUsuarioPage'
 import ReportesPage from '../paginas/admin/ReportesPage'
+
+/** Atajo: envuelve una página que solo puede ver el administrador. */
+function SoloAdmin({ children }: { children: ReactNode }) {
+  return <RutaProtegida roles={['admin']}>{children}</RutaProtegida>
+}
 
 export function AppRoutes() {
   return (
@@ -56,19 +62,21 @@ export function AppRoutes() {
         <Route path="*" element={<NoEncontradoPage />} />
       </Route>
 
-      {/* ---------- Panel admin (solo rol admin) ---------- */}
+      {/* ---------- Panel de la clínica (administrador y recepcionista) ----------
+           Usuarios y reportes: solo administrador.
+           Citas y mascotas: administrador y recepcionista (según el caso). */}
       <Route
         path="/admin"
         element={
-          <RutaProtegida soloAdmin>
+          <RutaProtegida roles={['admin', 'recepcionista']}>
             <PlantillaAdmin />
           </RutaProtegida>
         }
       >
         <Route index element={<DashboardPage />} />
-        <Route path="usuarios" element={<UsuariosPage />} />
-        <Route path="usuarios/:id" element={<DetalleUsuarioPage />} />
-        <Route path="reportes" element={<ReportesPage />} />
+        <Route path="usuarios" element={<SoloAdmin><UsuariosPage /></SoloAdmin>} />
+        <Route path="usuarios/:id" element={<SoloAdmin><DetalleUsuarioPage /></SoloAdmin>} />
+        <Route path="reportes" element={<SoloAdmin><ReportesPage /></SoloAdmin>} />
         <Route path="mascotas" element={<PaginaPendiente titulo="Mascotas" modulo="mascotas" admin />} />
         <Route path="citas" element={<PaginaPendiente titulo="Citas" modulo="citas" admin />} />
       </Route>

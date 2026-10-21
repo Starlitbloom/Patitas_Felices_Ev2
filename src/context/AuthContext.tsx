@@ -11,6 +11,8 @@ import * as sesionService from '../services/sesionService'
 interface AuthContextValor {
   usuario: UsuarioSesion | null
   esAdmin: boolean
+  /** Personal de la clínica (admin o recepcionista): puede entrar al panel. */
+  esPersonal: boolean
   iniciarSesion: (correo: string, password: string) => ReturnType<typeof sesionService.autenticar>
   cerrarSesion: () => void
   /** Refresca la sesión después de editar los datos del usuario conectado. */
@@ -40,7 +42,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ usuario, esAdmin: usuario?.rol === 'admin', iniciarSesion, cerrarSesion, refrescarSesion }}
+      value={{
+        usuario,
+        esAdmin: usuario?.rol === 'admin',
+        esPersonal: usuario?.rol === 'admin' || usuario?.rol === 'recepcionista',
+        iniciarSesion,
+        cerrarSesion,
+        refrescarSesion,
+      }}
     >
       {children}
     </AuthContext.Provider>

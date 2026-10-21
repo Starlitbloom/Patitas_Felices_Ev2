@@ -8,7 +8,7 @@ import { Encabezado } from '../organismos/Encabezado'
 import { PiePagina } from '../organismos/PiePagina'
 
 export function PlantillaPublica() {
-  const { usuario, esAdmin } = useAuth()
+  const { usuario, esPersonal } = useAuth()
   const { pathname } = useLocation()
   const esInicio = pathname === '/'
 
@@ -19,7 +19,7 @@ export function PlantillaPublica() {
 
   return (
     <div className={`pagina ${esInicio ? 'pagina--inicio' : ''}`.trim()}>
-      <Encabezado sesionActiva={!!usuario} esAdmin={esAdmin} flotante={esInicio} />
+      <Encabezado sesionActiva={!!usuario} accesoPanel={esPersonal} flotante={esInicio} />
       <Outlet />
       <PiePagina />
     </div>

@@ -23,7 +23,7 @@ export default function DetalleVeterinarioPage() {
     )
   }
 
-  const { nombre, cargo, area, especies, experiencia, descripcion, dias, horario, imagen, correo } = veterinario
+  const { nombre, cargo, titulo, area, especies, experiencia, descripcion, dias, horario, imagen, correo } = veterinario
 
   return (
     <main className="equipo-pagina">
@@ -33,7 +33,7 @@ export default function DetalleVeterinarioPage() {
             <img src={imagen} alt="" className="equipo-detalle-imagen" />
           </div>
           <div className="col-12 col-md-7">
-            <Etiqueta>{cargo}</Etiqueta>
+            <Etiqueta>{titulo}</Etiqueta>
             <h1>{nombre}</h1>
             <p>{descripcion}</p>
             <ul className="equipo-detalle-datos">
@@ -59,7 +59,8 @@ export default function DetalleVeterinarioPage() {
               </li>
             </ul>
             <div className="d-flex flex-wrap gap-3 mt-4">
-              <EnlaceBoton to="/solicitar-cita">Agendar una hora</EnlaceBoton>
+              {/* Solo los médicos veterinarios atienden citas (renderizado condicional) */}
+              {cargo === 'Médico veterinario' && <EnlaceBoton to="/solicitar-cita">Agendar una hora</EnlaceBoton>}
               <EnlaceBoton to="/equipo" variante="secundario">
                 ← Volver al equipo
               </EnlaceBoton>
