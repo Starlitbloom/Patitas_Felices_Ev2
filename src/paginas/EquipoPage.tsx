@@ -1,6 +1,7 @@
-/* PÁGINA (contenedor) — Nuestro equipo veterinario.  Ruta: /equipo
+/* PÁGINA (contenedor) — Nuestro equipo.  Ruta: /equipo
    Vista nueva de la EP2 (requerimiento del cliente: que los tutores
-   conozcan a los profesionales y elijan según la especie de su mascota).
+   conozcan al equipo de la clínica: 3 médicos veterinarios, 1 técnico
+   veterinario y 1 recepcionista, y vean quién atiende a la especie de su mascota).
    Estado: los filtros (useState). La lista visible se calcula en cada render. */
 import { useState } from 'react'
 import type { FiltrosEquipo as Filtros } from '../types/veterinario'
@@ -9,7 +10,7 @@ import { FiltrosEquipo } from '../componentes/organismos/FiltrosEquipo'
 import { GrillaEquipo } from '../componentes/organismos/GrillaEquipo'
 import { TituloSeccion } from '../componentes/moleculas/TituloSeccion'
 
-const SIN_FILTROS: Filtros = { texto: '', especialidad: '', especie: '' }
+const SIN_FILTROS: Filtros = { texto: '', cargo: '', especie: '' }
 
 export default function EquipoPage() {
   const [filtros, setFiltros] = useState<Filtros>(SIN_FILTROS)
@@ -20,12 +21,12 @@ export default function EquipoPage() {
       <div className="contenedor">
         <TituloSeccion
           etiqueta="Conoce a quienes cuidan a tu mascota"
-          titulo="Nuestro equipo veterinario"
-          descripcion="Filtra por especialidad o por la especie de tu mascota para encontrar al profesional indicado."
+          titulo="Nuestro equipo"
+          descripcion="Filtra por cargo o por la especie de tu mascota para encontrar a quien puede atenderla."
         />
         <FiltrosEquipo filtros={filtros} onCambio={setFiltros} onLimpiar={() => setFiltros(SIN_FILTROS)} />
         <p className="equipo-resumen" aria-live="polite">
-          {visibles.length} {visibles.length === 1 ? 'profesional encontrado' : 'profesionales encontrados'}
+          {visibles.length} {visibles.length === 1 ? 'integrante encontrado' : 'integrantes encontrados'}
         </p>
         <GrillaEquipo veterinarios={visibles} />
       </div>

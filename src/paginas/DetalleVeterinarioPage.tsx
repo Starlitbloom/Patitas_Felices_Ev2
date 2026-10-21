@@ -1,4 +1,4 @@
-/* PÁGINA (contenedor) — Perfil de un veterinario.  Ruta con parámetro: /equipo/:id
+/* PÁGINA (contenedor) — Perfil de un integrante del equipo.  Ruta con parámetro: /equipo/:id
    useParams lee el id de la URL y se busca en el servicio. */
 import { useParams } from 'react-router-dom'
 import { obtenerVeterinarioPorId } from '../services/veterinariosService'
@@ -23,7 +23,7 @@ export default function DetalleVeterinarioPage() {
     )
   }
 
-  const { nombre, especialidad, especies, experiencia, descripcion, dias, horario, imagen, correo } = veterinario
+  const { nombre, cargo, area, especies, experiencia, descripcion, dias, horario, imagen, correo } = veterinario
 
   return (
     <main className="equipo-pagina">
@@ -33,16 +33,21 @@ export default function DetalleVeterinarioPage() {
             <img src={imagen} alt="" className="equipo-detalle-imagen" />
           </div>
           <div className="col-12 col-md-7">
-            <Etiqueta>{especialidad}</Etiqueta>
+            <Etiqueta>{cargo}</Etiqueta>
             <h1>{nombre}</h1>
             <p>{descripcion}</p>
             <ul className="equipo-detalle-datos">
               <li>
-                <strong>Experiencia:</strong> {experiencia} años
+                <strong>Área:</strong> {area}
               </li>
               <li>
-                <strong>Atiende a:</strong> {especies.join(', ')}
+                <strong>Experiencia:</strong> {experiencia} años
               </li>
+              {especies.length > 0 && (
+                <li>
+                  <strong>Atiende a:</strong> {especies.join(', ')}
+                </li>
+              )}
               <li>
                 <strong>Días:</strong> {dias.join(', ')}
               </li>

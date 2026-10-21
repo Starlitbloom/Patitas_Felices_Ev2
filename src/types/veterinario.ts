@@ -1,20 +1,17 @@
-/* Tipos de la vista "Equipo veterinario". */
+/* Tipos de la vista "Nuestro equipo".
+   Según el caso, el equipo de Veterinaria San Marcos tiene
+   3 médicos veterinarios, 1 técnico veterinario y 1 recepcionista. */
 
 export type Especie = 'Perros' | 'Gatos' | 'Conejos' | 'Aves'
 
-export type Especialidad =
-  | 'Medicina general'
-  | 'Cirugía'
-  | 'Dermatología'
-  | 'Animales exóticos'
-  | 'Medicina preventiva'
-  | 'Nutrición'
+export type Cargo = 'Médico veterinario' | 'Técnico veterinario' | 'Recepcionista'
 
 export interface Veterinario {
   id: number
   nombre: string
-  especialidad: Especialidad
-  especies: Especie[]
+  cargo: Cargo
+  area: string // área o servicio principal (ej: "Cirugía menor")
+  especies: Especie[] // vacío si no atiende pacientes (recepción)
   experiencia: number // años
   descripcion: string
   dias: string[]
@@ -26,6 +23,6 @@ export interface Veterinario {
 /** Filtros de la página de equipo ('' = sin filtrar). */
 export interface FiltrosEquipo {
   texto: string
-  especialidad: '' | Especialidad
+  cargo: '' | Cargo
   especie: '' | Especie
 }

@@ -1,7 +1,7 @@
-/* ORGANISMO — Filtros de la página de equipo (búsqueda + especialidad + especie).
+/* ORGANISMO — Filtros de la página de equipo (búsqueda + cargo + especie).
    Presentacional: el estado de los filtros vive en EquipoPage. */
-import { ESPECIALIDADES, ESPECIES } from '../../data/veterinarios'
-import type { Especialidad, Especie, FiltrosEquipo as Filtros } from '../../types/veterinario'
+import { CARGOS, ESPECIES } from '../../data/veterinarios'
+import type { Cargo, Especie, FiltrosEquipo as Filtros } from '../../types/veterinario'
 
 export interface FiltrosEquipoProps {
   filtros: Filtros
@@ -23,16 +23,16 @@ export function FiltrosEquipo({ filtros, onCambio, onLimpiar }: FiltrosEquipoPro
         />
       </div>
       <div className="col-12 col-md-6 col-lg-3 campo mb-0">
-        <label htmlFor="equipo-especialidad">Especialidad</label>
+        <label htmlFor="equipo-cargo">Cargo</label>
         <select
-          id="equipo-especialidad"
-          value={filtros.especialidad}
-          onChange={(e) => onCambio({ ...filtros, especialidad: e.target.value as '' | Especialidad })}
+          id="equipo-cargo"
+          value={filtros.cargo}
+          onChange={(e) => onCambio({ ...filtros, cargo: e.target.value as '' | Cargo })}
         >
-          <option value="">Todas</option>
-          {ESPECIALIDADES.map((esp) => (
-            <option key={esp} value={esp}>
-              {esp}
+          <option value="">Todos</option>
+          {CARGOS.map((c) => (
+            <option key={c} value={c}>
+              {c}
             </option>
           ))}
         </select>

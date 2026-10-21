@@ -1,5 +1,5 @@
 /* =========================================================
-   veterinariosService — fuente de datos del equipo veterinario.
+   veterinariosService — fuente de datos del equipo de la clínica.
    Lectura y filtros sobre los datos simulados de data/veterinarios.ts.
 ========================================================= */
 import { VETERINARIOS } from '../data/veterinarios'
@@ -14,7 +14,7 @@ export function obtenerVeterinarioPorId(id: number): Veterinario | null {
 }
 
 /**
- * Filtra por nombre (texto), especialidad y especie atendida.
+ * Filtra por nombre (texto), cargo y especie atendida.
  * Un filtro vacío ('') no restringe nada. No modifica la lista original.
  */
 export function filtrarVeterinarios(lista: Veterinario[], filtros: FiltrosEquipo): Veterinario[] {
@@ -22,7 +22,7 @@ export function filtrarVeterinarios(lista: Veterinario[], filtros: FiltrosEquipo
   return lista.filter(
     (v) =>
       (!texto || v.nombre.toLowerCase().includes(texto)) &&
-      (!filtros.especialidad || v.especialidad === filtros.especialidad) &&
+      (!filtros.cargo || v.cargo === filtros.cargo) &&
       (!filtros.especie || v.especies.includes(filtros.especie)),
   )
 }

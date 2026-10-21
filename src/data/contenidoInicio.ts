@@ -17,7 +17,7 @@ export const SERVICIOS = [
 export const ESTADISTICAS = [
   { icono: '/img/icono-experiencia.png', hasta: 15, sufijo: '+', etiqueta: 'Años de experiencia' },
   { icono: '/img/icono-pacientes.png', hasta: 25, sufijo: '', etiqueta: 'Pacientes atendidos al día' },
-  { icono: '/img/icono-veterinarios.png', hasta: 6, sufijo: '', etiqueta: 'Médicos veterinarios' },
+  { icono: '/img/icono-veterinarios.png', hasta: 3, sufijo: '', etiqueta: 'Médicos veterinarios' },
   { icono: '/img/icono-atencion-carino.png', hasta: 100, sufijo: '%', etiqueta: 'Atención con cariño' },
 ]
 
