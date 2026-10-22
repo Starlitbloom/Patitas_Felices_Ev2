@@ -1,3 +1,4 @@
+
 /* =========================================================
    Mapa de rutas de la aplicación (React Router).
    Cada <Route> reemplaza a un archivo .html de la EP1.
@@ -21,6 +22,24 @@ import DashboardPage from '../paginas/admin/DashboardPage'
 import UsuariosPage from '../paginas/admin/UsuariosPage'
 import DetalleUsuarioPage from '../paginas/admin/DetalleUsuarioPage'
 import ReportesPage from '../paginas/admin/ReportesPage'
+
+/* =========================================================
+   NOSOTROS
+   Importamos nuestra página desarrollada en React.
+========================================================= */
+import NosotrosPage from '../paginas/NosotrosPage'
+
+/* =========================================================
+   NOVEDADES
+   Importamos nuestra página desarrollada en React.
+========================================================= */
+import NovedadesPage from '../paginas/NovedadesPage'
+
+/* =========================================================
+  DETALLE DE NOVEDADES
+   Importamos la página que muestra los artículos completos.
+========================================================= */
+import DetalleNovedadPage from '../paginas/DetalleNovedadPage'
 
 /** Atajo: envuelve una página que solo puede ver el administrador. */
 function SoloAdmin({ children }: { children: ReactNode }) {
@@ -48,8 +67,16 @@ export function AppRoutes() {
         />
 
         {/* Pendientes de migrar (contenido) */}
-        <Route path="/nosotros" element={<PaginaPendiente titulo="Nosotros" modulo="contenido" />} />
-        <Route path="/novedades" element={<PaginaPendiente titulo="Novedades" modulo="contenido" />} />
+
+        {/* NOSOTROS: página migrada a React */}
+        <Route path="/nosotros" element={<NosotrosPage />} />
+
+        {/* NOVEDADES: página migrada a React */}
+        <Route path="/novedades" element={<NovedadesPage />} />
+
+        {/* DETALLE DE NOVEDADES */}
+        <Route path="/detalle-novedad" element={<DetalleNovedadPage />} />
+
         <Route path="/contacto" element={<PaginaPendiente titulo="Contacto" modulo="contenido" />} />
 
         {/* Pendientes de migrar (mascotas) */}

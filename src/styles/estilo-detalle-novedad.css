@@ -1,0 +1,493 @@
+
+/* =========================================================
+   DETALLE DE NOVEDADES — PATITAS FELICES
+
+   Estilos exclusivos de los artículos.
+   1. Presentación del artículo
+   2. Imagen principal
+   3. Contenido del artículo
+   4. Consejo destacado
+   5. Tarjetas de recomendaciones
+   6. Botón volver a novedades
+   7. Diseño responsivo
+========================================================= */
+
+/* =========================================================
+   1. PRESENTACIÓN DEL ARTÍCULO
+========================================================= */
+
+.hero-detalle {
+  position: relative;
+  padding: 75px 20px 110px;
+  background: linear-gradient(
+    135deg,
+    #f8fcff 0%,
+    #d6ecfa 42%,
+    #eae2f6 72%,
+    #f5efe6 100%
+  );
+  overflow: hidden;
+}
+
+.hero-detalle .detalle-hero-contenido {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Burbujas decorativas */
+
+.hero-detalle .burbuja {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-detalle .burbuja-1 {
+  width: 210px;
+  height: 210px;
+  left: -70px;
+  bottom: -70px;
+  background: rgba(255, 214, 231, 0.65);
+}
+
+.hero-detalle .burbuja-2 {
+  width: 240px;
+  height: 240px;
+  right: -75px;
+  top: -65px;
+  background: rgba(230, 214, 247, 0.75);
+}
+
+/* Enlace volver */
+
+.hero-detalle .volver-novedades {
+  display: inline-flex;
+  margin-bottom: 24px;
+  color: #2e2e38;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.hero-detalle .volver-novedades:hover {
+  color: #72a9d0;
+  transform: translateX(-3px);
+}
+
+/* Categoría del artículo */
+
+.hero-detalle .categoria-articulo {
+  display: table;
+  margin: 0 auto 14px;
+  padding: 8px 17px;
+  background: #ffd6e7;
+  border-radius: 22px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Fecha */
+
+.hero-detalle .fecha-articulo {
+  margin-bottom: 15px;
+  color: #6f6f78;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Título */
+
+.hero-detalle h1 {
+  max-width: 850px;
+  margin: 0 auto 20px;
+  color: #2e2e38;
+  font-size: 48px;
+  line-height: 1.18;
+}
+
+/* Resumen */
+
+.hero-detalle .resumen-articulo {
+  max-width: 720px;
+  margin: 0 auto;
+  color: #6f6f78;
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+
+/* =========================================================
+   2. IMAGEN PRINCIPAL DEL ARTÍCULO
+========================================================= */
+
+.seccion-imagen-articulo {
+  position: relative;
+  margin-top: -65px;
+  padding: 0 20px 50px;
+}
+
+.seccion-imagen-articulo .imagen-articulo {
+  position: relative;
+  z-index: 5;
+  max-width: 980px;
+  height: 480px;
+  margin: 0 auto;
+  padding: 10px;
+  background: #ffffff;
+  border-radius: 32px;
+  box-shadow: 0 15px 38px rgba(46, 46, 56, 0.12);
+  overflow: hidden;
+}
+
+.seccion-imagen-articulo .imagen-articulo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+}
+
+
+/* =========================================================
+   3. CONTENIDO DEL ARTÍCULO
+========================================================= */
+
+.seccion-contenido-articulo {
+  padding: 25px 20px 65px;
+  background: linear-gradient(
+    #ffffff,
+    #fffcf9
+  );
+}
+
+/* Contenedor del texto */
+
+.seccion-contenido-articulo .articulo-contenido {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 48px 50px;
+  background: #ffffff;
+  border-radius: 30px;
+  box-shadow: 0 12px 32px rgba(46, 46, 56, 0.07);
+}
+
+/* Etiqueta */
+
+.articulo-contenido .etiqueta-contenido {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 7px 15px;
+  background: #d6ecfa;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Subtítulos */
+
+.articulo-contenido h2 {
+  margin-bottom: 18px;
+  color: #2e2e38;
+  font-size: 28px;
+  line-height: 1.3;
+}
+
+.articulo-contenido h2:not(:first-of-type) {
+  margin-top: 38px;
+}
+
+/* Párrafos */
+
+.articulo-contenido > p {
+  margin-bottom: 18px;
+  color: #6f6f78;
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+
+/* =========================================================
+   4. CONSEJO DESTACADO
+========================================================= */
+
+.articulo-contenido .consejo-destacado {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 35px 0;
+  padding: 25px 27px;
+  background: linear-gradient(
+    135deg,
+    #fff2f7,
+    #f2f8fd
+  );
+  border: 1px solid rgba(255, 214, 231, 0.75);
+  border-radius: 24px;
+}
+
+/* Ícono del consejo */
+
+.consejo-destacado .consejo-icono {
+  flex: 0 0 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffd6e7;
+  border-radius: 50%;
+  font-size: 25px;
+}
+
+/* Título pequeño */
+
+.consejo-destacado .consejo-texto span {
+  display: block;
+  margin-bottom: 6px;
+  color: #2e2e38;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Texto del consejo */
+
+.consejo-destacado .consejo-texto p {
+  margin: 0;
+  color: #6f6f78;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+
+/* =========================================================
+   5. TARJETAS DE RECOMENDACIONES — RECUERDA
+========================================================= */
+
+.articulo-contenido .puntos-importantes {
+  margin-top: 45px;
+  padding: 38px 32px;
+  background: linear-gradient(
+    135deg,
+    #fbf8ff,
+    #f7fbff
+  );
+  border-radius: 30px;
+}
+
+/* Título */
+
+.puntos-importantes h3 {
+  margin-bottom: 28px;
+  color: #2e2e38;
+  font-size: 23px;
+}
+
+/* Organización de tarjetas */
+
+.puntos-importantes .grid-puntos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* Tarjeta individual */
+
+.puntos-importantes .punto-item {
+  min-height: 250px;
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: #ffffff;
+  border-radius: 27px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(46, 46, 56, 0.07);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.puntos-importantes .punto-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(46, 46, 56, 0.11);
+}
+
+/* Íconos */
+
+.punto-item .punto-icono {
+  flex: 0 0 115px;
+  width: 115px;
+  height: 115px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  overflow: hidden;
+}
+
+.punto-item .punto-icono img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Texto de recomendación */
+
+.punto-item p {
+  max-width: 190px;
+  margin: 0;
+  color: #6f6f78;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   6. BOTÓN VOLVER A NOVEDADES
+========================================================= */
+
+.seccion-volver {
+  padding: 0 20px 70px;
+  background: #fffcf9;
+  text-align: center;
+}
+
+.seccion-volver .boton-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 21px;
+  background: #d6ecfa;
+  color: #2e2e38;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 24px;
+  transition: transform 0.3s, background 0.3s;
+}
+
+.seccion-volver .boton-volver:hover {
+  background: #ffd6e7;
+  transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   7. DISEÑO RESPONSIVO — TABLETS
+========================================================= */
+
+@media (max-width: 1050px) {
+
+  .hero-detalle h1 {
+    font-size: 39px;
+  }
+
+  .seccion-imagen-articulo .imagen-articulo {
+    height: 400px;
+  }
+
+  .seccion-contenido-articulo .articulo-contenido {
+    padding: 40px;
+  }
+
+  .puntos-importantes .grid-puntos {
+    grid-template-columns: 1fr;
+  }
+
+  .puntos-importantes .punto-item {
+    min-height: 220px;
+  }
+
+  .punto-item .punto-icono {
+    flex-basis: 110px;
+    width: 110px;
+    height: 110px;
+  }
+}
+
+
+/* =========================================================
+   8. DISEÑO RESPONSIVO — CELULARES
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .hero-detalle {
+    padding: 55px 16px 95px;
+  }
+
+  .hero-detalle h1 {
+    font-size: 31px;
+  }
+
+  .hero-detalle .resumen-articulo {
+    font-size: 15px;
+  }
+
+  .seccion-imagen-articulo {
+    margin-top: -50px;
+  }
+
+  .seccion-imagen-articulo .imagen-articulo {
+    height: 275px;
+    border-radius: 25px;
+  }
+
+  .seccion-imagen-articulo .imagen-articulo img {
+    border-radius: 19px;
+  }
+
+  .seccion-contenido-articulo .articulo-contenido {
+    padding: 32px 24px;
+    border-radius: 25px;
+  }
+
+  .articulo-contenido h2 {
+    font-size: 24px;
+  }
+
+  .articulo-contenido > p {
+    font-size: 14px;
+  }
+
+  .articulo-contenido .consejo-destacado {
+    padding: 22px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .articulo-contenido .puntos-importantes {
+    padding: 28px 18px;
+    border-radius: 25px;
+  }
+
+  .puntos-importantes h3 {
+    font-size: 21px;
+  }
+
+  .puntos-importantes .grid-puntos {
+    gap: 18px;
+  }
+
+  .puntos-importantes .punto-item {
+    min-height: 210px;
+    padding: 25px 20px;
+    border-radius: 24px;
+  }
+
+  .punto-item .punto-icono {
+    flex-basis: 105px;
+    width: 105px;
+    height: 105px;
+  }
+
+  .punto-item p {
+    max-width: 230px;
+  }
+}
