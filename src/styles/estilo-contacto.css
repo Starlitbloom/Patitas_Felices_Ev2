@@ -1,0 +1,920 @@
+
+/* =========================================================
+    CONTACTO
+   VETERINARIA PATITAS FELICES
+
+   CONTENIDO:
+   1. Hero Contacto
+   2. Tarjetas de información
+   3. Formulario de contacto
+   4. Texto informativo del formulario
+   5. Tarjeta "Tu mascota nos importa"
+   6. Campos y botón de envío
+   7. Ubicación y Google Maps
+   8. Diseño responsivo
+   
+========================================================= */
+
+/* =========================================================
+   1. HERO CONTACTO
+========================================================= */
+
+.hero-contacto {
+  position: relative;
+  padding: 70px 25px;
+  background: linear-gradient(
+    135deg,
+    #f8fcff 0%,
+    #d6ecfa 42%,
+    #e9e4f4 75%,
+    #f6efe6 100%
+  );
+  overflow: hidden;
+}
+
+/* Distribución del texto y la ilustración */
+
+.hero-contacto .hero-contacto-contenido {
+  position: relative;
+  z-index: 2;
+
+  width: 90%;
+  max-width: 1180px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: 55px;
+}
+
+/* Texto principal */
+
+.hero-contacto .hero-contacto-texto {
+  position: relative;
+  z-index: 3;
+  min-width: 0;
+}
+
+/* Etiqueta */
+
+.hero-contacto .etiqueta-contacto {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 9px 18px;
+
+  background: #ffd6e7;
+  border-radius: 30px;
+
+  color: #303044;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* Título */
+
+.hero-contacto .hero-contacto-texto h1 {
+  max-width: 620px;
+  margin: 0 0 22px;
+
+  color: #303044;
+  font-size: clamp(32px, 3.5vw, 47px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Descripción */
+
+.hero-contacto .hero-contacto-texto p {
+  max-width: 560px;
+  margin: 0;
+
+  color: #666677;
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+/* Contenedor de la ilustración */
+
+.hero-contacto .hero-contacto-imagen {
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 320px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Imagen corregida para evitar tamaño gigante */
+
+.hero-contacto .hero-contacto-imagen img {
+  position: relative;
+  z-index: 2;
+
+  display: block;
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  max-height: 340px;
+
+  object-fit: contain;
+
+  filter: drop-shadow(
+    0 12px 18px rgba(46, 46, 56, 0.08)
+  );
+}
+
+/* Círculo detrás de la imagen */
+
+.hero-contacto .circulo-hero-contacto {
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  background: rgba(255, 214, 231, 0.65);
+  border-radius: 50%;
+}
+
+/* Burbujas decorativas */
+
+.hero-contacto .burbuja-contacto {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-contacto .burbuja-contacto-1 {
+  width: 230px;
+  height: 230px;
+  left: -100px;
+  bottom: -110px;
+
+  background: rgba(230, 214, 247, 0.65);
+}
+
+.hero-contacto .burbuja-contacto-2 {
+  width: 200px;
+  height: 200px;
+  right: -80px;
+  top: -90px;
+
+  background: rgba(255, 214, 231, 0.65);
+}
+
+
+/* =========================================================
+   2. TARJETAS DE INFORMACIÓN DE CONTACTO
+========================================================= */
+
+.seccion-informacion-contacto {
+  padding: 80px 25px;
+  background: #ffffff;
+}
+
+.seccion-informacion-contacto > .contenedor {
+  width: 90%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* Título de sección */
+
+.seccion-informacion-contacto .titulo-seccion {
+  margin-bottom: 45px;
+  text-align: center;
+}
+
+.seccion-informacion-contacto .titulo-seccion h2 {
+  margin-bottom: 15px;
+  color: #303044;
+}
+
+.seccion-informacion-contacto .titulo-seccion p {
+  color: #666677;
+  line-height: 1.7;
+}
+
+/* Distribución de cuatro tarjetas */
+
+.seccion-informacion-contacto .grid-info-contacto {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+}
+
+/* Diseño de las tarjetas */
+
+.seccion-informacion-contacto .tarjeta-info-contacto {
+  min-height: 260px;
+  padding: 35px 20px 28px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 17px;
+
+  background: #ffffff;
+  border-radius: 25px;
+
+  box-shadow:
+    0 10px 28px rgba(46, 46, 56, 0.07);
+
+  text-align: center;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Animación */
+
+.seccion-informacion-contacto .tarjeta-info-contacto:hover {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 15px 35px rgba(46, 46, 56, 0.11);
+}
+
+/* Íconos circulares */
+
+.seccion-informacion-contacto .icono-info-contacto {
+  flex-shrink: 0;
+
+  width: 65px;
+  height: 65px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  color: #303044;
+  font-size: 29px;
+}
+
+/* Colores de los íconos */
+
+.seccion-informacion-contacto
+.tarjeta-correo .icono-info-contacto {
+  background: #cbeaff;
+}
+
+.seccion-informacion-contacto
+.tarjeta-telefono .icono-info-contacto {
+  background: #ffc9e2;
+}
+
+.seccion-informacion-contacto
+.tarjeta-ubicacion .icono-info-contacto {
+  background: #dfc0fa;
+}
+
+.seccion-informacion-contacto
+.tarjeta-horario .icono-info-contacto {
+  background: #f4eadb;
+}
+
+/* Títulos */
+
+.seccion-informacion-contacto .tarjeta-info-contacto h3 {
+  margin: 5px 0 0;
+
+  color: #303044;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Descripciones */
+
+.seccion-informacion-contacto .tarjeta-info-contacto p {
+  min-height: 45px;
+  margin: 0;
+
+  color: #666677;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Datos destacados en celeste */
+
+.seccion-informacion-contacto .dato-info-contacto {
+  display: block;
+  margin-top: auto;
+
+  color: #72a9d0;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.6;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   3. SECCIÓN DEL FORMULARIO
+========================================================= */
+
+.seccion-formulario-contacto {
+  padding: 85px 25px;
+
+  background: linear-gradient(
+    110deg,
+    #faf6ff 0%,
+    #f4faff 100%
+  );
+}
+
+.seccion-formulario-contacto > .contenedor {
+  width: 90%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* Dos columnas: información y formulario */
+
+.seccion-formulario-contacto .contacto-formulario-layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 0.85fr) minmax(0, 1.15fr);
+
+  align-items: center;
+  gap: 65px;
+}
+
+
+/* =========================================================
+   4. INFORMACIÓN A LA IZQUIERDA DEL FORMULARIO
+========================================================= */
+
+.contacto-formulario-intro {
+  min-width: 0;
+}
+
+/* Etiqueta Cuéntanos */
+
+.contacto-formulario-intro .contacto-etiqueta-intro {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 9px 17px;
+
+  background: #e6d6f7;
+  border-radius: 25px;
+
+  color: #72538f;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Título */
+
+.contacto-formulario-intro h2 {
+  max-width: 420px;
+  margin-bottom: 25px;
+
+  color: #303044;
+  font-size: clamp(32px, 3.3vw, 44px);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+/* Descripción */
+
+.contacto-formulario-intro > p {
+  max-width: 430px;
+  margin-bottom: 28px;
+
+  color: #666677;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+
+/* =========================================================
+   5. TARJETA "TU MASCOTA NOS IMPORTA"
+========================================================= */
+
+.contacto-aviso-mascota {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+
+  max-width: 400px;
+  padding: 22px 20px;
+
+  background: #ffffff;
+  border-radius: 23px;
+
+  box-shadow:
+    0 10px 26px rgba(46, 46, 56, 0.06);
+}
+
+/* Corazón */
+
+.contacto-aviso-icono {
+  flex: 0 0 50px;
+
+  width: 50px;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffd6e7;
+  border-radius: 50%;
+
+  color: #303044;
+  font-size: 26px;
+}
+
+/* Título y texto */
+
+.contacto-aviso-mascota h3 {
+  margin: 0 0 7px;
+
+  color: #303044;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.contacto-aviso-mascota p {
+  margin: 0;
+
+  color: #666677;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   6. FORMULARIO DE CONTACTO
+========================================================= */
+
+.seccion-formulario-contacto .formulario-contacto {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 25px 18px;
+
+  padding: 35px;
+
+  background: #ffffff;
+  border-radius: 30px;
+
+  box-shadow:
+    0 15px 35px rgba(46, 46, 56, 0.07);
+}
+
+/* Campos */
+
+.seccion-formulario-contacto .campo-contacto {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Etiquetas */
+
+.seccion-formulario-contacto .campo-contacto label {
+  color: #303044;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Inputs, select y textarea */
+
+.seccion-formulario-contacto .campo-contacto input,
+.seccion-formulario-contacto .campo-contacto select,
+.seccion-formulario-contacto .campo-contacto textarea {
+  width: 100%;
+  padding: 13px 15px;
+
+  background: #ffffff;
+
+  border: 1px solid #e1e1e9;
+  border-radius: 15px;
+
+  color: #303044;
+  font: inherit;
+  font-size: 14px;
+
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Enfoque del campo */
+
+.seccion-formulario-contacto .campo-contacto input:focus,
+.seccion-formulario-contacto .campo-contacto select:focus,
+.seccion-formulario-contacto .campo-contacto textarea:focus {
+  outline: none;
+
+  border-color: #72a9d0;
+
+  box-shadow:
+    0 0 0 3px rgba(114, 169, 208, 0.15);
+}
+
+/* Mensaje ocupa dos columnas */
+
+.seccion-formulario-contacto .campo-mensaje {
+  grid-column: 1 / -1;
+}
+
+.seccion-formulario-contacto .campo-contacto textarea {
+  min-height: 125px;
+  resize: vertical;
+}
+
+/* Errores de validación */
+
+.seccion-formulario-contacto .error-contacto {
+  color: #b42342;
+  font-size: 12px;
+}
+
+.seccion-formulario-contacto [aria-invalid="true"] {
+  border-color: #d64a65;
+}
+
+/* Botón de envío */
+
+.seccion-formulario-contacto .acciones-contacto {
+  grid-column: 1 / -1;
+
+  display: flex;
+  justify-content: stretch;
+}
+
+.seccion-formulario-contacto .boton-enviar-contacto {
+  width: 100%;
+  padding: 15px 25px;
+
+  background: #72a9d0;
+  border: none;
+  border-radius: 30px;
+
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 20px rgba(114, 169, 208, 0.17);
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* Animación del botón */
+
+.seccion-formulario-contacto .boton-enviar-contacto:hover {
+  background: #5b98c4;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Accesibilidad con teclado */
+
+.seccion-formulario-contacto .boton-enviar-contacto:focus-visible {
+  outline: 3px solid #72a9d0;
+  outline-offset: 3px;
+}
+
+/* Mensaje de validación exitosa */
+
+.seccion-formulario-contacto .mensaje-exito-contacto {
+  grid-column: 1 / -1;
+
+  margin: 0;
+  padding: 18px 20px;
+
+  background: #e6f8ed;
+  border-radius: 16px;
+
+  color: #246342;
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+
+/* =========================================================
+   7. UBICACIÓN Y GOOGLE MAPS
+========================================================= */
+
+.seccion-ubicacion-contacto {
+  padding: 85px 25px;
+  background: #fffaf6;
+}
+
+.seccion-ubicacion-contacto > .contenedor {
+  width: 90%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* Título */
+
+.seccion-ubicacion-contacto .titulo-seccion {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* Información y mapa */
+
+.seccion-ubicacion-contacto .ubicacion-contacto-contenido {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 0.8fr) minmax(0, 1.2fr);
+
+  align-items: stretch;
+  gap: 30px;
+}
+
+/* Información de ubicación */
+
+.seccion-ubicacion-contacto .ubicacion-contacto-info {
+  padding: 35px 30px;
+
+  background: #ffffff;
+  border-radius: 27px;
+
+  box-shadow:
+    0 10px 30px rgba(46, 46, 56, 0.07);
+}
+
+/* Icono */
+
+.seccion-ubicacion-contacto .ubicacion-contacto-icono {
+  width: 65px;
+  height: 65px;
+  margin-bottom: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #e6d6f7;
+  border-radius: 50%;
+
+  font-size: 30px;
+}
+
+/* Títulos */
+
+.seccion-ubicacion-contacto .ubicacion-contacto-info h3 {
+  margin-bottom: 17px;
+
+  color: #303044;
+  font-size: 23px;
+}
+
+/* Descripciones */
+
+.seccion-ubicacion-contacto .ubicacion-contacto-info p {
+  margin-bottom: 15px;
+
+  color: #666677;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+/* Dirección destacada */
+
+.seccion-ubicacion-contacto .ubicacion-contacto-direccion {
+  color: #303044;
+  font-weight: 700;
+}
+
+/* Contenedor del mapa */
+
+.seccion-ubicacion-contacto .ubicacion-contacto-mapa {
+  min-height: 360px;
+
+  overflow: hidden;
+
+  background: #eaf4fc;
+  border-radius: 27px;
+
+  box-shadow:
+    0 10px 30px rgba(46, 46, 56, 0.07);
+}
+
+/* Google Maps */
+
+.seccion-ubicacion-contacto .ubicacion-contacto-mapa iframe {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+
+  border: 0;
+}
+
+/* Mensaje cuando no existe un mapa */
+
+.seccion-ubicacion-contacto .ubicacion-contacto-sin-mapa {
+  min-height: 360px;
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+
+  color: #666677;
+  text-align: center;
+}
+
+.seccion-ubicacion-contacto .ubicacion-contacto-sin-mapa span {
+  font-size: 55px;
+}
+
+.seccion-ubicacion-contacto .ubicacion-contacto-sin-mapa p {
+  margin: 0;
+}
+
+
+/* =========================================================
+   8. DISEÑO RESPONSIVO — TABLETS
+========================================================= */
+
+@media (max-width: 992px) {
+
+  /* Hero */
+
+  .hero-contacto .hero-contacto-contenido {
+    gap: 30px;
+  }
+
+  .hero-contacto .hero-contacto-imagen img {
+    max-width: 290px;
+  }
+
+  /* Tarjetas en dos columnas */
+
+  .seccion-informacion-contacto .grid-info-contacto {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Formulario en una columna */
+
+  .seccion-formulario-contacto .contacto-formulario-layout {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .contacto-formulario-intro h2 {
+    max-width: 100%;
+  }
+
+  .contacto-formulario-intro > p {
+    max-width: 650px;
+  }
+
+  /* Mapa debajo de la información */
+
+  .seccion-ubicacion-contacto .ubicacion-contacto-contenido {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================================================
+   9. DISEÑO RESPONSIVO — CELULARES
+========================================================= */
+
+@media (max-width: 768px) {
+
+  /* Hero */
+
+  .hero-contacto {
+    padding: 50px 20px;
+  }
+
+  .hero-contacto .hero-contacto-contenido {
+    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .hero-contacto .hero-contacto-texto {
+    text-align: center;
+  }
+
+  .hero-contacto .hero-contacto-texto h1 {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 34px;
+  }
+
+  .hero-contacto .hero-contacto-texto p {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 15px;
+  }
+
+  .hero-contacto .hero-contacto-imagen {
+    min-height: 250px;
+  }
+
+  .hero-contacto .hero-contacto-imagen img {
+    max-width: 260px;
+  }
+
+  .hero-contacto .circulo-hero-contacto {
+    width: 230px;
+    height: 230px;
+  }
+
+  /* Secciones */
+
+  .seccion-informacion-contacto,
+  .seccion-formulario-contacto,
+  .seccion-ubicacion-contacto {
+    padding: 55px 18px;
+  }
+
+  /* Formulario */
+
+  .contacto-formulario-intro h2 {
+    font-size: 32px;
+  }
+
+  .seccion-formulario-contacto .formulario-contacto {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 28px 22px;
+  }
+
+  .seccion-formulario-contacto .campo-mensaje,
+  .seccion-formulario-contacto .acciones-contacto,
+  .seccion-formulario-contacto .mensaje-exito-contacto {
+    grid-column: 1;
+  }
+
+}
+
+
+/* =========================================================
+   10. PANTALLAS PEQUEÑAS
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .hero-contacto .hero-contacto-texto h1 {
+    font-size: 29px;
+  }
+
+  .hero-contacto .etiqueta-contacto {
+    font-size: 12px;
+  }
+
+  /* Tarjetas en una columna */
+
+  .seccion-informacion-contacto .grid-info-contacto {
+    grid-template-columns: 1fr;
+  }
+
+  .seccion-informacion-contacto .tarjeta-info-contacto {
+    min-height: 220px;
+  }
+
+  /* Formulario */
+
+  .contacto-formulario-intro h2 {
+    font-size: 29px;
+  }
+
+  .contacto-aviso-mascota {
+    padding: 18px;
+  }
+
+  .seccion-formulario-contacto .formulario-contacto {
+    padding: 25px 18px;
+  }
+
+  /* Ubicación */
+
+  .seccion-ubicacion-contacto .ubicacion-contacto-info {
+    padding: 28px 22px;
+  }
+
+}

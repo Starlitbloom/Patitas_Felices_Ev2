@@ -34,15 +34,18 @@ import NosotrosPage from '../paginas/NosotrosPage'
 
 /* =========================================================
    NOVEDADES
-   Importamos nuestra página desarrollada en React.
 ========================================================= */
 import NovedadesPage from '../paginas/NovedadesPage'
 
 /* =========================================================
   DETALLE DE NOVEDADES
-   Importamos la página que muestra los artículos completos.
 ========================================================= */
 import DetalleNovedadPage from '../paginas/DetalleNovedadPage'
+
+/* =========================================================
+   CONTACTO
+========================================================= */
+import ContactoPage from '../paginas/ContactoPage'
 
 /** Atajo: envuelve una página que solo puede ver el administrador. */
 function SoloAdmin({ children }: { children: ReactNode }) {
@@ -80,7 +83,8 @@ export function AppRoutes() {
         {/* DETALLE DE NOVEDADES */}
         <Route path="/detalle-novedad" element={<DetalleNovedadPage />} />
 
-        <Route path="/contacto" element={<PaginaPendiente titulo="Contacto" modulo="contenido" />} />
+        {/* CONTACTO: página migrada a React */}
+        <Route path="/contacto" element={<ContactoPage />} />
 
         {/* MASCOTAS */}
         <Route path="/mascotas" element={<RutaProtegida><MisMascotasPage /></RutaProtegida>} />
