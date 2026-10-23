@@ -17,6 +17,9 @@ import PerfilPage from '../paginas/PerfilPage'
 import PaginaPendiente from '../paginas/PaginaPendiente'
 import NoEncontradoPage from '../paginas/NoEncontradoPage'
 import EquipoPage from '../paginas/EquipoPage'
+import MisMascotasPage from '../paginas/MisMascotasPage'
+import DetalleMascotaPage from '../paginas/DetalleMascotaPage'
+import MascotasAdminPage from '../paginas/admin/MascotasPage'
 import DetalleVeterinarioPage from '../paginas/DetalleVeterinarioPage'
 import DashboardPage from '../paginas/admin/DashboardPage'
 import UsuariosPage from '../paginas/admin/UsuariosPage'
@@ -79,8 +82,9 @@ export function AppRoutes() {
 
         <Route path="/contacto" element={<PaginaPendiente titulo="Contacto" modulo="contenido" />} />
 
-        {/* Pendientes de migrar (mascotas) */}
-        <Route path="/mascotas" element={<PaginaPendiente titulo="Mis mascotas" modulo="mascotas" />} />
+        {/* MASCOTAS */}
+        <Route path="/mascotas" element={<RutaProtegida><MisMascotasPage /></RutaProtegida>} />
+        <Route path="/mascotas/:id" element={<RutaProtegida><DetalleMascotaPage /></RutaProtegida>} />
 
         {/* Pendientes de migrar (citas) */}
         <Route path="/solicitar-cita" element={<PaginaPendiente titulo="Solicitar cita" modulo="citas" />} />
@@ -104,7 +108,7 @@ export function AppRoutes() {
         <Route path="usuarios" element={<SoloAdmin><UsuariosPage /></SoloAdmin>} />
         <Route path="usuarios/:id" element={<SoloAdmin><DetalleUsuarioPage /></SoloAdmin>} />
         <Route path="reportes" element={<SoloAdmin><ReportesPage /></SoloAdmin>} />
-        <Route path="mascotas" element={<PaginaPendiente titulo="Mascotas" modulo="mascotas" admin />} />
+        <Route path="mascotas" element={<MascotasAdminPage />} />
         <Route path="citas" element={<PaginaPendiente titulo="Citas" modulo="citas" admin />} />
       </Route>
     </Routes>

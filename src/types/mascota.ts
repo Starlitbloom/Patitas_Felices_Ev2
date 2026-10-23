@@ -25,8 +25,8 @@ export interface Mascota{
     edad: string
     sexo: Sexo
     peso: string
-    dueno: string
-    correoDueno: string
+    dueño: string
+    correoDueño: string
     
     /** False mientras falten raza/sexo/peso/foto */
     completo : boolean

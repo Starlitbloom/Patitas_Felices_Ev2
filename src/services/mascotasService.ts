@@ -44,7 +44,7 @@ export function listarMascotas(): Mascota[] {
 /** Mascotas de un dueño/a (lo usa la vista pública "Mis mascotas", filtrada por sesión). */
 export function listarMascotasPorDueno(correo: string): Mascota[] {
   const objetivo = correo.trim().toLowerCase()
-  return listarMascotas().filter((m) => m.correoDueno.trim().toLowerCase() === objetivo)
+  return listarMascotas().filter((m) => m.correoDueño.trim().toLowerCase() === objetivo)
 }
 
 export function obtenerMascotaPorId(id: string): Mascota | null {

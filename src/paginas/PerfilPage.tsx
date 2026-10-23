@@ -104,7 +104,7 @@ export default function PerfilPage() {
             iconoItem="🐾"
             items={mascotas}
             textoVacio="Aún no tienes mascotas registradas."
-            enlace={{ to: '/mascotas', texto: 'Agregar mascota' }}
+            enlace={{ to: '/solicitar-cita', texto: 'Agregar mascota' }}
           />
         </div>
 
