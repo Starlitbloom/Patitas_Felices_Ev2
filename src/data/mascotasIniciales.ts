@@ -1,0 +1,180 @@
+import type { Mascota, RegistroClinico, RegistroVacuna} from '../types/mascota'
+
+export const MASCOTAS_INICIALES: Mascota[] = [
+    {
+        id: 'rocky',
+        nombre: 'Rocky',
+        especie: 'Perro',
+        raza: 'Golden Retriever',
+        edad: '3 años',
+        sexo: 'Macho',
+        peso: '28 kg',
+        dueno: 'Maria Calfileo Ceballos',
+        correoDueno: 'ma.calfileo@duoc.cl',
+        completo: true,
+        imagen: '/img/golden.jpg',
+        estado: 'al-dia',
+        descripcion: 'Rocky es un perro tranquilo y juguetón. Mantiene sus controles y vacunas al día, sin antecedentes de alergias conocidas.',
+    },
+    {
+        id: 'luna',
+        nombre: 'Luna',
+        especie: 'Gato',
+        raza: 'Común europeo',
+        edad: '2 años',
+        sexo: 'Hembra',
+        peso: '4 kg',
+        dueno: 'Maria Calfileo Ceballos',
+        correoDueno: 'ma.calfileo@duoc.cl',
+        completo: true,
+        imagen: '/img/gataeuropea.jpg',
+        estado: 'pendiente',
+        descripcion: 'Luna es una gata independiente y curiosa. Le falta aplicarse el refuerzo anual de su calendario de vacunación.',
+    },
+    {
+        id: 'max',
+        nombre: 'Max',
+        especie: 'Perro',
+        raza: 'Labrador',
+        edad: '5 años',
+        sexo: 'Macho',
+        peso: '32 kg',
+        dueno: 'Rocio Cruces',
+        correoDueno: 'ro.cruces@duoc.cl',
+        completo: true,
+        imagen: '/img/labrador.jpg',
+        estado: 'tratamiento',
+        descripcion: 'Max se encuentra en tratamiento por una dermatitis leve. Requiere control de seguimiento en las próximas semanas.',
+    },
+    {
+        id: 'michi',
+        nombre: 'Michi',
+        especie: 'Gato',
+        raza: 'Persa',
+        edad: '1 año',
+        sexo: 'Hembra',
+        peso: '3.2 kg',
+        dueno: 'Maria Calfileo Ceballos',
+        correoDueno: 'ma.calfileo@duoc.cl',
+        completo: true,
+        imagen: '/img/gatopersa.jpg',
+        estado: 'al-dia',
+        descripcion: 'Michi es una gatita joven y sana. Al ser de raza persa, se recomienda vigilar su cuidado respiratorio y ocular.',
+    },
+    {
+        id: 'bella',
+        nombre: 'Bella',
+        especie: 'Conejo',
+        raza: 'Toy enano',
+        edad: '3 meses',
+        sexo: 'Hembra',
+        peso: '1.1 kg',
+        dueno: 'Rocio Cruces',
+        correoDueno: 'ro.cruces@duoc.cl',
+        completo: true,
+        imagen: '/img/conejo.jpg',
+        estado: 'al-dia',
+        descripcion: 'Bella es una coneja joven y sana. Al ser de raza toy enano, se recomienda vigilar su cuidado dental y digestivo.',
+    },
+    {
+        id: 'nicanor',
+        nombre: 'Nicanor',
+        especie: 'Ave',
+        raza: 'Cacatúa',
+        edad: '1 año',
+        sexo: 'Macho',
+        peso: '800 gr',
+        dueno: 'Rocio Cruces',
+        correoDueno: 'ro.cruces@duoc.cl',
+        completo: true,
+        imagen: '/img/Cacatua.jpg',
+        estado: 'al-dia',
+        descripcion:'Nicanor es un loro curioso y activo. No requiere vacunas dentro del protocolo actual de la clínica; se recomienda control veterinario aviar cada 6 meses.',
+    },
+]
+
+/** Historial clínico por mascota: fecha, motivo, diagnóstico y tratamiento de cada atención */
+export const HISTORIALES_INICIALES: Record<string, RegistroClinico[]>={
+    rocky : [
+        {
+            fecha: '12 agosto 2026',
+            motivo: 'Control anual',
+            diagnostico: 'Paciente sano, sin hallazgos relevantes.',
+            tratamiento: 'Sin medicación. Se indica Condrovet forte (condroitín + glucosamina) como suplemento articular preventivo.',
+            veterinario: 'Dra. Paula Vidal',
+        },
+        {
+            fecha: '03 marzo 2026',
+            motivo: 'Vómitos ocasionales',
+            diagnostico: 'Gastritis leve, probablemente alimentaria.',
+            tratamiento: 'Omeprazol 10mg vet cada 24h por 5 días y dieta blanda por 3 días.',
+            veterinario: 'Dr. Sebastian Jimenez',
+        },
+    ],
+    luna: [
+        {
+            fecha: '20 julio 2026',
+            motivo: 'Control de rutina',
+            diagnostico: 'Paciente sana. Pendiente refuerzo de vacuna anual.',
+            tratamiento: 'Se agenda vacuna triple felina (Felocell CVR) para el próximo control.',
+            veterinario: 'Dra. Paula Vidal'
+        },
+    ],
+    max: [
+        {
+            fecha: '28 agosto 2026',
+            motivo: 'Picazón y enrojecimiento en la piel',
+            diagnostico: 'Dermatitis alérgica leve.',
+            tratamiento: 'Apoquel 16mg (oclacitinib) una vez al día y shampoo Malaseb dos veces por semana durante 10 días.',
+            veterinario: 'Dr. Ignacio Rojas',
+        },
+        {
+            fecha: '14 agosto 2026',
+            motivo: 'Chequeo previo a tratamiento',
+            diagnostico: 'Confirmación de irritación cutánea en zona abdominal.',
+            tratamiento: 'Se deriva a control dermatológico y se solicita hemograma completo.',
+            veterinario: 'Dra. Marta López',
+        },
+    ],
+    michi: [
+        {
+            fecha: '02 junio 2026',
+            motivo: 'Primer control post adopción',
+            diagnostico: 'Cachorra sana, buen desarrollo.',
+            tratamiento: 'Inicio de plan de vacunación con Nobivac Rabies y desparasitación interna felina.',
+            veterinario: 'Dr. Eduardo Caceres',
+        },
+    ],
+    bella: [
+        {
+            fecha: '18 agosto 2026',
+            motivo: 'Control dental de rutina',
+            diagnostico: 'Sin sobrecrecimiento dentario, buen estado general.',
+            tratamiento: 'Se recomienda dieta rica en fibra (heno) para desgaste natural de dientes.',
+            veterinario: 'Dra. Marta López',
+        },
+    ],
+    nicanor: [
+        {
+            fecha: '05 agosto 2026',
+            motivo: 'Chequeo aviar general',
+            diagnostico: 'Ave activa, plumaje en buen estado, sin signos de enfermedad respiratoria.',
+            tratamiento: 'Se indica suplemento vitamínico y control en 6 meses.',
+            veterinario: 'Dr. Sebastian Jimenez',
+        },
+    ],
+}
+
+/**Calendario de vacunas por mascota. Michi y Bella/Nicanor sin registro = aún no les toca o no aplica */
+export const VACUNAS_INICIALES: Record<string, RegistroVacuna[]> = {
+    rocky: [
+        { vacuna: 'Vacuna sextuple canina (VA002', fecha: '10 enero 2026', proximoRefuerzo: '10 enero 2027', estado: 'al-dia'},
+        { vacuna: 'Vacuna antirrábica canina (VA001)', fecha: '15 enero 2026', proximoRefuerzo: '15 enero 2027', estado: 'al-dia' },
+    ],
+    luna: [{ vacuna: 'Vacuna triple felina (VA004)', fecha: '05 julio 2025', proximoRefuerzo: '05 julio 2026', estado: 'atrasada' }],
+    max: [
+        { vacuna: 'Vacuna sextuple canina (VA002)', fecha: '20 mayo 2026', proximoRefuerzo: '20 mayo 2027', estado: 'al-dia' },
+        { vacuna: 'Vacuna Bordetella canina (VA005)', fecha: '18 septiembre 2026', proximoRefuerzo: '18 septiembre 2027', estado: 'proxima' },
+    ],
+    michi: [{ vacuna: 'Vacuna bivalente felina (VA003)', fecha: '02 junio 2026', proximoRefuerzo: '02 diciembre 2026', estado: 'proxima' }],
+}

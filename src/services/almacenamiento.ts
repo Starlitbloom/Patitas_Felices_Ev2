@@ -10,6 +10,9 @@ export const CLAVES = {
   usuarios: 'patitasFelices_usuarios',
   sesion: 'patitasFelices_sesion',
   mascotas: 'patitasFelices_mascotas',
+  historialesMascotas: 'patitasFelices_historiales',
+  vacunasMascotas: 'patitasFelices_vacunas',
+  favoritosMascotas: 'patitasFelices_favoritosMascotas',
   citas: 'patitasFelices_citas',
   solicitudesMascotas: 'patitasFelices_solicitudesMascotas',
 } as const

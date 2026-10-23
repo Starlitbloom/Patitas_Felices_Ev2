@@ -13,8 +13,10 @@ import './styles/ajustes-react.css'
 
 import App from './App'
 import { asegurarDatosIniciales } from './services/usuariosService'
+import { asegurarDatosInicialesMascotas } from './services/mascotasService'
 
 asegurarDatosIniciales() // carga los usuarios de ejemplo y las cuentas fijas (admins y recepcionista)
+asegurarDatosInicialesMascotas() // carga mascotas, historiales y vacunas de ejemplo
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
