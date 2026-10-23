@@ -15,7 +15,7 @@ export interface TarjetaMascotaProps {
 }
 
 export function TarjetaMascota({ mascota, favorita, onAlternarFavorita }: TarjetaMascotaProps) {
-  const { id, nombre, especie, raza, dueno, imagen, estado, completo } = mascota
+  const { id, nombre, especie, raza, dueño, imagen, estado, completo } = mascota
 
   return (
     <article className="tarjeta-mascota h-100">
@@ -47,7 +47,7 @@ export function TarjetaMascota({ mascota, favorita, onAlternarFavorita }: Tarjet
           {especie}
           {raza ? ` · ${raza}` : ''}
         </p>
-        <p className="dueno">Dueño/a: {dueno}</p>
+        <p className="dueno">Dueño/a: {dueño}</p>
         <Link to={`/mascotas/${id}`}>Ver ficha completa →</Link>
       </div>
     </article>

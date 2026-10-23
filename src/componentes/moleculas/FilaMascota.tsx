@@ -10,13 +10,13 @@ export interface FilaMascotaProps {
 }
 
 export function FilaMascota({ mascota, onEditar, onEliminar }: FilaMascotaProps) {
-  const { nombre, especie, raza, dueno, estado } = mascota
+  const { nombre, especie, raza, dueño, estado } = mascota
   return (
     <tr>
       <td>{nombre}</td>
       <td>{especie}</td>
       <td>{raza || '—'}</td>
-      <td>{dueno}</td>
+      <td>{dueño}</td>
       <td>
         <span className={`estado-badge estado-${estado}`}>{TEXTO_ESTADO_MASCOTA[estado]}</span>
       </td>

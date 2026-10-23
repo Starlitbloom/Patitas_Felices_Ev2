@@ -37,7 +37,7 @@ export default function DetalleMascotaPage() {
     )
   }
 
-  const { nombre, especie, raza, edad, sexo, peso, dueno, imagen, estado, descripcion } = mascota
+  const { nombre, especie, raza, edad, sexo, peso, dueño, imagen, estado, descripcion } = mascota
 
   const manejarFavorita = () => setFavorita(alternarFavorita(mascota.id))
 
@@ -95,7 +95,7 @@ export default function DetalleMascotaPage() {
                   </li>
                   <li>
                     <strong>Dueño/a</strong>
-                    {dueno}
+                    {dueño}
                   </li>
                 </ul>
                 <p className="detalle-mascota-descripcion">{descripcion}</p>
