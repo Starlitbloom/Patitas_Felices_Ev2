@@ -79,3 +79,31 @@ export interface RegistroVacuna{
     proximoRefuerzo: string
     estado: EstadoVacuna
 }
+
+
+/* =========================================================
+   SOLICITUDES DE CAMBIO
+   El dueño/a propone cambios sobre una mascota ya completa y
+   el personal los aprueba o rechaza desde el panel admin.
+========================================================= */
+
+export type EstadoSolicitud = 'pendiente' | 'aprobada' | 'rechazada'
+
+/** Datos que el dueño/a puede proponer cambiar. */
+export interface CambiosSolicitud {
+  raza: string
+  sexo: Sexo
+  peso: string
+  imagen: string
+  descripcion: string
+}
+
+export interface SolicitudCambio {
+  id: string
+  mascotaId: string
+  correoSolicitante: string
+  cambios: CambiosSolicitud
+  estado: EstadoSolicitud
+  fechaSolicitud: string // ISO
+  fechaResolucion: string | null
+}

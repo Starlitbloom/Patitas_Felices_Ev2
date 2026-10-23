@@ -14,7 +14,7 @@ export interface GrillaMascotasProps {
 
 export function GrillaMascotas({ mascotas, favoritos, onAlternarFavorita }: GrillaMascotasProps) {
   if (mascotas.length === 0) {
-    return <p className="grid-mascotas-vacio">No encontramos mascotas con esos filtros. Prueba con otra combinación.</p>
+    return <p className="grid-mascotas-vacio">No hay mascotas registradas para este filtro.</p>
   }
 
   return (

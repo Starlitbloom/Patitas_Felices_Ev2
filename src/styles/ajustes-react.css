@@ -18,7 +18,17 @@ a {
 button {
     font-family: inherit;
 }
+/* Bootstrap deja los títulos en peso 500; en la EP1 eran bold */
+h1,
+h2,
+h3 {
+    font-weight: 700;
+}
 
+/* Los botones del sitio no llevan el borde nativo del navegador (en la EP1 eran enlaces) */
+button.boton-principal {
+    border: none;
+}
 .pagina {
     min-height: 100vh;
     display: flex;

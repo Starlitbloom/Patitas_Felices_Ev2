@@ -8,6 +8,9 @@ import { alternarFavorita, filtrarMascotas, listarMascotasPorDueno, obtenerFavor
 import { FiltrosMascotas } from '../componentes/organismos/FiltrosMascotas'
 import { GrillaMascotas } from '../componentes/organismos/GrillaMascotas'
 import { TituloSeccion } from '../componentes/moleculas/TituloSeccion'
+import { CuidadosPorEspecie } from '../componentes/organismos/CuidadosPorEspecie'
+import { VideoCuidados } from '../componentes/organismos/VideoCuidados'
+import { HeroMascotas } from '../componentes/organismos/HeroMascotas'
 
 const SIN_FILTROS: Filtros = { texto: '', especie: '', soloFavoritas: false }
 
@@ -28,13 +31,16 @@ export default function MisMascotasPage() {
   }
 
   return (
-    <main className="seccion-mascotas">
-      <div className="contenedor">
-        <TituloSeccion
-          etiqueta="Mis pacientes"
-          titulo="Mis mascotas"
-          descripcion="Revisa el estado de salud, la ficha clínica y las vacunas de tus mascotas registradas en Patitas Felices."
-        />
+    <main className="seccion-mascotas seccion-mascotas--con-hero">
+      <HeroMascotas />
+      <section className="contenedor catalogo-mascotas" id="catalogo-mascotas">
+        <div className="titulo-seccion-mascotas">
+          <TituloSeccion
+            etiqueta="Tus mascotas"
+            titulo="Mascotas registradas"
+            descripcion="Aquí encontrarás las mascotas asociadas a tu cuenta. Revisa su ficha clínica, historial, vacunas y controles."
+          />
+        </div>
 
         <FiltrosMascotas filtros={filtros} onCambio={setFiltros} onLimpiar={() => setFiltros(SIN_FILTROS)} />
 
@@ -43,7 +49,9 @@ export default function MisMascotasPage() {
         </p>
 
         <GrillaMascotas mascotas={visibles} favoritos={favoritos} onAlternarFavorita={manejarFavorita} />
-      </div>
+      </section>
+      <CuidadosPorEspecie />
+      <VideoCuidados />
     </main>
   )
 }

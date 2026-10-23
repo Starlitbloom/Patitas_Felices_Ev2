@@ -1,15 +1,18 @@
 /* ORGANISMO — Formulario de mascota (crear/editar), mismo
    componente para los dos modos del panel admin. */
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import type { Especie, Mascota, Sexo } from '../../types/mascota'
 import { ESPECIES_MASCOTA, ESTADOS_MASCOTA, TEXTO_ESTADO_MASCOTA } from '../../types/mascota'
 import { hayErrores, validarRequerido } from '../../utils/validaciones'
+import { redimensionarImagen, validarArchivoAvatar } from '../../utils/imagen'
+import { MensajeError } from '../atomos/MensajeError'
 import { CampoFormulario } from '../moleculas/CampoFormulario'
 import { CampoSelector } from '../moleculas/CampoSelector'
 import { Boton } from '../atomos/Boton'
 
 export type ModoFormularioMascota = 'crear' | 'editar'
 
+/* Datos que entrega el formulario a la página cuando todo es válido */
 export interface DatosFormularioMascota {
   nombre: string
   especie: Especie | ''
@@ -24,17 +27,28 @@ export interface DatosFormularioMascota {
   descripcion: string
 }
 
+/* Mientras se escribe, el estado puede estar sin elegir ('') */
+type DatosEdicion = Omit<DatosFormularioMascota, 'estado'> & { estado: Mascota['estado'] | '' }
+
+/* Un mensaje de error (o null) por cada campo */
 type Errores = Partial<Record<keyof DatosFormularioMascota, string | null>>
+
+/* Error que devuelve la página si el servicio rechaza los datos */
 export type ErrorFormularioMascota = { campo: string; mensaje: string }
+
+/* Foto que se usa cuando no se sube ni se pega ninguna */
+const IMAGEN_GENERICA = '/img/vision.png'
 
 export interface FormularioMascotaProps {
   modo: ModoFormularioMascota
+  /* Datos de la mascota a editar (en modo crear no se pasa nada) */
   valoresIniciales?: Partial<Mascota>
   onSubmit: (datos: DatosFormularioMascota) => ErrorFormularioMascota | void
   onCancelar?: () => void
 }
 
-const VALORES_VACIOS: DatosFormularioMascota = {
+/* Formulario en blanco: así empieza el modo "crear" */
+const VALORES_VACIOS: DatosEdicion = {
   nombre: '',
   especie: '',
   raza: '',
@@ -44,27 +58,34 @@ const VALORES_VACIOS: DatosFormularioMascota = {
   dueño: '',
   correoDueño: '',
   imagen: '',
-  estado: 'al-dia',
+  estado: '',
   descripcion: '',
 }
 
-export function validarFormularioMascota(d: DatosFormularioMascota): Errores {
+/* Campos obligatorios: devuelve el error de cada uno (null si está bien) */
+export function validarFormularioMascota(d: DatosEdicion): Errores {
   return {
     nombre: validarRequerido(d.nombre, 'El nombre', 40),
     especie: d.especie ? null : 'Selecciona una especie.',
     raza: validarRequerido(d.raza, 'La raza', 40),
     edad: validarRequerido(d.edad, 'La edad', 20),
     dueño: validarRequerido(d.dueño, 'El nombre del dueño/a', 60),
+    estado: d.estado ? null : 'Selecciona un estado.',
   }
 }
 
 export function FormularioMascota({ modo, valoresIniciales = {}, onSubmit, onCancelar }: FormularioMascotaProps) {
-  const [datos, setDatos] = useState<DatosFormularioMascota>({
+  /* Valores de los campos: vacíos al crear, con los datos de la mascota al editar */
+  const [datos, setDatos] = useState<DatosEdicion>({
     ...VALORES_VACIOS,
     ...valoresIniciales,
   })
   const [errores, setErrores] = useState<Errores>({})
 
+  /* Referencia al input de archivo, para poder vaciarlo desde el código */
+  const inputArchivo = useRef<HTMLInputElement>(null)
+
+  /* Actualiza un campo de texto y borra su error */
   const cambiar =
     (campo: keyof DatosFormularioMascota) =>
     (valor: string): void => {
@@ -72,18 +93,47 @@ export function FormularioMascota({ modo, valoresIniciales = {}, onSubmit, onCan
       setErrores((prev) => ({ ...prev, [campo]: null }))
     }
 
+  /* Al enviar: valida, y si todo está bien entrega los datos a la página */
   const enviar = (e: FormEvent) => {
     e.preventDefault()
     const nuevosErrores = validarFormularioMascota(datos)
     setErrores(nuevosErrores)
     if (hayErrores(nuevosErrores)) return
 
-    const errorServicio = onSubmit(datos)
+    const { estado } = datos
+    if (estado === '') return
+
+    /* Sin foto elegida se guarda la genérica */
+    const errorServicio = onSubmit({ ...datos, estado, imagen: datos.imagen.trim() || IMAGEN_GENERICA })
     if (errorServicio) setErrores({ [errorServicio.campo]: errorServicio.mensaje })
+  }
+
+  /* Foto subida desde el equipo: se reduce y se guarda como texto (base64) */
+  const subirFoto = async (archivo: File | undefined) => {
+    if (!archivo) return
+    const errorArchivo = validarArchivoAvatar(archivo)
+    if (errorArchivo) {
+      setErrores((prev) => ({ ...prev, imagen: errorArchivo }))
+      return
+    }
+    try {
+      const dataUrl = await redimensionarImagen(archivo, 400)
+      setDatos((prev) => ({ ...prev, imagen: dataUrl }))
+      setErrores((prev) => ({ ...prev, imagen: null }))
+    } catch {
+      setErrores((prev) => ({ ...prev, imagen: 'No se pudo leer la imagen seleccionada.' }))
+    }
+  }
+
+  /* Foto por enlace: se limpia el archivo elegido para que no queden dos fuentes */
+  const escribirUrl = (url: string) => {
+    if (inputArchivo.current) inputArchivo.current.value = ''
+    cambiar('imagen')(url)
   }
 
   return (
     <form onSubmit={enviar} noValidate className="admin-modal-form" aria-label="Datos de la mascota">
+      {/* Datos generales: nombre y especie */}
       <h4 className="admin-modal-seccion">Datos generales</h4>
       <div className="row">
         <div className="col-md-6">
@@ -105,6 +155,7 @@ export function FormularioMascota({ modo, valoresIniciales = {}, onSubmit, onCan
         </div>
       </div>
 
+      {/* Raza y edad */}
       <div className="row">
         <div className="col-md-6">
           <CampoFormulario id={`${modo}-raza`} etiqueta="Raza" valor={datos.raza} onCambio={cambiar('raza')} error={errores.raza} maxLength={40} />
@@ -114,6 +165,7 @@ export function FormularioMascota({ modo, valoresIniciales = {}, onSubmit, onCan
         </div>
       </div>
 
+      {/* Sexo y peso (opcionales) */}
       <div className="row">
         <div className="col-md-6">
           <CampoSelector
@@ -133,6 +185,7 @@ export function FormularioMascota({ modo, valoresIniciales = {}, onSubmit, onCan
         </div>
       </div>
 
+      {/* Dueño/a: el correo es lo que vincula la mascota con su cuenta */}
       <h4 className="admin-modal-seccion">Dueño/a</h4>
       <div className="row">
         <div className="col-md-6">
@@ -151,30 +204,58 @@ export function FormularioMascota({ modo, valoresIniciales = {}, onSubmit, onCan
         </div>
       </div>
 
+      {/* Estado clínico (obligatorio) */}
       <h4 className="admin-modal-seccion">Estado clínico y foto</h4>
-      <div className="row">
-        <div className="col-md-6">
-          <CampoSelector
-            id={`${modo}-estado`}
-            etiqueta="Estado"
-            valor={datos.estado}
-            onCambio={(v) => setDatos((prev) => ({ ...prev, estado: v as Mascota['estado'] }))}
-            opciones={ESTADOS_MASCOTA.map((e) => ({ valor: e, texto: TEXTO_ESTADO_MASCOTA[e] }))}
+      <CampoSelector
+        id={`${modo}-estado`}
+        etiqueta="Estado"
+        valor={datos.estado}
+        onCambio={cambiar('estado')}
+        opciones={ESTADOS_MASCOTA.map((e) => ({ valor: e, texto: TEXTO_ESTADO_MASCOTA[e] }))}
+        textoVacio="Selecciona un estado"
+        error={errores.estado}
+      />
+
+      {/* Foto: vista previa + subir archivo o pegar una URL */}
+      <div className={`campo ${errores.imagen ? 'campo--invalido' : ''}`.trim()}>
+        <label htmlFor={`${modo}-imagen-archivo`}>Foto de la mascota</label>
+        <div className="admin-imagen-campo">
+          {/* Vista previa: si la imagen falla o no hay, muestra la genérica */}
+          <img
+            className="admin-imagen-vista-previa"
+            src={datos.imagen || IMAGEN_GENERICA}
+            alt="Vista previa"
+            onError={(e) => {
+              if (!e.currentTarget.src.endsWith(IMAGEN_GENERICA)) e.currentTarget.src = IMAGEN_GENERICA
+            }}
           />
+          <div className="admin-imagen-campo-controles">
+            {/* Opción 1: subir un archivo desde el equipo */}
+            <input
+              ref={inputArchivo}
+              id={`${modo}-imagen-archivo`}
+              type="file"
+              accept="image/*"
+              onChange={(e) => subirFoto(e.target.files?.[0])}
+            />
+            {/* Opción 2: pegar el enlace de una imagen (vacío si la foto fue subida) */}
+            <input
+              type="text"
+              value={datos.imagen.startsWith('data:') ? '' : datos.imagen}
+              onChange={(e) => escribirUrl(e.target.value)}
+              placeholder="O pega una URL: /img/nombre-mascota.jpg"
+              aria-label="URL de la foto"
+              autoComplete="off"
+            />
+          </div>
         </div>
-        <div className="col-md-6">
-          <CampoFormulario
-            id={`${modo}-imagen`}
-            etiqueta="URL de la foto"
-            valor={datos.imagen}
-            onCambio={cambiar('imagen')}
-            placeholder="Ej: /img/nombre-mascota.jpg"
-            ayuda="Si la dejas vacía, se usa una foto genérica."
-            maxLength={200}
-          />
-        </div>
+        <p className="campo__ayuda">
+          Sube una foto desde tu equipo o pega el enlace de una imagen. Si la dejas vacía, se usará una foto genérica.
+        </p>
+        <MensajeError mensaje={errores.imagen} id={`${modo}-imagen-error`} />
       </div>
 
+      {/* Descripción (opcional) */}
       <CampoFormulario
         id={`${modo}-descripcion`}
         etiqueta="Descripción (opcional)"
@@ -183,6 +264,7 @@ export function FormularioMascota({ modo, valoresIniciales = {}, onSubmit, onCan
         maxLength={300}
       />
 
+      {/* Botones: guardar y cancelar */}
       <div className="admin-panel-editar-botones">
         <Boton type="submit" flecha>
           {modo === 'crear' ? 'Crear mascota' : 'Guardar cambios'}

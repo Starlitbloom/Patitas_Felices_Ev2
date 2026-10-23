@@ -7,10 +7,12 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { actualizarUsuario } from '../services/usuariosService'
 import { listarCitasDe, listarMascotasDe } from '../services/datosEquipoService'
+import { obtenerMascotaPorId } from '../services/mascotasService'
 import { redimensionarImagen, validarArchivoAvatar } from '../utils/imagen'
 import { CabeceraPerfil } from '../componentes/organismos/CabeceraPerfil'
 import { FormularioUsuario, type DatosFormularioUsuario } from '../componentes/organismos/FormularioUsuario'
 import { ListaPerfil } from '../componentes/organismos/ListaPerfil'
+import { BloqueCompletarMascota } from '../componentes/organismos/BloqueCompletarMascota'
 import { DatoPerfil } from '../componentes/moleculas/DatoPerfil'
 import { Boton } from '../componentes/atomos/Boton'
 
@@ -19,14 +21,25 @@ export default function PerfilPage() {
   const navigate = useNavigate()
   const [editando, setEditando] = useState(false)
   const [errorAvatar, setErrorAvatar] = useState<string | null>(null)
+  const [, setVersion] = useState(0) // se incrementa al guardar una mascota para volver a leer la lista
 
   if (!usuario) return null // la ruta ya está protegida; esto solo satisface a TypeScript
 
-  const mascotas = listarMascotasDe(usuario.correo).map((m, i) => ({
-    id: m.id ?? String(i),
-    titulo: m.nombre || 'Mascota',
-    detalle: [m.especie, m.raza].filter(Boolean).join(' · '),
-  }))
+    const mascotas = listarMascotasDe(usuario.correo).map((m, i) => {
+    const ficha = m.id ? obtenerMascotaPorId(m.id) : null
+    return {
+      id: m.id ?? String(i),
+      titulo: m.nombre || 'Mascota',
+      detalle: [m.especie, m.raza].filter(Boolean).join(' · '),
+      extra: ficha ? (
+        <BloqueCompletarMascota
+          mascota={ficha}
+          correoSolicitante={usuario.correo}
+          onGuardado={() => setVersion((v) => v + 1)}
+        />
+      ) : null,
+    }
+  })
   const citas = listarCitasDe(usuario.correo).map((c, i) => ({
     id: c.id ?? String(i),
     titulo: `${c.fecha || 'Fecha por confirmar'} — ${c.motivo || c.servicio || 'Consulta'}`,
@@ -120,7 +133,6 @@ export default function PerfilPage() {
 
         <p className="perfil-cerrar-sesion-wrap">
           <Boton
-            flecha
             onClick={() => {
               cerrarSesion()
               navigate('/')

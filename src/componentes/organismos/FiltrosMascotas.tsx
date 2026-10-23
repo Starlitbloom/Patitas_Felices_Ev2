@@ -1,9 +1,8 @@
 /* ORGANISMO — Filtros del catálogo "Mis mascotas".
-   Acá el filtro activo es un objeto de estado (FiltrosMascotas)
-   que vive en la página; este componente solo lo muestra y
-   avisa los cambios con onCambio, igual que FiltrosEquipo. */
+   El filtro activo vive en la página (objeto de estado); este componente
+   solo lo muestra y avisa los cambios con onCambio, igual que FiltrosEquipo. */
 import { ESPECIES_MASCOTA } from '../../types/mascota'
-import type { FiltrosMascotas as Filtros } from '../../types/mascota'
+import type { Especie, FiltrosMascotas as Filtros } from '../../types/mascota'
 
 export interface FiltrosMascotasProps {
   filtros: Filtros
@@ -11,54 +10,61 @@ export interface FiltrosMascotasProps {
   onLimpiar: () => void
 }
 
+/* Texto de cada botón en plural */
+const TEXTO_ESPECIE: Record<Especie, string> = {
+  Perro: 'Perros',
+  Gato: 'Gatos',
+  Conejo: 'Conejos',
+  Ave: 'Aves',
+}
+
 export function FiltrosMascotas({ filtros, onCambio, onLimpiar }: FiltrosMascotasProps) {
   return (
-    <form className="mascotas-filtros row g-3 align-items-end" role="search" onSubmit={(e) => e.preventDefault()}>
-      <div className="col-12 col-lg-4 campo mb-0">
-        <label htmlFor="mascotas-buscar">Buscar por nombre</label>
-        <input
-          id="mascotas-buscar"
-          type="search"
-          value={filtros.texto}
-          placeholder="Ej: Rocky"
-          onChange={(e) => onCambio({ ...filtros, texto: e.target.value })}
-        />
-      </div>
+    <form className="contenedor-filtros-mascotas" role="search" onSubmit={(e) => e.preventDefault()}>
+      <span className="filtros-mascotas-titulo">Filtrar por</span>
 
-      <div className="col-12 col-lg-8">
-        <div className="filtros-mascotas mb-0">
+      <input
+        id="mascotas-buscar"
+        type="search"
+        className="filtro-buscar-mascotas"
+        value={filtros.texto}
+        placeholder="Buscar por nombre"
+        aria-label="Buscar mascota por nombre"
+        onChange={(e) => onCambio({ ...filtros, texto: e.target.value })}
+      />
+
+      <div className="filtros-mascotas">
+        <button
+          type="button"
+          className={`filtro-especie ${filtros.especie === '' ? 'activo' : ''}`}
+          onClick={() => onCambio({ ...filtros, especie: '' })}
+        >
+          Todas
+        </button>
+
+        {ESPECIES_MASCOTA.map((especie) => (
           <button
+            key={especie}
             type="button"
-            className={`filtro-especie ${filtros.especie === '' ? 'activo' : ''}`}
-            onClick={() => onCambio({ ...filtros, especie: '' })}
+            className={`filtro-especie ${filtros.especie === especie ? 'activo' : ''}`}
+            onClick={() => onCambio({ ...filtros, especie })}
           >
-            Todas
+            {TEXTO_ESPECIE[especie]}
           </button>
+        ))}
 
-          {ESPECIES_MASCOTA.map((especie) => (
-            <button
-              key={especie}
-              type="button"
-              className={`filtro-especie ${filtros.especie === especie ? 'activo' : ''}`}
-              onClick={() => onCambio({ ...filtros, especie })}
-            >
-              {especie}
-            </button>
-          ))}
+        <button
+          type="button"
+          className={`filtro-especie filtro-favoritos ${filtros.soloFavoritas ? 'activo' : ''}`}
+          onClick={() => onCambio({ ...filtros, soloFavoritas: !filtros.soloFavoritas })}
+          aria-pressed={filtros.soloFavoritas}
+        >
+          ★ Favoritos
+        </button>
 
-          <button
-            type="button"
-            className={`filtro-especie ${filtros.soloFavoritas ? 'activo' : ''}`}
-            onClick={() => onCambio({ ...filtros, soloFavoritas: !filtros.soloFavoritas })}
-            aria-pressed={filtros.soloFavoritas}
-          >
-            ♥ Favoritas
-          </button>
-
-          <button type="button" className="equipo-limpiar" onClick={onLimpiar}>
-            Limpiar
-          </button>
-        </div>
+        <button type="button" className="equipo-limpiar" onClick={onLimpiar}>
+          Limpiar
+        </button>
       </div>
     </form>
   )

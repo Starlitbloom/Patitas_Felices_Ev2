@@ -4,11 +4,13 @@
 ========================================================= */
 import type {
   CambiosMascota,
+  CambiosSolicitud,
   FiltrosMascotas,
   Mascota,
   NuevaMascota,
   RegistroClinico,
   RegistroVacuna,
+  SolicitudCambio,
 } from '../types/mascota'
 import type { ResultadoOperacion } from '../types/usuario'
 import { HISTORIALES_INICIALES, MASCOTAS_INICIALES, VACUNAS_INICIALES } from '../data/mascotasIniciales'
@@ -160,3 +162,74 @@ export function agregarVacuna(idMascota: string, registro: RegistroVacuna): void
   todos[idMascota] = [registro, ...(todos[idMascota] ?? [])]
   guardarObjeto(CLAVES.vacunasMascotas, todos)
 }
+
+/* =========================================================
+   SOLICITUDES DE CAMBIO
+========================================================= */
+
+export function listarSolicitudes(): SolicitudCambio[] {
+  return leerColeccion<SolicitudCambio>(CLAVES.solicitudesMascotas)
+}
+
+export function listarSolicitudesPendientes(): SolicitudCambio[] {
+  return listarSolicitudes().filter((s) => s.estado === 'pendiente')
+}
+
+/** Solicitud pendiente de una mascota (si el dueño/a ya envió cambios y aún no se resuelven). */
+export function obtenerSolicitudPendiente(mascotaId: string): SolicitudCambio | null {
+  return listarSolicitudesPendientes().find((s) => s.mascotaId === mascotaId) ?? null
+}
+
+/**
+ * El dueño/a envía los datos de su mascota. Igual que en la EP1:
+ * - si la ficha estaba incompleta, los cambios se aplican directo ('aplicado');
+ * - si ya estaba completa, se crea una solicitud pendiente de aprobación ('solicitud').
+ */
+export function enviarCambiosMascota(
+  idMascota: string,
+  correoSolicitante: string,
+  cambios: CambiosSolicitud,
+): ResultadoOperacion<'aplicado' | 'solicitud'> {
+  const errorRaza = validarRequerido(cambios.raza, 'La raza', 40)
+  if (errorRaza) return { ok: false, campo: 'raza', mensaje: errorRaza }
+
+  const mascota = obtenerMascotaPorId(idMascota)
+  if (!mascota) return { ok: false, campo: 'id', mensaje: 'La mascota no existe.' }
+
+  if (!mascota.completo) {
+    actualizarMascota(idMascota, { ...cambios, completo: true })
+    return { ok: true, dato: 'aplicado' }
+  }
+
+  const solicitudes = listarSolicitudes()
+  solicitudes.push({
+    id: `sol-${Date.now()}`,
+    mascotaId: idMascota,
+    correoSolicitante,
+    cambios,
+    estado: 'pendiente',
+    fechaSolicitud: new Date().toISOString(),
+    fechaResolucion: null,
+  })
+  guardarColeccion(CLAVES.solicitudesMascotas, solicitudes)
+  return { ok: true, dato: 'solicitud' }
+}
+
+/** Resuelve una solicitud pendiente. Devuelve false si no existe o ya estaba resuelta. */
+function resolverSolicitud(id: string, estado: 'aprobada' | 'rechazada'): boolean {
+  const solicitudes = listarSolicitudes()
+  const solicitud = solicitudes.find((s) => s.id === id)
+  if (!solicitud || solicitud.estado !== 'pendiente') return false
+
+  if (estado === 'aprobada') {
+    actualizarMascota(solicitud.mascotaId, { ...solicitud.cambios, completo: true })
+  }
+
+  solicitud.estado = estado
+  solicitud.fechaResolucion = new Date().toISOString()
+  guardarColeccion(CLAVES.solicitudesMascotas, solicitudes)
+  return true
+}
+
+export const aprobarSolicitud = (id: string) => resolverSolicitud(id, 'aprobada')
+export const rechazarSolicitud = (id: string) => resolverSolicitud(id, 'rechazada')

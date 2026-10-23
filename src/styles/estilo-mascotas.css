@@ -413,3 +413,807 @@
         grid-template-columns: 1fr;
     }
 }
+/* =========================================================
+   VIDEO
+========================================================= */
+
+.seccion-video-cuidados {
+    padding-top: 85px;
+}
+
+.video-cuidados-tarjeta {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(260px, 0.8fr) minmax(420px, 1.2fr);
+    align-items: center;
+    gap: 55px;
+    padding: 48px;
+    border: 1px solid rgba(46, 46, 56, 0.06);
+    border-radius: 30px;
+    background:
+        radial-gradient(circle at 0 0, rgba(214, 236, 250, 0.74), transparent 32%),
+        radial-gradient(circle at 100% 100%, rgba(255, 214, 231, 0.65), transparent 35%),
+        #fffefc;
+    box-shadow: 0 12px 32px rgba(46, 46, 56, 0.07);
+}
+
+.video-cuidados-texto {
+    position: relative;
+    z-index: 2;
+}
+
+.video-cuidados-texto .seccion-etiqueta {
+    display: inline-block;
+    margin-bottom: 14px;
+}
+
+.video-cuidados-texto h2 {
+    margin: 0 0 14px;
+    color: var(--texto);
+    font-size: clamp(1.7rem, 3vw, 2.25rem);
+    line-height: 1.15;
+}
+
+.video-cuidados-texto > p {
+    margin: 0 0 23px;
+    color: var(--gris-suave);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.video-cuidados-puntos {
+    display: grid;
+    gap: 10px;
+}
+
+.video-cuidados-puntos div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--texto);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.video-cuidados-puntos span {
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: var(--morado);
+    color: var(--texto);
+    font-size: 12px;
+}
+
+/* =========================================================
+   VIDEO EMBEBIDO
+========================================================= */
+
+.video-embebido {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 7px solid rgba(255, 255, 255, 0.92);
+    border-radius: 24px;
+    background-color: #1e1b2e;
+    box-shadow: 0 16px 34px rgba(46, 46, 56, 0.16);
+}
+
+.video-embebido iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 0;
+}
+
+/* =========================================================
+   SECCIÓN: CUIDADOS BÁSICOS POR ESPECIE (infografías)
+========================================================= */
+
+/* Colores por especie, a juego con cada infografía */
+:root {
+    --perro-color: #8B5CF6;
+    --perro-color-suave: #9629d1;
+    --gato-color: #EC6BA5;
+    --gato-color-suave: #ff99c2;
+    --conejo-color: #4FB6A6;
+    --conejo-color-suave: #84ebd6;
+    --ave-color: #F0A94E;
+    --ave-color-suave: #ffe139;
+}
+
+.seccion-cuidados {
+    padding: 20px 0 90px;
+}
+
+.grid-embebido {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px 40px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.tarjeta-cuidado {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--blanco);
+    padding: 8px;
+    border-radius: 22px;
+    border: 3px solid var(--gris-suave);
+    box-shadow: 0 8px 25px rgba(46, 46, 56, 0.07);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tarjeta-cuidado:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 30px rgba(46, 46, 56, 0.1);
+}
+
+/* Color de marco por especie: 1° Perro, 2° Gato, 3° Conejo, 4° Aves */
+.grid-embebido .tarjeta-cuidado:nth-child(1) {
+    border-color: var(--perro-color);
+    background-color: var(--perro-color-suave);
+}
+
+.grid-embebido .tarjeta-cuidado:nth-child(2) {
+    border-color: var(--gato-color);
+    background-color: var(--gato-color-suave);
+}
+
+.grid-embebido .tarjeta-cuidado:nth-child(3) {
+    border-color: var(--conejo-color);
+    background-color: var(--conejo-color-suave);
+}
+
+.grid-embebido .tarjeta-cuidado:nth-child(4) {
+    border-color: var(--ave-color);
+    background-color: var(--ave-color-suave);
+}
+
+.img-cuidados {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    margin: 0 auto;
+    border-radius: 16px;
+    cursor: zoom-in;
+    transition: transform 0.2s ease;
+}
+
+.img-cuidados:hover {
+    transform: scale(1.03);
+}
+
+@media (max-width: 900px) {
+    .grid-embebido {
+        gap: 28px;
+    }
+
+    .img-cuidados {
+        max-width: 180px;
+    }
+
+    .video-cuidados-tarjeta {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+}
+
+@media (max-width: 600px) {
+    .grid-embebido {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .img-cuidados {
+        max-width: 150px;
+    }
+
+    .video-cuidados-tarjeta {
+        padding: 32px 25px;
+    }
+}
+
+/* =========================================================
+   VISOR AMPLIADO DE INFOGRAFÍAS (lightbox)
+========================================================= */
+
+.visor-infografia {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background-color: rgba(20, 20, 26, 0.72);
+    cursor: zoom-out;
+}
+
+.visor-infografia.visor-infografia--abierto {
+    display: flex;
+}
+
+.visor-infografia img {
+    max-width: min(90vw, 700px);
+    max-height: 85vh;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.visor-infografia-cerrar {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #2E2E38;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+/* =========================================================
+   HERO DE MASCOTAS
+========================================================= */
+
+/* Variante de la página con hero: sin espacio arriba para que el banner
+   quede pegado al header, y con el fondo de manchas de colores */
+.seccion-mascotas--con-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 0 0 110px;
+    background:
+        radial-gradient(circle at 8% 48%, rgba(214, 236, 250, 0.75) 0, rgba(214, 236, 250, 0.35) 11%, transparent 25%),
+        radial-gradient(circle at 92% 56%, rgba(255, 214, 231, 0.72) 0, rgba(255, 214, 231, 0.30) 12%, transparent 27%),
+        radial-gradient(circle at 50% 82%, rgba(230, 214, 247, 0.50) 0, rgba(230, 214, 247, 0.20) 13%, transparent 28%),
+        linear-gradient(180deg, #ffffff 0, #ffffff 5%, #f5efe6 5%, #f5efe6 100%);
+}
+
+.seccion-mascotas--con-hero > section {
+    position: relative;
+    z-index: 2;
+}
+
+.catalogo-mascotas {
+    padding-top: 75px;
+}
+
+.hero-mascotas {
+    position: relative;
+    overflow: hidden;
+    padding: 58px 0 70px;
+    background:
+        radial-gradient(circle at 12% 20%, rgba(214, 236, 250, 0.65), transparent 28%),
+        radial-gradient(circle at 92% 65%, rgba(255, 214, 231, 0.70), transparent 30%),
+        linear-gradient(135deg, #fffdfa 0%, #f8f1e7 100%);
+}
+
+.hero-mascotas::before {
+    content: "";
+    position: absolute;
+    width: 230px;
+    height: 230px;
+    left: -90px;
+    bottom: -120px;
+    border-radius: 50%;
+    background-color: rgba(230, 214, 247, 0.42);
+}
+
+.hero-mascotas::after {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    right: -55px;
+    top: -75px;
+    border-radius: 50%;
+    background-color: rgba(214, 236, 250, 0.52);
+}
+
+.hero-mascotas-contenido {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+    align-items: center;
+    gap: 65px;
+}
+
+.hero-mascotas-texto {
+    max-width: 650px;
+}
+
+.hero-mascotas-etiqueta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 8px 17px;
+    border-radius: 999px;
+    background-color: var(--celeste);
+    color: var(--texto);
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 5px 16px rgba(46, 46, 56, 0.06);
+}
+
+.hero-mascotas-texto h1 {
+    margin: 0 0 20px;
+    color: var(--texto);
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+}
+
+.hero-mascotas-texto h1 span {
+    color: #72A9D0;
+}
+
+.hero-mascotas-texto > p {
+    max-width: 580px;
+    margin: 0 0 28px;
+    color: var(--gris-suave);
+    font-size: 16px;
+    line-height: 1.75;
+}
+
+.hero-mascotas-acciones {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.hero-mascotas-boton {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 23px;
+    border-radius: 999px;
+    background-color: var(--rosa);
+    color: var(--texto);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(255, 182, 211, 0.28);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.hero-mascotas-boton:hover {
+    transform: translateY(-3px);
+    background-color: #ffc5de;
+    box-shadow: 0 12px 25px rgba(255, 182, 211, 0.42);
+}
+
+.hero-mascotas-boton span {
+    font-size: 19px;
+}
+
+.hero-mascotas-mini {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--gris-suave);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.hero-mascotas-mini-icono {
+    width: 31px;
+    height: 31px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: var(--morado);
+    color: var(--texto);
+}
+
+.hero-mascotas-ilustracion {
+    position: relative;
+    min-height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-mascotas-ilustracion img {
+    position: relative;
+    z-index: 3;
+    display: block;
+    width: min(100%, 470px);
+    max-height: 370px;
+    object-fit: contain;
+    filter: drop-shadow(0 18px 22px rgba(46, 46, 56, 0.12));
+}
+
+.hero-mascotas-forma {
+    position: absolute;
+    border-radius: 55% 45% 52% 48% / 45% 55% 45% 55%;
+}
+
+.hero-mascotas-forma--rosa {
+    width: 350px;
+    height: 320px;
+    background-color: rgba(255, 214, 231, 0.82);
+    transform: rotate(-8deg);
+}
+
+.hero-mascotas-forma--celeste {
+    width: 290px;
+    height: 285px;
+    right: 15px;
+    bottom: 20px;
+    background-color: rgba(214, 236, 250, 0.70);
+    transform: rotate(14deg);
+}
+
+.hero-mascotas-decoracion {
+    position: absolute;
+    z-index: 4;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    box-shadow: 0 8px 18px rgba(46, 46, 56, 0.12);
+}
+
+.hero-mascotas-decoracion--1 {
+    width: 52px;
+    height: 52px;
+    left: 25px;
+    top: 50px;
+    background-color: var(--blanco);
+    color: #e79ab9;
+    font-size: 25px;
+}
+
+.hero-mascotas-decoracion--2 {
+    width: 62px;
+    height: 62px;
+    right: 12px;
+    bottom: 65px;
+    background-color: var(--morado);
+    font-size: 25px;
+}
+
+@media (max-width: 1000px) {
+    .hero-mascotas-contenido {
+        grid-template-columns: 1fr 0.85fr;
+        gap: 35px;
+    }
+
+    .hero-mascotas-ilustracion {
+        min-height: 310px;
+    }
+}
+
+@media (max-width: 760px) {
+    .hero-mascotas {
+        padding: 45px 0 55px;
+    }
+
+    .hero-mascotas-contenido {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .hero-mascotas-texto {
+        margin: 0 auto;
+    }
+
+    .hero-mascotas-texto > p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-mascotas-acciones {
+        justify-content: center;
+    }
+
+    .hero-mascotas-ilustracion {
+        min-height: 300px;
+    }
+
+    .hero-mascotas-ilustracion img {
+        max-height: 290px;
+    }
+}
+/* =========================================================
+   CATÁLOGO: título y caja de filtros
+========================================================= */
+
+.titulo-seccion-mascotas {
+    max-width: 720px;
+    margin: 0 auto 34px;
+    text-align: center;
+}
+
+.titulo-seccion-mascotas .seccion-etiqueta {
+    display: inline-block;
+    margin-bottom: 14px;
+}
+
+.titulo-seccion-mascotas h2 {
+    margin-bottom: 12px;
+    font-size: clamp(1.9rem, 3vw, 2.45rem);
+}
+
+.titulo-seccion-mascotas p {
+    max-width: 640px;
+    margin: 0 auto;
+    color: var(--gris-suave);
+    line-height: 1.7;
+}
+
+.contenedor-filtros-mascotas {
+    max-width: 980px;
+    margin: 0 auto 28px;
+    padding: 15px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    border: 1px solid rgba(46, 46, 56, 0.06);
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 8px 24px rgba(46, 46, 56, 0.05);
+}
+
+.filtros-mascotas-titulo {
+    color: var(--gris-suave);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.filtro-buscar-mascotas {
+    width: 190px;
+    padding: 9px 16px;
+    border: 1.5px solid #ece5d8;
+    border-radius: 999px;
+    background-color: var(--blanco);
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+}
+
+.filtro-buscar-mascotas:focus {
+    border-color: var(--celeste-fuerte);
+}
+
+.filtros-mascotas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    margin: 0;
+}
+
+.filtro-especie {
+    padding: 9px 19px;
+    border: 1.5px solid #ece5d8;
+    border-radius: 999px;
+    font-size: 13px;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.filtro-especie:hover {
+    transform: translateY(-2px);
+}
+
+.filtro-especie.activo {
+    box-shadow: 0 6px 15px rgba(114, 169, 208, 0.25);
+}
+
+.filtro-favoritos:hover {
+    border-color: #e79ab9;
+}
+
+.mascotas-resumen {
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--gris-suave);
+    font-size: 13px;
+}
+
+.grid-mascotas-vacio {
+    grid-column: 1 / -1;
+    padding: 55px 25px;
+    border-radius: 24px;
+    background-color: rgba(255, 255, 255, 0.65);
+    color: var(--gris-suave);
+    text-align: center;
+}
+
+@media (max-width: 760px) {
+    .contenedor-filtros-mascotas {
+        border-radius: 25px;
+        flex-direction: column;
+    }
+}
+/* Bootstrap deja los títulos en peso 500; en la EP1 eran bold */
+.seccion-mascotas h1,
+.seccion-mascotas h2,
+.seccion-mascotas h3 {
+    font-weight: 700;
+}
+/* =========================================================
+   PANEL ADMIN: cabecera de la sección "Mascotas registradas"
+========================================================= */
+
+.admin-seccion-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.admin-seccion-cabecera h2 {
+    color: var(--blanco);
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.admin-seccion-cabecera p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    margin: 0;
+}
+/* Mensaje de tabla sin datos (ej: "No hay solicitudes pendientes.") */
+.admin-tabla-sin-datos {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+}
+/* Espacio entre la tabla de solicitudes y la sección siguiente */
+.admin-tabla-seccion + .admin-seccion-cabecera {
+    margin-top: 40px;
+}
+/* Foto + nombre alineados a la izquierda en la primera columna de la tabla */
+.admin-celda-mascota {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    text-align: left;
+}
+
+.admin-celda-mascota img {
+    flex-shrink: 0;
+    margin-right: 0;
+}
+
+/* El encabezado "Nombre" también va a la izquierda, sobre las fotos */
+.admin-tabla:has(.admin-celda-mascota) th:first-child {
+    text-align: left;
+    padding-left: 22px;
+}
+
+.admin-tabla:has(.admin-celda-mascota) td:first-child {
+    padding-left: 22px;
+}
+/* Tipo de letra de todo el panel de administración */
+.admin-body {
+    font-family: 'Times New Roman', Times, serif;
+}
+/* =========================================================
+   MASCOTA: botones "Editar / Completar datos" y "Cancelar"
+   (mi perfil del cliente y detalle de la mascota)
+   es el boton nuevo de mi perfil,mis mascotas
+========================================================= */
+
+/* Fila de botones bajo la tarjeta gris, en el fondo blanco */
+.perfil-mascota-extra {
+    list-style: none;
+    margin: 4px 0 22px;
+    padding: 0 6px;
+}
+
+.perfil-mascota-extra:last-child {
+    margin-bottom: 0;
+}
+
+.mascota-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.mascota-acciones .alerta-mascota {
+    margin: 0;
+}
+
+/* "Editar / Completar datos": botón celeste pastel */
+.mascota-acciones .enlace-completar {
+    display: inline-block;
+    margin: 0;
+    padding: 9px 22px;
+    border-radius: 999px;
+    background-color: var(--celeste);
+    color: var(--texto);
+    font-size: 13.5px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(114, 169, 208, 0.22);
+    transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.mascota-acciones .enlace-completar:hover {
+    transform: translateY(-2px);
+    background-color: #c4e2f6;
+    box-shadow: 0 7px 16px rgba(114, 169, 208, 0.32);
+}
+
+/* "Cancelar": botón rosa pastel */
+.boton-cancelar-mascota {
+    padding: 9px 22px;
+    border: none;
+    border-radius: 999px;
+    background-color: var(--rosa);
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255, 182, 211, 0.3);
+    transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.boton-cancelar-mascota:hover {
+    transform: translateY(-2px);
+    background-color: #ffc5de;
+    box-shadow: 0 7px 16px rgba(255, 182, 211, 0.45);
+}
+/* Botón "Guardar" del formulario de mascota: tamaño compacto y centrado */
+.formulario-mascota .boton-principal {
+    display: flex;
+    justify-content: center;
+    width: fit-content;
+    min-width: 185px;
+    margin: 8px auto 0;
+    padding: 12px 32px;
+}
+/* "Editar" y "Cancelar" con el mismo ancho, con el texto centrado */
+.mascota-acciones .enlace-completar,
+.boton-cancelar-mascota {
+    min-width: 112px;
+    text-align: center;
+}
+/* Enlace de las listas vacías del perfil ("Solicitar una cita", "Agregar mascota"): botón celeste pastel */
+.perfil-lista-vacia .perfil-card-link {
+    margin-top: 16px;
+    padding: 9px 22px;
+    border-radius: 999px;
+    background-color: var(--celeste);
+    color: var(--texto);
+    font-size: 13.5px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(114, 169, 208, 0.22);
+    transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.perfil-lista-vacia .perfil-card-link:hover {
+    transform: translateY(-2px);
+    background-color: #c4e2f6;
+    box-shadow: 0 7px 16px rgba(114, 169, 208, 0.32);
+}
