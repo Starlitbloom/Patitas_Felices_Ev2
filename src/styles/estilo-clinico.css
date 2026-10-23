@@ -1,0 +1,224 @@
+/* =========================================================
+   PATITAS FELICES — estilo-clinico.css
+   Compartido por las 3 pestañas del detalle de mascota:
+   ficha clínica, historial clínico y vacunas.
+   Usa --error, definido en estilo-usuarios.css (se carga antes).
+========================================================= */
+
+.seccion-clinica {
+    padding: 60px 0 110px;
+}
+
+.clinica-cabecera {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    background-color: var(--blanco);
+
+    border-radius: 24px;
+
+    padding: 22px 28px;
+
+    box-shadow: 0 8px 25px rgba(46, 46, 56, 0.07);
+
+    margin-bottom: 34px;
+}
+
+.clinica-cabecera img {
+    width: 70px;
+    height: 70px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+}
+
+.clinica-cabecera h1 {
+    font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+}
+
+.clinica-cabecera p {
+    color: var(--gris-suave);
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   PESTAÑAS (tabs) DEL DETALLE
+========================================================= */
+
+.clinica-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    margin-bottom: 28px;
+}
+
+.clinica-tab {
+    padding: 10px 22px;
+
+    border: 1.5px solid #ECE5D8;
+    border-radius: 999px;
+
+    background-color: var(--blanco);
+    color: var(--texto);
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.clinica-tab:hover {
+    border-color: var(--celeste-fuerte);
+}
+
+.clinica-tab.activo {
+    background-color: var(--celeste-fuerte);
+    border-color: var(--celeste-fuerte);
+    color: var(--blanco);
+}
+
+
+/* =========================================================
+   TIMELINE / TABLA DE REGISTROS
+========================================================= */
+
+.lista-registros {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    margin-bottom: 40px;
+}
+
+.registro-clinico {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 22px;
+
+    background-color: var(--blanco);
+
+    padding: 22px 26px;
+
+    border-radius: 20px;
+
+    box-shadow: 0 6px 20px rgba(46, 46, 56, 0.06);
+}
+
+.registro-clinico .registro-fecha {
+    font-weight: bold;
+
+    color: var(--celeste-fuerte);
+
+    font-size: 14px;
+}
+
+.registro-clinico h3 {
+    margin-bottom: 6px;
+
+    font-size: 16.5px;
+}
+
+.registro-clinico p {
+    font-size: 14px;
+
+    color: var(--texto);
+
+    margin-bottom: 4px;
+}
+
+.registro-clinico p strong {
+    color: var(--gris-suave);
+
+    font-weight: bold;
+}
+
+.registros-vacio {
+    text-align: center;
+
+    padding: 34px 20px;
+
+    color: var(--gris-suave);
+
+    background-color: var(--blanco);
+
+    border-radius: 20px;
+}
+
+
+/* =========================================================
+   BADGES DE ESTADO (VACUNAS)
+========================================================= */
+
+.estado-badge-vacuna {
+    display: inline-block;
+
+    padding: 5px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    color: var(--texto);
+}
+
+.estado-badge-vacuna.estado-al-dia {
+    background-color: var(--celeste);
+}
+
+.estado-badge-vacuna.estado-proxima {
+    background-color: var(--morado);
+}
+
+.estado-badge-vacuna.estado-atrasada {
+    background-color: var(--rosa);
+}
+
+
+/* =========================================================
+   FORMULARIO (registrar atención / vacuna) — admin
+========================================================= */
+
+.tarjeta-formulario-clinica {
+    background-color: var(--blanco);
+
+    padding: 34px 32px;
+
+    border-radius: 24px;
+
+    box-shadow: 0 8px 25px rgba(46, 46, 56, 0.07);
+
+    margin-top: 10px;
+}
+
+.tarjeta-formulario-clinica h2 {
+    font-size: 19px;
+
+    margin-bottom: 18px;
+}
+
+.fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+
+@media (max-width: 700px) {
+    .registro-clinico {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .fila-campos {
+        grid-template-columns: 1fr;
+    }
+}

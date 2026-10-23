@@ -1,0 +1,415 @@
+/* =========================================================
+   PATITAS FELICES — estilo-mascotas.css
+   Para la vista "Mis mascotas" (catálogo del cliente) y las
+   tarjetas de mascota. Reutiliza las variables de :root
+   definidas en styles.css (--beige, --rosa, --celeste, etc.)
+========================================================= */
+
+.seccion-mascotas {
+    padding: 60px 0 110px;
+}
+
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+.filtros-mascotas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    margin: 0 auto 44px;
+}
+
+.filtro-especie {
+    padding: 10px 22px;
+
+    border: 1.5px solid #ECE5D8;
+    border-radius: 999px;
+
+    background-color: var(--blanco);
+    color: var(--texto);
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.filtro-especie:hover {
+    border-color: var(--celeste-fuerte);
+}
+
+.filtro-especie.activo {
+    background-color: var(--celeste-fuerte);
+    border-color: var(--celeste-fuerte);
+    color: var(--blanco);
+}
+
+
+/* =========================================================
+   GRID DE TARJETAS
+========================================================= */
+
+.grid-mascotas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+}
+
+.grid-mascotas-vacio {
+    grid-column: 1 / -1;
+
+    text-align: center;
+
+    padding: 40px 20px;
+
+    color: var(--gris-suave);
+}
+
+
+/* =========================================================
+   TARJETA DE MASCOTA
+========================================================= */
+
+.tarjeta-mascota {
+    overflow: hidden;
+
+    background-color: #FFFEFC;
+
+    border-radius: 24px;
+
+    box-shadow: 0 8px 25px rgba(46, 46, 56, 0.07);
+
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.tarjeta-mascota:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 15px 32px rgba(46, 46, 56, 0.12);
+}
+
+.tarjeta-mascota-imagen {
+    position: relative;
+
+    width: 100%;
+    height: 210px;
+
+    overflow: hidden;
+}
+
+.tarjeta-mascota-imagen img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+    object-position: center;
+
+    transition: transform 0.5s ease;
+}
+
+.tarjeta-mascota:hover .tarjeta-mascota-imagen img {
+    transform: scale(1.05);
+}
+
+.estado-badge {
+    position: absolute;
+
+    top: 16px;
+    left: 16px;
+
+    z-index: 2;
+
+    padding: 7px 13px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    color: var(--texto);
+
+    box-shadow: 0 4px 12px rgba(46, 46, 56, 0.07);
+}
+
+.estado-al-dia {
+    background-color: var(--celeste);
+}
+
+.estado-tratamiento {
+    background-color: var(--morado);
+}
+
+.estado-pendiente {
+    background-color: var(--rosa);
+}
+
+.boton-favorito {
+    position: absolute;
+
+    top: 16px;
+    right: 16px;
+
+    z-index: 2;
+
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background-color: rgba(255, 255, 255, 0.9);
+    color: var(--texto);
+
+    font-size: 18px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    box-shadow: 0 4px 12px rgba(46, 46, 56, 0.1);
+
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.boton-favorito:hover {
+    transform: scale(1.1);
+}
+
+.boton-favorito.activo {
+    color: #E7497A;
+}
+
+.boton-favorito-detalle {
+    position: static;
+
+    width: auto;
+    height: auto;
+
+    padding: 8px 16px;
+
+    border-radius: 999px;
+
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.tarjeta-mascota-contenido {
+    padding: 22px 24px;
+}
+
+.tarjeta-mascota-contenido h3 {
+    margin-bottom: 6px;
+
+    color: var(--texto);
+
+    font-size: 19px;
+}
+
+.tarjeta-mascota-contenido .raza-especie {
+    margin-bottom: 12px;
+
+    color: var(--gris-suave);
+
+    font-size: 14px;
+}
+
+.tarjeta-mascota-contenido .dueno {
+    margin-bottom: 16px;
+
+    font-size: 13.5px;
+
+    color: var(--gris-suave);
+}
+
+.tarjeta-mascota-contenido a {
+    color: var(--celeste-fuerte);
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    transition: color 0.3s ease;
+}
+
+.tarjeta-mascota-contenido a:hover {
+    color: #E79AB9;
+}
+
+
+/* =========================================================
+   DETALLE DE MASCOTA
+========================================================= */
+
+.volver-listado {
+    display: inline-block;
+
+    margin-bottom: 20px;
+
+    color: var(--celeste-fuerte);
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    font-size: 14px;
+}
+
+.volver-listado:hover {
+    color: #E79AB9;
+}
+
+.detalle-mascota-cabecera {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 36px;
+
+    margin-bottom: 44px;
+}
+
+.detalle-mascota-imagen img {
+    width: 100%;
+    height: 320px;
+
+    object-fit: cover;
+
+    border-radius: 24px;
+}
+
+.detalle-mascota-titulo-fila {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    margin-bottom: 8px;
+}
+
+.lista-datos {
+    list-style: none;
+
+    margin: 18px 0;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.lista-datos li {
+    font-size: 14px;
+}
+
+.lista-datos li strong {
+    display: block;
+
+    color: var(--gris-suave);
+
+    font-size: 12.5px;
+    font-weight: bold;
+
+    margin-bottom: 2px;
+}
+
+.detalle-mascota-descripcion {
+    margin: 14px 0 20px;
+
+    line-height: 1.6;
+}
+
+.accesos-clinicos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.acceso-clinico {
+    display: block;
+
+    padding: 28px 24px;
+
+    background-color: var(--blanco);
+
+    border-radius: 22px;
+
+    box-shadow: 0 8px 25px rgba(46, 46, 56, 0.07);
+
+    text-decoration: none;
+    color: var(--texto);
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.acceso-clinico:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 30px rgba(46, 46, 56, 0.1);
+}
+
+.acceso-clinico .icono-acceso img {
+    width: 42px;
+    height: 42px;
+
+    margin-bottom: 14px;
+}
+
+.acceso-clinico h3 {
+    margin-bottom: 8px;
+
+    font-size: 17px;
+}
+
+.acceso-clinico p {
+    font-size: 13.5px;
+
+    color: var(--gris-suave);
+
+    margin-bottom: 14px;
+}
+
+.acceso-clinico .flecha {
+    color: var(--celeste-fuerte);
+
+    font-weight: bold;
+    font-size: 13.5px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+    .grid-mascotas {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .detalle-mascota-cabecera {
+        grid-template-columns: 1fr;
+    }
+
+    .accesos-clinicos {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .grid-mascotas {
+        grid-template-columns: 1fr;
+    }
+
+    .lista-datos {
+        grid-template-columns: 1fr;
+    }
+}
