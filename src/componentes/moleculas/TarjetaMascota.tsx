@@ -48,7 +48,7 @@ export function TarjetaMascota({ mascota, favorita, onAlternarFavorita }: Tarjet
           {raza ? ` · ${raza}` : ''}
         </p>
         <p className="dueno">Dueño/a: {dueño}</p>
-        <Link to={`/mascotas/${id}`}>Ver ficha completa →</Link>
+        <Link to={`/mascotas/${id}`}>Ver ficha completa</Link>
       </div>
     </article>
   )

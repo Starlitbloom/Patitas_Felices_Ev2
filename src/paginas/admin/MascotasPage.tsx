@@ -1,13 +1,17 @@
 /* PÁGINA — Panel admin de mascotas (ruta /admin/mascotas): CRUD completo. */
 import { useState } from 'react'
-import type { Mascota, SolicitudCambio } from '../../types/mascota'
+import type { EstadoMascota, Mascota, RegistroClinico, RegistroVacuna, SolicitudCambio } from '../../types/mascota'
 import {
   actualizarMascota,
+  agregarRegistroClinico,
+  agregarVacuna,
   aprobarSolicitud,
   crearMascota,
   eliminarMascota,
+  eliminarVacuna,
   listarMascotas,
   listarSolicitudesPendientes,
+  obtenerVacunas,
   rechazarSolicitud,
 } from '../../services/mascotasService'
 import { EncabezadoAdmin } from '../../componentes/organismos/EncabezadoAdmin'
@@ -17,11 +21,15 @@ import { TablaSolicitudesMascotas } from '../../componentes/organismos/TablaSoli
 import { Modal } from '../../componentes/organismos/Modal'
 import { ModalConfirmacion } from '../../componentes/organismos/ModalConfirmacion'
 import { FormularioMascota, type DatosFormularioMascota } from '../../componentes/organismos/FormularioMascota'
+import { FormularioAtencion } from '../../componentes/organismos/FormularioAtencion'
+import { FormularioVacuna } from '../../componentes/organismos/FormularioVacuna'
 import { Boton } from '../../componentes/atomos/Boton'
 
 const FILTROS_INICIALES: FiltrosMascotasAdminValor = { texto: '', especie: '' }
 
 type EstadoModal = { tipo: 'crear' } | { tipo: 'editar'; mascota: Mascota } | null
+/* Registro clínico que se está llenando: de qué tipo y para qué mascota (null = cerrado) */
+type EstadoClinico = { tipo: 'atencion' | 'vacuna'; mascota: Mascota } | null
 
 export default function MascotasPage() {
   const [mascotas, setMascotas] = useState<Mascota[]>(() => listarMascotas())
@@ -31,6 +39,7 @@ export default function MascotasPage() {
   const [solicitudes, setSolicitudes] = useState<SolicitudCambio[]>(() => listarSolicitudesPendientes())
   const [aRechazar, setARechazar] = useState<SolicitudCambio | null>(null)
   const [aviso, setAviso] = useState<string | null>(null)
+  const [clinico, setClinico] = useState<EstadoClinico>(null)
 
   const visibles = mascotas.filter(
     (m) =>
@@ -82,6 +91,29 @@ export default function MascotasPage() {
     setAEliminar(null)
     recargar()
   }
+    /* Guarda la atención en el historial, las vacunas marcadas en el calendario del paciente
+     y, si el veterinario cambió el estado del paciente, lo actualiza */
+  const guardarAtencion =
+    (mascota: Mascota) => (registro: RegistroClinico, estado: EstadoMascota, vacunasNuevas: RegistroVacuna[]) => {
+      agregarRegistroClinico(mascota.id, registro)
+      vacunasNuevas.forEach((vacuna) => agregarVacuna(mascota.id, vacuna))
+      if (estado !== mascota.estado) actualizarMascota(mascota.id, { estado })
+      recargar() // vuelve a leer la tabla para que se vea el estado nuevo
+      setClinico(null)
+      setAviso(`Atención de ${mascota.nombre} registrada correctamente.`)
+    }
+
+  /* Guarda la vacuna en el calendario de la mascota y cierra el formulario */
+  const guardarVacuna = (mascota: Mascota) => (registro: RegistroVacuna) => {
+    agregarVacuna(mascota.id, registro)
+    setClinico(null)
+    setAviso(`Vacuna de ${mascota.nombre} registrada correctamente.`)
+  }
+    /* Quita un registro de vacuna (ej: uno de prueba o mal ingresado) y refresca el aviso del formulario */
+  const quitarVacuna = (mascota: Mascota) => (indice: number) => {
+    eliminarVacuna(mascota.id, indice)
+    recargar() // vuelve a dibujar la página para que el aviso muestre las vacunas actualizadas
+  }
 
   return (
     <>
@@ -125,7 +157,12 @@ export default function MascotasPage() {
       />
 
       <section className="admin-tabla-seccion">
-        <TablaMascotas mascotas={visibles} onEditar={(m) => setModal({ tipo: 'editar', mascota: m })} onEliminar={setAEliminar} />
+        <TablaMascotas mascotas={visibles}
+          onEditar={(m) => setModal({ tipo: 'editar', mascota: m })} 
+          onEliminar={setAEliminar} 
+          onAtencion={(m) => setClinico({ tipo: 'atencion', mascota: m })} 
+          onVacuna={(m) => setClinico({ tipo: 'vacuna', mascota: m })}
+        />
       </section>
 
       <Modal abierto={modal !== null} titulo={modal?.tipo === 'editar' ? 'Editar mascota' : 'Nueva mascota'} onCerrar={() => setModal(null)} ancho>
@@ -141,6 +178,34 @@ export default function MascotasPage() {
         )}
       </Modal>
 
+      {/* Formulario de atención o de vacuna, según el botón que se pulsó */}
+      <Modal
+        abierto={clinico !== null}
+        titulo={clinico?.tipo === 'vacuna' ? `Registrar vacuna · ${clinico.mascota.nombre}` : `Registrar atención · ${clinico?.mascota.nombre ?? ''}`}
+        onCerrar={() => setClinico(null)}
+        ancho
+      >
+        {clinico?.tipo === 'atencion' && (
+          <FormularioAtencion
+            key={clinico.mascota.id}
+            especie={clinico.mascota.especie}
+            estadoActual={clinico.mascota.estado}
+            aplicadas={obtenerVacunas(clinico.mascota.id)}
+            onSubmit={guardarAtencion(clinico.mascota)}
+            onCancelar={() => setClinico(null)}
+          />
+        )}
+        {clinico?.tipo === 'vacuna' && (
+          <FormularioVacuna
+            key={clinico.mascota.id}
+            especie={clinico.mascota.especie}
+            aplicadas={obtenerVacunas(clinico.mascota.id)}
+            onSubmit={guardarVacuna(clinico.mascota)}
+            onCancelar={() => setClinico(null)}
+            onEliminar={quitarVacuna(clinico.mascota)}
+          />
+        )}
+      </Modal>
       <ModalConfirmacion
         abierto={aEliminar !== null}
         titulo="Eliminar mascota"

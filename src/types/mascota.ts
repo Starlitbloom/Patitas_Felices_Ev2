@@ -59,6 +59,8 @@ export interface RegistroClinico{
     diagnostico: string
     tratamiento: string
     veterinario: string
+    /** Servicios realizados en la atención (cirugía, exámenes, etc.). Las atenciones antiguas no lo tienen. */
+    servicios?: string[]
 }
 
 /*===============================================================

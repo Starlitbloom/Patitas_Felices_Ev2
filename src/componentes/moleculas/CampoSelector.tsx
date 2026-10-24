@@ -4,6 +4,8 @@ import { MensajeError } from '../atomos/MensajeError'
 export interface OpcionSelector {
   valor: string
   texto: string
+  /** Opción visible pero no seleccionable (opcional). */
+  deshabilitada?: boolean
 }
 
 export interface CampoSelectorProps {
@@ -41,7 +43,7 @@ export function CampoSelector({
       >
         {textoVacio !== undefined && <option value="">{textoVacio}</option>}
         {opciones.map((op) => (
-          <option key={op.valor} value={op.valor}>
+          <option key={op.valor} value={op.valor}disabled={op.deshabilitada}>
             {op.texto}
           </option>
         ))}

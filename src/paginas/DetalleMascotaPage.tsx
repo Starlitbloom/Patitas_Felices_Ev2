@@ -1,8 +1,9 @@
 /* PÁGINA — Detalle de mascota (ruta /mascotas/:id).
-   Junta lo que en la EP1 eran 4 páginas separadas (detalle-mascota,
-   ficha-clinica, historial-clinico, vacunas) en una sola, con pestañas. */
-import { useParams } from 'react-router-dom'
+   Muestra la ficha con foto y datos, y tres accesos (ficha clínica,
+   historial y vacunas) que despliegan su contenido debajo. */
+import { Link, useParams } from 'react-router-dom'
 import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 import {
   esFavorita,
   alternarFavorita,
@@ -11,52 +12,109 @@ import {
   obtenerVacunas,
 } from '../services/mascotasService'
 import { TEXTO_ESTADO_MASCOTA } from '../types/mascota'
-import { EnlaceBoton } from '../componentes/atomos/EnlaceBoton'
-import { PestanasClinicas, type PestanaClinica } from '../componentes/moleculas/PestanasClinicas'
+import { HeroDetalleMascota } from '../componentes/organismos/HeroDetalleMascota'
+import { BloqueCompletarMascota } from '../componentes/organismos/BloqueCompletarMascota'
+import { TituloSeccion } from '../componentes/moleculas/TituloSeccion'
 import { TarjetaRegistroClinico } from '../componentes/moleculas/TarjetaRegistroClinico'
 import { TarjetaVacuna } from '../componentes/moleculas/TarjetaVacuna'
 
+/* Las tres secciones que se pueden abrir bajo la ficha */
+type Seccion = 'ficha' | 'historial' | 'vacunas'
+
+/* Las tres tarjetas de acceso que hay bajo la ficha (icono, textos y a qué sección abren) */
+const ACCESOS: { clave: Seccion; icono: string; titulo: string; texto: string; enlace: string }[] = [
+  {
+    clave: 'ficha',
+    icono: '/img/icono-ficha-clinica.png',
+    titulo: 'Ficha clínica',
+    texto: 'Datos generales y registro de nuevas atenciones.',
+    enlace: 'Ir a la ficha',
+  },
+  {
+    clave: 'historial',
+    icono: '/img/icono-historial-clinico.png',
+    titulo: 'Historial clínico',
+    texto: 'Consultas y tratamientos anteriores.',
+    enlace: 'Ver historial',
+  },
+  {
+    clave: 'vacunas',
+    icono: '/img/icono-vacunas.png',
+    titulo: 'Vacunas',
+    texto: 'Calendario de vacunación y refuerzos.',
+    enlace: 'Ver vacunas',
+  },
+]
+
 export default function DetalleMascotaPage() {
+  /* Id de la mascota que viene en la dirección (/mascotas/:id) y usuario con sesión iniciada */
   const { id } = useParams<{ id: string }>()
+  const { usuario } = useAuth()
+
+  /* Se lee la mascota en cada render, así se ve actualizada después de guardar cambios */
   const mascota = id ? obtenerMascotaPorId(id) : null
 
-  const [pestana, setPestana] = useState<PestanaClinica>('ficha')
+  /* Tarjeta de acceso abierta (null = ninguna) */
+  const [seccion, setSeccion] = useState<Seccion | null>(null)
+
+  /* Si la mascota está en favoritos */
   const [favorita, setFavorita] = useState(() => (id ? esFavorita(id) : false))
+
+  /* Se incrementa al guardar cambios para volver a leer la mascota */
+  const [, setVersion] = useState(0)
 
   if (!mascota) {
     return (
-      <main className="seccion-mascotas">
-        <div className="contenedor text-center">
-          <h1>Mascota no encontrada</h1>
-          <p>No existe un paciente registrado con el identificador "{id}".</p>
-          <EnlaceBoton to="/mascotas" variante="secundario">
-            ← Volver a mis mascotas
-          </EnlaceBoton>
-        </div>
+      <main className="seccion-detalle-mascota">
+        <HeroDetalleMascota />
+        <section className="detalle-fondo-ficha">
+          <div className="contenedor detalle-mascota-contenedor">
+            <div className="mascota-no-encontrada">
+              <h2>Mascota no encontrada</h2>
+              <p>No existe un paciente registrado con el identificador "{id}".</p>
+              <Link to="/mascotas" className="volver-listado">
+                Volver al listado de mascotas
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
     )
   }
+  /* Datos de la mascota que se muestran en la ficha */
+  const { nombre, especie, raza, edad, sexo, peso, dueño,correoDueño, imagen, estado, descripcion } = mascota
 
-  const { nombre, especie, raza, edad, sexo, peso, dueño, imagen, estado, descripcion } = mascota
+  /* Solo el dueño/a puede completar o editar los datos */
+  const esDueño = !!usuario && usuario.correo.toLowerCase() === (correoDueño ?? '').toLowerCase()
 
+  /* Agrega o quita la mascota de favoritos */
   const manejarFavorita = () => setFavorita(alternarFavorita(mascota.id))
 
+  /* Registros clínicos que se muestran al abrir las tarjetas de acceso */
   const historial = obtenerHistorial(mascota.id)
   const vacunas = obtenerVacunas(mascota.id)
 
   return (
-    <main className="seccion-mascotas">
-      <div className="contenedor">
-        <a href="/mascotas" className="volver-listado">
-          ← Volver al listado de mascotas
-        </a>
+    <main className="seccion-detalle-mascota">
+      {/* Banner superior */}
+      <HeroDetalleMascota />
 
+        <section className="detalle-fondo-ficha" aria-label="Ficha de la mascota">
+        <div className="contenedor detalle-mascota-contenedor">
+        {/* Botón para volver al catálogo */}
+        <Link to="/mascotas" className="volver-listado">
+          ← Volver al listado de mascotas
+        </Link>
+
+        {/* Tarjeta principal: foto + datos */}
         <div className="detalle-mascota-cabecera">
+          {/* Foto de la mascota */}
           <div className="detalle-mascota-imagen">
             <img src={imagen} alt={`${nombre}, ${especie.toLowerCase()}`} />
           </div>
 
-          <div>
+          <div className="detalle-mascota-info">
+            {/* Nombre y botón de favoritos */}
             <div className="detalle-mascota-titulo-fila">
               <h1>{nombre}</h1>
               <button
@@ -70,60 +128,126 @@ export default function DetalleMascotaPage() {
               </button>
             </div>
 
+            {/* Especie, raza y estado de salud */}
             <p className="raza-especie">
               {especie}
               {raza ? ` · ${raza}` : ''}
             </p>
             <span className={`estado-badge estado-${estado}`}>{TEXTO_ESTADO_MASCOTA[estado]}</span>
 
-            <PestanasClinicas activa={pestana} onCambio={setPestana} />
+            {/* Datos en cajas de colores: edad, sexo, peso y dueño/a */}
+            <ul className="lista-datos">
+              <li>
+                <strong>Edad</strong>
+                {edad}
+              </li>
+              <li>
+                <strong>Sexo</strong>
+                {sexo || 'No especificado'}
+              </li>
+              <li>
+                <strong>Peso</strong>
+                {peso || 'No especificado'}
+              </li>
+              <li>
+                <strong>Dueño/a</strong>
+                {dueño}
+              </li>
+            </ul>
 
-            {pestana === 'ficha' && (
-              <>
-                <ul className="lista-datos">
-                  <li>
-                    <strong>Edad</strong>
-                    {edad}
-                  </li>
-                  <li>
-                    <strong>Sexo</strong>
-                    {sexo || 'No especificado'}
-                  </li>
-                  <li>
-                    <strong>Peso</strong>
-                    {peso || 'No especificado'}
-                  </li>
-                  <li>
-                    <strong>Dueño/a</strong>
-                    {dueño}
-                  </li>
-                </ul>
-                <p className="detalle-mascota-descripcion">{descripcion}</p>
-              </>
-            )}
+            {/* Descripción de la mascota */}
+            <p className="detalle-mascota-descripcion">{descripcion}</p>
 
-            {pestana === 'historial' && (
-              <div className="lista-registros">
-                {historial.length === 0 ? (
-                  <p className="registros-vacio">Aún no hay atenciones registradas para esta mascota.</p>
-                ) : (
-                  historial.map((registro, indice) => <TarjetaRegistroClinico key={indice} {...registro} />)
-                )}
+            {/* Completar o editar los datos (solo el dueño/a) */}
+            {esDueño && usuario && (
+              <div className="detalle-mascota-completar">
+                <BloqueCompletarMascota
+                  mascota={mascota}
+                  correoSolicitante={usuario.correo}
+                  onGuardado={() => setVersion((v) => v + 1)}
+                />
               </div>
             )}
-
-            {pestana === 'vacunas' && (
-              <div className="lista-registros">
-                {vacunas.length === 0 ? (
-                  <p className="registros-vacio">Esta mascota no tiene vacunas registradas.</p>
-                ) : (
-                  vacunas.map((registro, indice) => <TarjetaVacuna key={indice} {...registro} />)
-                )}
-              </div>
-            )}
+            </div>
           </div>
+          </div>
+      </section>
+
+        {/* Zona con fondo rosa de confeti: accesos y su contenido, a todo el ancho de la página */}
+        <section className="detalle-fondo-clinico">
+          <div className="contenedor">
+
+        {/* Accesos a ficha clínica, historial y vacunas: al pulsar uno se despliega debajo */}
+        <div className="accesos-clinicos">
+          {ACCESOS.map((acceso) => {
+            /* Si esta tarjeta es la que está abierta */
+            const activo = seccion === acceso.clave
+            return (
+              <a
+                key={acceso.clave}
+                href="#"
+                className={`acceso-clinico ${activo ? 'acceso-clinico--activo' : ''}`}
+                aria-expanded={activo}
+                onClick={(e) => {
+                  /* Abre la tarjeta, o la cierra si ya estaba abierta */
+                  e.preventDefault()
+                  setSeccion(activo ? null : acceso.clave)
+                }}
+              >
+                <span className="icono-acceso">
+                  <img src={acceso.icono} alt={acceso.titulo} />
+                </span>
+                <h3>{acceso.titulo}</h3>
+                <p>{acceso.texto}</p>
+                <span className="flecha">{acceso.enlace} →</span>
+              </a>
+            )
+          })}
         </div>
-      </div>
+
+        {/* Contenido de la tarjeta abierta: ficha clínica (las 3 atenciones más recientes) */}
+        {seccion === 'ficha' && (
+          <section className="detalle-clinico-panel">
+            <TituloSeccion etiqueta="Ficha clínica" titulo="Atenciones recientes" />
+            <div className="lista-registros">
+              {historial.length === 0 ? (
+                <p className="registros-vacio">Aún no hay atenciones registradas para esta mascota.</p>
+              ) : (
+                historial.slice(0, 3).map((registro, indice) => <TarjetaRegistroClinico key={indice} {...registro} />)
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* Historial clínico: todas las atenciones */}
+        {seccion === 'historial' && (
+          <section className="detalle-clinico-panel">
+            <TituloSeccion etiqueta="Historial médico" titulo="Atenciones registradas" />
+            <div className="lista-registros">
+              {historial.length === 0 ? (
+                <p className="registros-vacio">Aún no hay atenciones registradas para esta mascota.</p>
+              ) : (
+                historial.map((registro, indice) => <TarjetaRegistroClinico key={indice} {...registro} />)
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* Vacunas: calendario de vacunación */}
+        {seccion === 'vacunas' && (
+          <section className="detalle-clinico-panel">
+            <TituloSeccion etiqueta="Calendario de vacunación" titulo="Vacunas aplicadas" />
+            <div className="lista-registros">
+              {vacunas.length === 0 ? (
+                <p className="registros-vacio">Esta mascota no tiene vacunas registradas.</p>
+              ) : (
+                vacunas.map((registro, indice) => <TarjetaVacuna key={indice} {...registro} />)
+              )}
+            </div>
+          </section>
+        )}
+        </div>
+      </section>
     </main>
   )
 }

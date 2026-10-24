@@ -157,9 +157,19 @@ export function obtenerVacunas(idMascota: string): RegistroVacuna[] {
   return todos[idMascota] ?? []
 }
 
+/** Registra una vacuna. Hay una sola entrada por vacuna: si ya existía (ej: refuerzo atrasado), se reemplaza por la nueva. */
 export function agregarVacuna(idMascota: string, registro: RegistroVacuna): void {
   const todos = leerObjeto<Record<string, RegistroVacuna[]>>(CLAVES.vacunasMascotas) ?? {}
-  todos[idMascota] = [registro, ...(todos[idMascota] ?? [])]
+  const nombre = registro.vacuna.trim().toLowerCase()
+  const otras = (todos[idMascota] ?? []).filter((v) => v.vacuna.trim().toLowerCase() !== nombre)
+  todos[idMascota] = [registro, ...otras]
+  guardarObjeto(CLAVES.vacunasMascotas, todos)
+}
+
+/** Quita un registro de vacuna de la mascota (por su posición en la lista). */
+export function eliminarVacuna(idMascota: string, indice: number): void {
+  const todos = leerObjeto<Record<string, RegistroVacuna[]>>(CLAVES.vacunasMascotas) ?? {}
+  todos[idMascota] = (todos[idMascota] ?? []).filter((_, i) => i !== indice)
   guardarObjeto(CLAVES.vacunasMascotas, todos)
 }
 

@@ -6,9 +6,12 @@ export interface TablaMascotasProps {
   mascotas: Mascota[]
   onEditar: (mascota: Mascota) => void
   onEliminar: (mascota: Mascota) => void
+  onAtencion: (mascota: Mascota) => void // abre el formulario de atención
+  onVacuna: (mascota: Mascota) => void // abre el formulario de vacuna
 }
 
-export function TablaMascotas({ mascotas, onEditar, onEliminar }: TablaMascotasProps) {
+export function TablaMascotas({ mascotas, onEditar, onEliminar, onAtencion, onVacuna }: TablaMascotasProps) {
+  /* Sin mascotas: solo se muestra un mensaje */
   if (mascotas.length === 0) {
     return <p className="admin-tabla-vacia">No hay mascotas registradas.</p>
   }
@@ -28,7 +31,14 @@ export function TablaMascotas({ mascotas, onEditar, onEliminar }: TablaMascotasP
         </thead>
         <tbody>
           {mascotas.map((m) => (
-            <FilaMascota key={m.id} mascota={m} onEditar={onEditar} onEliminar={onEliminar} />
+            <FilaMascota 
+              key={m.id} 
+              mascota={m} 
+              onEditar={onEditar} 
+              onEliminar={onEliminar}
+              onAtencion={onAtencion}
+              onVacuna={onVacuna}
+            />
           ))}
         </tbody>
       </table>

@@ -33,25 +33,29 @@ export default function MisMascotasPage() {
   return (
     <main className="seccion-mascotas seccion-mascotas--con-hero">
       <HeroMascotas />
-      <section className="contenedor catalogo-mascotas" id="catalogo-mascotas">
-        <div className="titulo-seccion-mascotas">
+      {/* Zona con fondo lila → rosa, a todo el ancho */}
+      <section className="fondo-catalogo-mascotas">
+        <div className="contenedor catalogo-mascotas" id="catalogo-mascotas">
           <TituloSeccion
             etiqueta="Tus mascotas"
             titulo="Mascotas registradas"
             descripcion="Aquí encontrarás las mascotas asociadas a tu cuenta. Revisa su ficha clínica, historial, vacunas y controles."
           />
+
+          <FiltrosMascotas filtros={filtros} onCambio={setFiltros} onLimpiar={() => setFiltros(SIN_FILTROS)} />
+
+          <p className="mascotas-resumen" aria-live="polite">
+            {visibles.length} {visibles.length === 1 ? 'mascota encontrada' : 'mascotas encontradas'}
+          </p>
+
+          <GrillaMascotas mascotas={visibles} favoritos={favoritos} onAlternarFavorita={manejarFavorita} />
+          </div>
+        </section>
+        {/* Zona con el mismo fondo del banner de Novedades, a todo el ancho */}
+        <div className="fondo-cuidados">
+          <CuidadosPorEspecie />
         </div>
-
-        <FiltrosMascotas filtros={filtros} onCambio={setFiltros} onLimpiar={() => setFiltros(SIN_FILTROS)} />
-
-        <p className="mascotas-resumen" aria-live="polite">
-          {visibles.length} {visibles.length === 1 ? 'mascota encontrada' : 'mascotas encontradas'}
-        </p>
-
-        <GrillaMascotas mascotas={visibles} favoritos={favoritos} onAlternarFavorita={manejarFavorita} />
-      </section>
-      <CuidadosPorEspecie />
-      <VideoCuidados />
-    </main>
+        <VideoCuidados />
+      </main>
   )
 }

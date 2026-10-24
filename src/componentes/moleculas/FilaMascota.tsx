@@ -7,6 +7,8 @@ export interface FilaMascotaProps {
   mascota: Mascota
   onEditar: (mascota: Mascota) => void
   onEliminar: (mascota: Mascota) => void
+  onAtencion: (mascota: Mascota) => void // abre el formulario de atención
+  onVacuna: (mascota: Mascota) => void // abre el formulario de vacuna
 }
 
 /* Color de la insignia según el estado (clases del panel admin) */
@@ -16,7 +18,7 @@ const CLASE_BADGE: Record<EstadoMascota, string> = {
   pendiente: 'admin-badge--pendiente',
 }
 
-export function FilaMascota({ mascota, onEditar, onEliminar }: FilaMascotaProps) {
+export function FilaMascota({ mascota, onEditar, onEliminar, onAtencion, onVacuna }: FilaMascotaProps) {
   const { nombre, especie, raza, dueño, imagen, estado } = mascota
   return (
     <tr>
@@ -34,6 +36,14 @@ export function FilaMascota({ mascota, onEditar, onEliminar }: FilaMascotaProps)
       </td>
       <td>
         <div className="admin-acciones-fila">
+          {/* Registrar una atención clínica de esta mascota */}
+          <Boton variante="ver" onClick={() => onAtencion(mascota)} aria-label={`Registrar atención de ${nombre}`}>
+            Atención
+          </Boton>
+          {/* Registrar una vacuna aplicada */}
+          <Boton variante="accion" onClick={() => onVacuna(mascota)} aria-label={`Registrar vacuna de ${nombre}`}>
+            Vacuna
+          </Boton>
           <Boton variante="editar" onClick={() => onEditar(mascota)} aria-label={`Editar a ${nombre}`}>
             Editar
           </Boton>

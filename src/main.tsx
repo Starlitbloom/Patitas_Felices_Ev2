@@ -10,6 +10,7 @@ import './styles/estilo-usuarios.css'
 import './styles/estilo-admin.css'
 import './styles/estilo-equipo.css'
 import './styles/estilo-mascotas.css'
+import './styles/estilo-detalle-mascota.css'
 import './styles/estilo-clinico.css'
 import './styles/ajustes-react.css'
 

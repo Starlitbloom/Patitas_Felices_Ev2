@@ -59,7 +59,7 @@ export function FiltrosMascotas({ filtros, onCambio, onLimpiar }: FiltrosMascota
           onClick={() => onCambio({ ...filtros, soloFavoritas: !filtros.soloFavoritas })}
           aria-pressed={filtros.soloFavoritas}
         >
-          ★ Favoritos
+        <span className="estrella-favoritos">★</span> Favoritos
         </button>
 
         <button type="button" className="equipo-limpiar" onClick={onLimpiar}>
