@@ -39,8 +39,23 @@ export function asegurarDatosInicialesMascotas(): void {
    LECTURA
 ========================================================= */
 
+/* Mascota tal como puede venir guardada: los datos de la EP1 escribían los campos
+   del dueño sin ñ ("dueno" y "correoDueno"). */
+type MascotaGuardada = Mascota & { dueno?: string; correoDueno?: string }
+
+/* Pasa una mascota guardada al formato actual (con ñ).
+   Si ya está en el formato actual, queda igual. */
+function normalizarMascota(guardada: MascotaGuardada): Mascota {
+  const { dueno, correoDueno, ...resto } = guardada
+  return {
+    ...resto,
+    dueño: resto.dueño ?? dueno ?? '',
+    correoDueño: resto.correoDueño ?? correoDueno ?? '',
+  }
+}
+
 export function listarMascotas(): Mascota[] {
-  return leerColeccion<Mascota>(CLAVES.mascotas)
+  return leerColeccion<MascotaGuardada>(CLAVES.mascotas).map(normalizarMascota)
 }
 
 /** Mascotas de un dueño/a (lo usa la vista pública "Mis mascotas", filtrada por sesión). */

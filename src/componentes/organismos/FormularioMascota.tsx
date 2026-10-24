@@ -265,8 +265,8 @@ export function FormularioMascota({ modo, valoresIniciales = {}, onSubmit, onCan
       />
 
       {/* Botones: guardar y cancelar */}
-      <div className="admin-panel-editar-botones">
-        <Boton type="submit" flecha>
+      <div className="admin-panel-editar-botones admin-botones-compactos">
+        <Boton type="submit">
           {modo === 'crear' ? 'Crear mascota' : 'Guardar cambios'}
         </Boton>
         {onCancelar && (

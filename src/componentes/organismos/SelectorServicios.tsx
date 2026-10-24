@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import type { Especie, RegistroVacuna } from '../../types/mascota'
 import { CATALOGO_VACUNAS, GRUPOS_SERVICIOS } from '../../data/serviciosClinica'
 import { buscarVacuna, estadoActualVacuna, refuerzoPorDefecto } from '../../utils/vacunas'
-import { CampoFormulario } from '../moleculas/CampoFormulario'
+import { CampoFecha } from '../moleculas/CampoFecha'
 
 export interface SelectorServiciosProps {
   /** Especie de la mascota: decide qué vacunas se ofrecen. */
@@ -105,10 +105,9 @@ export function SelectorServicios({
                   {/* Fecha del próximo refuerzo de la vacuna recién marcada */}
                   {nombre in vacunasNuevas && (
                     <div className="servicio-refuerzo">
-                      <CampoFormulario
+                      <CampoFecha
                         id={`refuerzo-${indice}`}
                         etiqueta="Próximo refuerzo"
-                        tipo="date"
                         valor={vacunasNuevas[nombre]}
                         onCambio={(valor) => onCambiarVacunas({ ...vacunasNuevas, [nombre]: valor })}
                         error={erroresVacunas[nombre]}
@@ -121,18 +120,22 @@ export function SelectorServicios({
           )}
         </div>
 
-        {/* Cirugía, Desparasitación, Exámenes y Otros */}
-        {GRUPOS_SERVICIOS.map(({ grupo, servicios: lista }) => (
-          <div className="servicios-grupo" key={grupo}>
-            <h4>{grupo}</h4>
-            {lista.map((nombre) => (
-              <label className="servicio-opcion" key={nombre}>
-                <input type="checkbox" checked={servicios.includes(nombre)} onChange={() => alternarServicio(nombre)} />
-                <span>{nombre}</span>
-              </label>
-            ))}
-          </div>
-        ))}
+        {/* Cirugía, Desparasitación, Exámenes y Otros: solo los de la especie de la mascota */}
+        {GRUPOS_SERVICIOS.map(({ grupo, servicios: lista }) => {
+          const disponibles = lista.filter((s) => !s.especies || s.especies.includes(especie))
+          if (disponibles.length === 0) return null // grupo sin servicios para esta especie
+          return (
+            <div className="servicios-grupo" key={grupo}>
+              <h4>{grupo}</h4>
+              {disponibles.map(({ nombre }) => (
+                <label className="servicio-opcion" key={nombre}>
+                  <input type="checkbox" checked={servicios.includes(nombre)} onChange={() => alternarServicio(nombre)} />
+                  <span>{nombre}</span>
+                </label>
+              ))}
+            </div>
+          )
+        })}
       </div>
     </details>
   )

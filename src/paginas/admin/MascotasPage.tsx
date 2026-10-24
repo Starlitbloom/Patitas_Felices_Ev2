@@ -18,6 +18,8 @@ import { EncabezadoAdmin } from '../../componentes/organismos/EncabezadoAdmin'
 import { FiltrosMascotasAdmin, type FiltrosMascotasAdminValor } from '../../componentes/organismos/FiltrosMascotasAdmin'
 import { TablaMascotas } from '../../componentes/organismos/TablaMascotas'
 import { TablaSolicitudesMascotas } from '../../componentes/organismos/TablaSolicitudesMascotas'
+import { TablaHistorialPacientes } from '../../componentes/organismos/TablaHistorialPacientes'
+import { DetalleHistorialPaciente } from '../../componentes/organismos/DetalleHistorialPaciente'
 import { Modal } from '../../componentes/organismos/Modal'
 import { ModalConfirmacion } from '../../componentes/organismos/ModalConfirmacion'
 import { FormularioMascota, type DatosFormularioMascota } from '../../componentes/organismos/FormularioMascota'
@@ -40,6 +42,8 @@ export default function MascotasPage() {
   const [aRechazar, setARechazar] = useState<SolicitudCambio | null>(null)
   const [aviso, setAviso] = useState<string | null>(null)
   const [clinico, setClinico] = useState<EstadoClinico>(null)
+    /* Paciente cuyo historial se está viendo (null = ventana cerrada) */
+  const [verHistorial, setVerHistorial] = useState<Mascota | null>(null)
 
   const visibles = mascotas.filter(
     (m) =>
@@ -53,6 +57,8 @@ export default function MascotasPage() {
   }
 
   const nombreMascota = (id: string) => mascotas.find((m) => m.id === id)?.nombre ?? id
+    /* Foto actual de la mascota (para la tabla de solicitudes) */
+  const imagenMascota = (id: string) => mascotas.find((m) => m.id === id)?.imagen ?? ''
 
   const aprobar = (solicitud: SolicitudCambio) => {
     aprobarSolicitud(solicitud.id)
@@ -136,7 +142,13 @@ export default function MascotasPage() {
       </div>
 
       <section className="admin-tabla-seccion">
-        <TablaSolicitudesMascotas solicitudes={solicitudes} nombreMascota={nombreMascota} onAprobar={aprobar} onRechazar={setARechazar} />
+        <TablaSolicitudesMascotas 
+          solicitudes={solicitudes} 
+          nombreMascota={nombreMascota} 
+          imagenMascota={imagenMascota} 
+          onAprobar={aprobar} 
+          onRechazar={setARechazar} 
+        />
       </section>
 
       <div className="admin-seccion-cabecera">
@@ -162,6 +174,21 @@ export default function MascotasPage() {
           onEliminar={setAEliminar} 
           onAtencion={(m) => setClinico({ tipo: 'atencion', mascota: m })} 
           onVacuna={(m) => setClinico({ tipo: 'vacuna', mascota: m })}
+        />
+      </section>
+            {/* Historial clínico por paciente: una fila por mascota con sus atenciones, vacunas y servicios */}
+      <div className="admin-seccion-cabecera">
+        <div>
+          <h2>Historial clínico de pacientes</h2>
+          <p>Revisa las atenciones, vacunas y servicios realizados a cada paciente.</p>
+        </div>
+      </div>
+
+      <section className="admin-tabla-seccion">
+        {/* Usa la lista filtrada: el buscador de arriba también aplica aquí */}
+        <TablaHistorialPacientes
+          mascotas={visibles}
+          onVer={setVerHistorial}
         />
       </section>
 
@@ -206,6 +233,16 @@ export default function MascotasPage() {
           />
         )}
       </Modal>
+      {/* Ventana con el historial completo del paciente (foto, atenciones, servicios y vacunas) */}
+      <Modal
+        abierto={verHistorial !== null}
+        titulo={`Historial · ${verHistorial?.nombre ?? ''}`}
+        onCerrar={() => setVerHistorial(null)}
+        ancho
+      >
+        {verHistorial && <DetalleHistorialPaciente mascota={verHistorial} />}
+      </Modal>
+      
       <ModalConfirmacion
         abierto={aEliminar !== null}
         titulo="Eliminar mascota"

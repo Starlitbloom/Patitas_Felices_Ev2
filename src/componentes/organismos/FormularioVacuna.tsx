@@ -7,12 +7,12 @@
    - El estado se calcula siempre con la fecha de hoy, a partir del próximo refuerzo. */
 import { useState, type FormEvent } from 'react'
 import type { Especie, EstadoVacuna, RegistroVacuna } from '../../types/mascota'
-import { TEXTO_ESTADO_VACUNA } from '../../types/mascota'
 import { hayErrores, validarRequerido } from '../../utils/validaciones'
 import { fechaDeHoyInput, fechaTextoAIso, formatearFechaInput } from '../../utils/fechas'
 import { CampoFormulario } from '../moleculas/CampoFormulario'
 import { CampoSelector } from '../moleculas/CampoSelector'
 import { Boton } from '../atomos/Boton'
+import { CampoFecha } from '../moleculas/CampoFecha'
 
 export interface FormularioVacunaProps {
   /** Especie de la mascota: decide qué vacunas se ofrecen. */
@@ -214,25 +214,30 @@ export function FormularioVacuna({ especie, aplicadas, onSubmit, onEliminar, onC
 
       <div className="row">
         <div className="col-md-6">
-          <CampoFormulario id="vacuna-fecha" etiqueta="Fecha de aplicación" tipo="date" valor={datos.fecha} onCambio={cambiar('fecha')} error={errores.fecha} />
+          {/* Fecha en que se aplicó la vacuna */}
+          <CampoFecha
+            id="vacuna-fecha"
+            etiqueta="Fecha de aplicación"
+            valor={datos.fecha}
+            onCambio={cambiar('fecha')}
+            error={errores.fecha ?? undefined}
+          />
         </div>
         <div className="col-md-6">
-          <CampoFormulario
+          {/* Próximo refuerzo: no deja elegir un día anterior a la aplicación */}
+          <CampoFecha
             id="vacuna-refuerzo"
             etiqueta="Próximo refuerzo"
-            tipo="date"
             valor={datos.proximoRefuerzo}
             onCambio={cambiar('proximoRefuerzo')}
-            error={errores.proximoRefuerzo}
+            error={errores.proximoRefuerzo ?? undefined}
+            minimo={datos.fecha}
           />
         </div>
       </div>
 
-      {/* Botones */}
-      <div className="admin-panel-editar-botones">
-        <Boton type="submit" flecha>
-          Guardar vacuna
-        </Boton>
+      <div className="admin-panel-editar-botones admin-botones-compactos">
+        <Boton type="submit">Guardar vacuna</Boton>
         <Boton variante="limpiar" onClick={onCancelar}>
           Cancelar
         </Boton>

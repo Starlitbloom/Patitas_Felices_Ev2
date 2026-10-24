@@ -1539,3 +1539,280 @@
     margin: 4px 0 8px 27px;
     max-width: 260px;
 }
+/* Texto largo de una celda (ej: tratamiento): se corta con "…" para historial */
+.celda-recortada {
+    display: block;
+    max-width: 200px;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+/* =========================================================
+   VENTANA "HISTORIAL" DE UN PACIENTE (panel admin)
+========================================================= */
+
+/* Cabecera: foto a la izquierda y datos a la derecha */
+.historial-paciente-cabecera {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    margin-bottom: 22px;
+}
+
+/* Foto del paciente: cuadrada con bordes redondeados */
+.historial-paciente-foto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 84px;
+    height: 84px;
+    flex-shrink: 0;
+
+    border-radius: 18px;
+    overflow: hidden;
+
+    background: linear-gradient(135deg, var(--rosa), var(--morado));
+    font-size: 30px;
+}
+
+.historial-paciente-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Nombre y datos básicos */
+.historial-paciente-cabecera h3 {
+    margin: 0 0 4px;
+
+    font-size: 20px;
+    color: var(--blanco);
+}
+
+.historial-paciente-cabecera p {
+    margin: 0 0 3px;
+
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Las listas dentro de la ventana no necesitan tanto espacio abajo */
+.historial-paciente .lista-registros {
+    margin-bottom: 24px;
+}
+
+/* Tarjetas de atención y de vacuna: de blanco a un fondo oscuro translúcido */
+.historial-paciente .registro-clinico {
+    grid-template-columns: 110px 1fr;
+    gap: 16px;
+
+    padding: 16px 20px;
+
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: none;
+}
+
+.historial-paciente .registro-clinico .registro-fecha {
+    font-size: 13px;
+    color: var(--rosa);
+}
+
+.historial-paciente .registro-clinico h3 {
+    color: var(--blanco);
+}
+
+.historial-paciente .registro-clinico p {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.historial-paciente .registro-clinico p strong {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Mensaje cuando no hay atenciones o vacunas */
+.historial-paciente-vacio {
+    margin: 0;
+    padding: 20px;
+
+    border: 1.5px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+
+    text-align: center;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+/* Pantallas chicas: la fecha pasa arriba del contenido */
+@media (max-width: 520px) {
+    .historial-paciente .registro-clinico {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+}
+/* ===== Calendario redondo (CampoFecha) ===== */
+
+/* Contenedor: el calendario se abre pegado debajo del botón */
+.campo-fecha {
+  position: relative;
+}
+
+/* Botón que muestra la fecha elegida (parece un campo de texto redondeado) */
+.campo-fecha-boton {
+  width: 100%;
+  text-align: left;
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--blanco);
+  cursor: pointer;
+}
+
+/* Cuando aún no hay fecha, el texto se ve apagado */
+.campo-fecha-boton--vacio {
+  color: var(--gris-suave);
+}
+
+.campo-fecha-boton:focus-visible {
+  outline: 2px solid var(--celeste);
+  outline-offset: 2px;
+}
+
+/* Ventana del calendario */
+.calendario {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 30;
+  width: 290px;
+  padding: 14px;
+  border-radius: 24px;
+  background: #2a2540;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  color: var(--blanco);
+}
+
+/* Fila superior: flecha, mes y año, flecha */
+.calendario-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+/* Flechas redondas para cambiar de mes */
+.calendario-flecha {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--blanco);
+  cursor: pointer;
+}
+
+.calendario-flecha:hover {
+  background: var(--rosa);
+}
+
+/* Letras de los días de la semana */
+.calendario-semana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--gris-suave);
+  margin-bottom: 4px;
+}
+
+/* Cuadrícula de días: 7 columnas */
+.calendario-dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+/* Cada día es un círculo */
+.calendario-dia {
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--blanco);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.calendario-dia:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Días no permitidos (antes de la fecha mínima) */
+.calendario-dia:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Hoy: con borde */
+.calendario-dia--hoy {
+  border: 1px solid var(--celeste);
+}
+
+/* Día elegido: círculo relleno */
+.calendario-dia--elegido {
+  background: var(--rosa);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Pie: botones "Hoy" / "Limpiar" */
+.calendario-pie {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.calendario-pie button {
+  border: none;
+  background: none;
+  color: var(--celeste);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.calendario-pie button:hover {
+  text-decoration: underline;
+}
+/* Botones de los formularios clínicos (Atención y Vacuna): más pequeños y alineados a la izquierda */
+.admin-botones-compactos .boton-principal {
+  flex: 0 0 auto;      /* no se estira: mide lo que ocupa su texto */
+  padding: 10px 28px;  /* más angosto y más bajo */
+  font-size: 0.9rem;
+}
+
+.admin-botones-compactos .admin-btn-limpiar {
+  padding: 10px 22px;
+  font-size: 0.9rem;
+}
+/* Al subir a la ficha con "Ir a la ficha", deja espacio para que el menú no tape la tarjeta */
+#ficha-mascota {
+  scroll-margin-top: 130px;
+}
+/* Miniatura de la foto nueva que propone el dueño en una solicitud de cambio */
+.solicitud-foto-nueva {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 12px;
+  vertical-align: middle;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}

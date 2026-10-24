@@ -107,7 +107,7 @@ export default function DetalleMascotaPage() {
         </Link>
 
         {/* Tarjeta principal: foto + datos */}
-        <div className="detalle-mascota-cabecera">
+        <div className="detalle-mascota-cabecera" id="ficha-mascota">
           {/* Foto de la mascota */}
           <div className="detalle-mascota-imagen">
             <img src={imagen} alt={`${nombre}, ${especie.toLowerCase()}`} />
@@ -192,6 +192,10 @@ export default function DetalleMascotaPage() {
                   /* Abre la tarjeta, o la cierra si ya estaba abierta */
                   e.preventDefault()
                   setSeccion(activo ? null : acceso.clave)
+                  // "Ir a la ficha": al abrirla, sube hasta la tarjeta de la mascota
+                  if (acceso.clave === 'ficha' && !activo) {
+                    document.getElementById('ficha-mascota')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  }
                 }}
               >
                 <span className="icono-acceso">
@@ -213,7 +217,7 @@ export default function DetalleMascotaPage() {
               {historial.length === 0 ? (
                 <p className="registros-vacio">Aún no hay atenciones registradas para esta mascota.</p>
               ) : (
-                historial.slice(0, 3).map((registro, indice) => <TarjetaRegistroClinico key={indice} {...registro} />)
+                historial.slice(0, 2).map((registro, indice) => <TarjetaRegistroClinico key={indice} {...registro} />)
               )}
             </div>
           </section>

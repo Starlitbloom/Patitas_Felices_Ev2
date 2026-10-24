@@ -6,6 +6,8 @@ export interface TablaSolicitudesMascotasProps {
   solicitudes: SolicitudCambio[]
   /** Devuelve el nombre de la mascota a partir de su id. */
   nombreMascota: (id: string) => string
+    /** Devuelve la foto actual de la mascota a partir de su id. */
+  imagenMascota: (id: string) => string
   onAprobar: (solicitud: SolicitudCambio) => void
   onRechazar: (solicitud: SolicitudCambio) => void
 }
@@ -18,18 +20,23 @@ const ETIQUETA_CAMBIO: Record<keyof CambiosSolicitud, string> = {
   descripcion: 'Descripción',
 }
 
-/* Lista solo los campos con valor; la foto se resume (guardada es un texto enorme) */
+/* Lista solo los campos con valor; la foto nueva se muestra en miniatura */
 function resumirCambios(cambios: CambiosSolicitud) {
   return (Object.keys(ETIQUETA_CAMBIO) as (keyof CambiosSolicitud)[])
     .filter((campo) => cambios[campo])
     .map((campo) => (
       <div key={campo}>
-        <strong>{ETIQUETA_CAMBIO[campo]}:</strong> {campo === 'imagen' ? 'Nueva foto' : cambios[campo]}
+        <strong>{ETIQUETA_CAMBIO[campo]}:</strong>{' '}
+        {campo === 'imagen' ? (
+          <img className="solicitud-foto-nueva" src={cambios.imagen} alt="Foto nueva propuesta" />
+        ) : (
+          cambios[campo]
+        )}
       </div>
     ))
 }
 
-export function TablaSolicitudesMascotas({ solicitudes, nombreMascota, onAprobar, onRechazar }: TablaSolicitudesMascotasProps) {
+export function TablaSolicitudesMascotas({ solicitudes, nombreMascota, imagenMascota, onAprobar, onRechazar }: TablaSolicitudesMascotasProps) {
   return (
     <div className="admin-tabla-wrap table-responsive">
       <table className="admin-tabla">
@@ -52,7 +59,13 @@ export function TablaSolicitudesMascotas({ solicitudes, nombreMascota, onAprobar
           ) : (
             solicitudes.map((s) => (
               <tr key={s.id}>
-                <td>{nombreMascota(s.mascotaId)}</td>
+                {/* Mascota: foto actual + nombre */}
+                <td>
+                  <div className="admin-celda-mascota">
+                    {imagenMascota(s.mascotaId) && <img src={imagenMascota(s.mascotaId)} alt="" />}
+                    <span>{nombreMascota(s.mascotaId)}</span>
+                  </div>
+                </td>
                 <td>{s.correoSolicitante}</td>
                 <td>{resumirCambios(s.cambios)}</td>
                 <td>{new Date(s.fechaSolicitud).toLocaleDateString('es-CL')}</td>

@@ -1,10 +1,17 @@
 /* DATOS — Servicios que se pueden registrar en una atención.
-   Son los mismos de "Solicitar cita" en la EP1, agrupados por tipo. */
+   Son los de "Solicitar cita" en la EP1, agrupados por tipo, más los de conejos y aves.
+   Cada servicio dice qué especies lo usan; si no dice nada, sirve para todas. */
 import type { Especie } from '../types/mascota'
+
+export interface Servicio {
+  nombre: string
+  /** Especies a las que se ofrece. Si no se indica, es para todas. */
+  especies?: Especie[]
+}
 
 export interface GrupoServicios {
   grupo: string
-  servicios: string[]
+  servicios: Servicio[]
 }
 
 /* Servicios que no son vacunas */
@@ -12,31 +19,46 @@ export const GRUPOS_SERVICIOS: GrupoServicios[] = [
   {
     grupo: 'Cirugía',
     servicios: [
-      'Esterilización hembra canina',
-      'Esterilización macho canino',
-      'Esterilización hembra felina',
-      'Esterilización macho felino',
-      'Extirpación de tumor cutáneo',
-      'Cesárea de urgencia',
+      { nombre: 'Esterilización hembra canina', especies: ['Perro'] },
+      { nombre: 'Esterilización macho canino', especies: ['Perro'] },
+      { nombre: 'Esterilización hembra felina', especies: ['Gato'] },
+      { nombre: 'Esterilización macho felino', especies: ['Gato'] },
+      { nombre: 'Esterilización hembra conejo', especies: ['Conejo'] },
+      { nombre: 'Esterilización macho conejo', especies: ['Conejo'] },
+      { nombre: 'Extirpación de tumor cutáneo', especies: ['Perro', 'Gato', 'Conejo'] },
+      { nombre: 'Cesárea de urgencia', especies: ['Perro', 'Gato', 'Conejo'] },
     ],
   },
   {
     grupo: 'Desparasitación',
     servicios: [
-      'Desparasitación interna pequeños',
-      'Desparasitación interna medianos',
-      'Desparasitación interna grandes',
-      'Desparasitación interna felina',
-      'Desparasitación externa',
+      { nombre: 'Desparasitación interna pequeños', especies: ['Perro'] },
+      { nombre: 'Desparasitación interna medianos', especies: ['Perro'] },
+      { nombre: 'Desparasitación interna grandes', especies: ['Perro'] },
+      { nombre: 'Desparasitación interna felina', especies: ['Gato'] },
+      { nombre: 'Desparasitación interna conejo', especies: ['Conejo'] },
+      { nombre: 'Desparasitación interna ave', especies: ['Ave'] },
+      { nombre: 'Desparasitación externa' },
     ],
   },
   {
     grupo: 'Exámenes',
-    servicios: ['Hemograma completo', 'Perfil bioquímico completo', 'Radiografía', 'Ecografía abdominal', 'Test de leishmaniasis'],
+    servicios: [
+      { nombre: 'Hemograma completo' },
+      { nombre: 'Perfil bioquímico completo' },
+      { nombre: 'Radiografía' },
+      { nombre: 'Ecografía abdominal' },
+      { nombre: 'Test de leishmaniasis', especies: ['Perro', 'Gato', 'Conejo'] },
+    ],
   },
   {
     grupo: 'Otros',
-    servicios: ['Corte de uñas', 'Limpieza dental', 'Microchip identificación', 'Hospitalización'],
+    servicios: [
+      { nombre: 'Corte de uñas' },
+      { nombre: 'Limpieza dental', especies: ['Perro', 'Gato', 'Conejo'] },
+      { nombre: 'Microchip identificación', especies: ['Perro', 'Gato'] },
+      { nombre: 'Hospitalización' },
+    ],
   },
 ]
 

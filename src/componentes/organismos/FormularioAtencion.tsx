@@ -10,12 +10,13 @@ import { ESTADOS_MASCOTA, TEXTO_ESTADO_MASCOTA } from '../../types/mascota'
 import { VETERINARIOS } from '../../data/veterinarios'
 import { hayErrores, validarRequerido } from '../../utils/validaciones'
 import { fechaDeHoyInput, formatearFechaInput } from '../../utils/fechas'
-import { calcularEstadoVacuna } from '../../utils/vacunas'
+import { buscarVacuna, calcularEstadoVacuna, estadoActualVacuna } from '../../utils/vacunas'
 import { MensajeError } from '../atomos/MensajeError'
 import { CampoFormulario } from '../moleculas/CampoFormulario'
 import { CampoSelector } from '../moleculas/CampoSelector'
 import { SelectorServicios } from './SelectorServicios'
 import { Boton } from '../atomos/Boton'
+import { CampoFecha } from '../moleculas/CampoFecha'
 
 export interface FormularioAtencionProps {
   /** Especie de la mascota: decide qué veterinarios y qué vacunas se ofrecen. */
@@ -93,6 +94,22 @@ export function FormularioAtencion({ especie, estadoActual, aplicadas, onSubmit,
       setDatos((prev) => ({ ...prev, [campo]: valor }))
       setErrores((prev) => ({ ...prev, [campo]: null }))
     }
+  /* Al marcar vacunas: guarda la selección y, si el paciente estaba en "Vacunas pendientes"
+     y no le queda ninguna vacuna atrasada sin renovar, el estado pasa solo a "Control al día".
+     El personal puede volver a cambiarlo en el selector. */
+  const cambiarVacunas = (vacunas: Record<string, string>) => {
+    setVacunasNuevas(vacunas)
+    setErroresVacunas({})
+
+    const marcadas = Object.keys(vacunas)
+    if (estado !== 'pendiente' || marcadas.length === 0) return
+
+    /* Vacunas atrasadas del paciente que no se están renovando en esta atención */
+    const renovadas = marcadas.map((nombre) => buscarVacuna(aplicadas, nombre))
+    const quedanAtrasadas = aplicadas.some((v) => estadoActualVacuna(v) === 'atrasada' && !renovadas.includes(v))
+
+    if (!quedanAtrasadas) setEstado('al-dia')
+  }
 
   /* Al guardar: valida y, si todo está bien, entrega la atención y las vacunas nuevas */
   const enviar = (e: FormEvent) => {
@@ -138,7 +155,14 @@ export function FormularioAtencion({ especie, estadoActual, aplicadas, onSubmit,
     <form onSubmit={enviar} noValidate className="admin-modal-form" aria-label="Registrar atención">
       <div className="row">
         <div className="col-md-6">
-          <CampoFormulario id="atencion-fecha" etiqueta="Fecha de la atención" tipo="date" valor={datos.fecha} onCambio={cambiar('fecha')} error={errores.fecha} />
+          {/* Fecha de la atención (calendario redondo) */}
+          <CampoFecha
+            id="atencion-fecha"
+            etiqueta="Fecha de la atención"
+            valor={datos.fecha}
+            onCambio={cambiar('fecha')}
+            error={errores.fecha ?? undefined}
+          />
         </div>
         <div className="col-md-6">
           <CampoSelector
@@ -179,10 +203,7 @@ export function FormularioAtencion({ especie, estadoActual, aplicadas, onSubmit,
         servicios={servicios}
         onCambiarServicios={setServicios}
         vacunasNuevas={vacunasNuevas}
-        onCambiarVacunas={(vacunas) => {
-          setVacunasNuevas(vacunas)
-          setErroresVacunas({})
-        }}
+        onCambiarVacunas={cambiarVacunas}
         erroresVacunas={erroresVacunas}
       />
 
@@ -216,7 +237,7 @@ export function FormularioAtencion({ especie, estadoActual, aplicadas, onSubmit,
 
       {/* Botones */}
       <div className="admin-panel-editar-botones">
-        <Boton type="submit" flecha>
+        <Boton type="submit">
           Guardar atención
         </Boton>
         <Boton variante="limpiar" onClick={onCancelar}>
