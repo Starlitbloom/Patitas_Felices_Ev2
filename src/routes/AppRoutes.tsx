@@ -47,6 +47,11 @@ import DetalleNovedadPage from '../paginas/DetalleNovedadPage'
 ========================================================= */
 import ContactoPage from '../paginas/ContactoPage'
 
+/* =========================================================
+   SOLICITAR CITA
+========================================================= */
+import SolicitarCitaPage from '../paginas/SolicitarCitaPage'
+
 /** Atajo: envuelve una página que solo puede ver el administrador. */
 function SoloAdmin({ children }: { children: ReactNode }) {
   return <RutaProtegida roles={['admin']}>{children}</RutaProtegida>
@@ -91,7 +96,10 @@ export function AppRoutes() {
         <Route path="/mascotas/:id" element={<RutaProtegida><DetalleMascotaPage /></RutaProtegida>} />
 
         {/* Pendientes de migrar (citas) */}
-        <Route path="/solicitar-cita" element={<PaginaPendiente titulo="Solicitar cita" modulo="citas" />} />
+
+        {/* SOLICITAR CITA: página migrada a React */}
+        <Route path="/solicitar-cita" element={<SolicitarCitaPage />} />
+
         <Route path="/mis-citas" element={<PaginaPendiente titulo="Mis citas" modulo="citas" />} />
 
         <Route path="*" element={<NoEncontradoPage />} />
