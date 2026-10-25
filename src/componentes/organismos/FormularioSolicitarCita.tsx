@@ -1,376 +1,880 @@
 
 /* =========================================================
-   SOLICITAR CITA
-   FORMULARIO SOLICITAR CITA
-
-   - Nombre, correo y teléfono chileno.
-   - Nombre, especie y edad de mascota.
-   - Servicio veterinario obligatorio.
-   - Fecha y horario.
-   - Comprobación de horarios ocupados.
-   - Motivo con máximo 500 caracteres.
-   - Confirmación obligatoria.
-   - Errores en tiempo real.
+   VETERINARIA PATITAS FELICES
+   FUNCIONALIDADES:
+   1. Datos del dueño.
+   2. Datos de la mascota.
+   3. Edad en meses o años.
+   4. Validación del nombre de la mascota.
+   5. Selección de Perro, Gato, Ave o Conejo.
+   6. Selección del veterinario compatible.
+   7. Servicios veterinarios.
+   8. Fecha y hora según la agenda del médico.
+   9. Validación del motivo de consulta.
+   10. Registro de la cita como Pendiente.
 ========================================================= */
 
-import { useState, useRef } from 'react'
-import type { ChangeEvent, FormEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
+import type {
+  ChangeEvent,
+  FormEvent
+} from 'react'
+
+import { Link } from 'react-router-dom'
+
+import { useAuth } from '../../context/AuthContext'
+
+import {
+  crearCita,
+  fechaLocalHoy,
+  HORARIOS_CITAS,
+  horasOcupadas,
+  SERVICIOS_CITAS
+} from '../../services/citasService'
+
+import {
+  obtenerVeterinarioPorId
+} from '../../services/veterinariosService'
+
+import SelectorVeterinarioCita from './SelectorVeterinarioCita'
+
+import type {
+  Especie,
+  Veterinario
+} from '../../types/veterinario'
+
 
 /* =========================================================
    1. TIPOS DE DATOS
+   unidadEdad:
+   - meses: mascotas menores de un año.
+   - anios: mascotas de uno o más años.
 ========================================================= */
 
+type OtraEspecie = '' | 'Ave' | 'Conejo'
+
+type UnidadEdad = 'meses' | 'anios'
+
 interface DatosCita {
+
+  // Información del dueño.
   nombreDueno: string
   correo: string
   telefono: string
+
+  // Información de la mascota.
   nombreMascota: string
-  tipoMascota: string
   edadMascota: string
+  unidadEdad: UnidadEdad
+  tipoMascota: string
+  otraEspecie: OtraEspecie
+
+  // Veterinario elegido.
+  veterinarioId: number | null
+
+  // Información de la cita.
   servicio: string
   fecha: string
   hora: string
   motivo: string
+
+  // Confirmación del formulario.
   confirmarDatos: boolean
 }
 
-type CampoCita = keyof DatosCita
+type Campo = keyof DatosCita
 
-type ErroresCita = Partial<Record<CampoCita, string>>
+type ErroresCita = Partial<Record<Campo, string>>
 
-interface CitaGuardada {
-  fecha?: string
-  hora?: string
-  estado?: string
-}
-
-const datosIniciales: DatosCita = {
-  nombreDueno: '',
-  correo: '',
-  telefono: '',
-  nombreMascota: '',
-  tipoMascota: '',
-  edadMascota: '',
-  servicio: '',
-  fecha: '',
-  hora: '',
-  motivo: '',
-  confirmarDatos: false
-}
 
 /* =========================================================
-   2. OPCIONES DE CITA
+   2. CAMPOS QUE SE VALIDARÁN AL ENVIAR
 ========================================================= */
 
-const horarios = [
-  '09:00',
-  '10:00',
-  '11:00',
-  '12:00',
-  '15:00',
-  '16:00',
-  '17:00',
-  '18:00'
+const campos: Campo[] = [
+  'nombreDueno',
+  'correo',
+  'telefono',
+  'nombreMascota',
+  'edadMascota',
+  'unidadEdad',
+  'tipoMascota',
+  'otraEspecie',
+  'veterinarioId',
+  'servicio',
+  'fecha',
+  'hora',
+  'motivo',
+  'confirmarDatos'
 ]
 
-const servicios = [
-  'Consulta general',
-  'Vacunación',
-  'Control preventivo',
-  'Desparasitación',
-  'Otro'
-]
 
 /* =========================================================
    3. EXPRESIONES REGULARES
 ========================================================= */
 
-// Permite nombres con letras, tildes, ñ, apóstrofes y guiones.
-const expresionNombre =
-  /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]+$/
+const regexNombre =
+  /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ '-][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$/
 
-const expresionCorreo =
+const regexCorreo =
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-// Teléfono celular chileno.
-const expresionTelefono =
+const regexTelefono =
   /^(?:\+?56)?9\d{8}$/
 
-/* =========================================================
-   4. FECHA ACTUAL LOCAL
-========================================================= */
-
-function obtenerFechaActual(): string {
-  const hoy = new Date()
-
-  const anio = hoy.getFullYear()
-  const mes = String(hoy.getMonth() + 1).padStart(2, '0')
-  const dia = String(hoy.getDate()).padStart(2, '0')
-
-  return `${anio}-${mes}-${dia}`
-}
 
 /* =========================================================
-   5. OBTENER HORARIOS OCUPADOS 
+   4. DÍAS DE LA SEMANA
 ========================================================= */
 
-function obtenerHorasOcupadas(fecha: string): string[] {
-  if (!fecha) return []
+const nombresDias = [
+  'Domingo',
+  'Lunes',
+  'Martes',
+  'Miércoles',
+  'Jueves',
+  'Viernes',
+  'Sábado'
+]
 
-  try {
-    const contenido = localStorage.getItem('patitasFelices_citas')
 
-    if (!contenido) return []
+/* =========================================================
+   5. TIPOS DE MASCOTAS
+========================================================= */
 
-    const citas: unknown = JSON.parse(contenido)
-
-    if (!Array.isArray(citas)) return []
-
-    return citas
-      .filter((cita: CitaGuardada) =>
-        cita.fecha === fecha &&
-        String(cita.estado || '').toLowerCase() !== 'cancelada'
-      )
-      .map((cita: CitaGuardada) => cita.hora || '')
-      .filter(Boolean)
-
-  } catch {
-    return []
+const tiposMascota = [
+  {
+    valor: 'Perro',
+    titulo: 'Perro',
+    detalle: 'Nuestro mejor amigo',
+    imagen: 'icono-perro.png',
+    color: 'icono-perro'
+  },
+  {
+    valor: 'Gato',
+    titulo: 'Gato',
+    detalle: 'Curioso y especial',
+    imagen: 'icono-gato.png',
+    color: 'icono-gato'
+  },
+  {
+    valor: 'Otro',
+    titulo: 'Otro',
+    detalle: 'Otra mascota',
+    imagen: 'icono-otro.png',
+    color: 'icono-otro'
   }
+]
+
+
+/* =========================================================
+   6. VALIDAR FORMATO DE FECHA
+========================================================= */
+
+function fechaCorrecta(
+  fecha: string
+): Date | null {
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+    return null
+  }
+
+  const [anio, mes, dia] = fecha
+    .split('-')
+    .map(Number)
+
+  const valor = new Date(anio, mes - 1, dia)
+
+  if (
+    valor.getFullYear() !== anio ||
+    valor.getMonth() !== mes - 1 ||
+    valor.getDate() !== dia
+  ) {
+    return null
+  }
+
+  return valor
+}
+
+
+/* =========================================================
+   7. COMPROBAR DÍA DEL VETERINARIO
+========================================================= */
+
+function atiendeEseDia(
+  medico: Veterinario | null,
+  fecha: string
+): boolean {
+
+  const fechaElegida = fechaCorrecta(fecha)
+
+  if (!medico || !fechaElegida) {
+    return false
+  }
+
+  const nombreDia = nombresDias[
+    fechaElegida.getDay()
+  ]
+
+  return medico.dias.includes(nombreDia)
+}
+
+
+/* =========================================================
+   8. COMPROBAR HORARIO DEL VETERINARIO
+========================================================= */
+
+function atiendeEsaHora(
+  medico: Veterinario | null,
+  hora: string
+): boolean {
+
+  if (!medico || !hora) {
+    return false
+  }
+
+  const rango = medico.horario.match(
+    /^(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})$/
+  )
+
+  if (!rango) {
+    return false
+  }
+
+  const inicio = rango[1]
+  const fin = rango[2]
+
+  return hora >= inicio && hora < fin
+}
+
+
+/* =========================================================
+   9. IMPEDIR RESERVAS EN HORAS PASADAS
+========================================================= */
+
+function esHoraFutura(
+  fecha: string,
+  hora: string
+): boolean {
+
+  if (fecha !== fechaLocalHoy()) {
+    return true
+  }
+
+  const ahora = new Date()
+
+  const [h, m] = hora
+    .split(':')
+    .map(Number)
+
+  const minutosCita = h * 60 + m
+
+  const minutosActuales =
+    ahora.getHours() * 60 +
+    ahora.getMinutes()
+
+  return minutosCita > minutosActuales
 }
 
 /* =========================================================
-   6. VALIDACIONES POR CAMPO
+   10. IDENTIFICAR ESPECIE
 ========================================================= */
 
-export function validarCampoCita(
-  campo: CampoCita,
-  datos: DatosCita,
-  horasOcupadas: string[]
+function obtenerEspecie(
+  datos: DatosCita
+): Especie | null {
+
+  if (datos.tipoMascota === 'Perro') {
+    return 'Perros'
+  }
+
+  if (datos.tipoMascota === 'Gato') {
+    return 'Gatos'
+  }
+
+  if (
+    datos.tipoMascota === 'Otro' &&
+    datos.otraEspecie === 'Ave'
+  ) {
+    return 'Aves'
+  }
+
+  if (
+    datos.tipoMascota === 'Otro' &&
+    datos.otraEspecie === 'Conejo'
+  ) {
+    return 'Conejos'
+  }
+
+  return null
+}
+
+
+/* =========================================================
+   11. VALIDAR NOMBRE DE LA MASCOTA
+========================================================= */
+
+function validarNombreMascota(
+  nombreIngresado: string
 ): string {
 
-  const valor = datos[campo]
+  const nombre = nombreIngresado.trim()
 
-  // Nombre del dueño.
-  if (campo === 'nombreDueno') {
-    const nombre = datos.nombreDueno.trim()
-
-    if (!nombre) return 'Ingresa tu nombre completo.'
-
-    if (nombre.length < 3) {
-      return 'El nombre debe tener al menos 3 caracteres.'
-    }
-
-    if (nombre.length > 60) {
-      return 'El nombre no puede superar los 60 caracteres.'
-    }
-
-    if (!expresionNombre.test(nombre)) {
-      return 'El nombre solo puede contener letras.'
-    }
-
-    return ''
+  if (!nombre) {
+    return 'Debes ingresar el nombre de tu mascota.'
   }
 
-  // Correo electrónico.
-  if (campo === 'correo') {
-    const correo = datos.correo.trim()
-
-    if (!correo) return 'Ingresa tu correo electrónico.'
-
-    if (!expresionCorreo.test(correo)) {
-      return 'Ingresa un correo válido.'
-    }
-
-    return ''
+  if (nombre.length < 2) {
+    return 'El nombre debe tener al menos 2 caracteres.'
   }
 
-  // Teléfono chileno.
-  if (campo === 'telefono') {
-    const telefono = datos.telefono.replace(/[\s-]/g, '')
-
-    if (!telefono) return 'Ingresa tu número de teléfono.'
-
-    if (!expresionTelefono.test(telefono)) {
-      return 'Usa un teléfono chileno válido. Ej: +56 9 1234 5678.'
-    }
-
-    return ''
+  if (nombre.length > 40) {
+    return 'El nombre no puede superar los 40 caracteres.'
   }
 
-  // Nombre de la mascota.
-  if (campo === 'nombreMascota') {
-    const nombre = datos.nombreMascota.trim()
-
-    if (!nombre) return 'Ingresa el nombre de tu mascota.'
-
-    if (nombre.length < 2) {
-      return 'Ingresa un nombre válido.'
-    }
-
-    if (!expresionNombre.test(nombre)) {
-      return 'El nombre solo puede contener letras.'
-    }
-
-    return ''
+  if (!regexNombre.test(nombre)) {
+    return 'El nombre solo puede contener letras, espacios y guiones.'
   }
 
-  // Tipo de mascota.
-  if (campo === 'tipoMascota') {
-    if (!['Perro', 'Gato', 'Otro'].includes(datos.tipoMascota)) {
-      return 'Selecciona el tipo de mascota.'
-    }
-
-    return ''
-  }
-
-  // Edad de la mascota.
-  if (campo === 'edadMascota') {
-    const edadTexto = datos.edadMascota.trim()
-    const edad = Number(edadTexto)
-
-    if (!edadTexto) {
-      return 'Ingresa la edad aproximada.'
-    }
-
-    if (
-      !Number.isFinite(edad) ||
-      edad < 0 ||
-      edad > 30
-    ) {
-      return 'Ingresa una edad entre 0 y 30 años.'
-    }
-
-    return ''
-  }
-
-  // Servicio veterinario.
-  if (campo === 'servicio') {
-    if (!servicios.includes(datos.servicio)) {
-      return 'Selecciona el tipo de atención.'
-    }
-
-    return ''
-  }
-
-  // Fecha.
-  if (campo === 'fecha') {
-    if (!datos.fecha) return 'Selecciona una fecha.'
-
-    if (datos.fecha < obtenerFechaActual()) {
-      return 'La fecha no puede ser anterior a hoy.'
-    }
-
-    const partes = datos.fecha.split('-').map(Number)
-    const [anio, mes, dia] = partes
-    const seleccionada = new Date(anio, mes - 1, dia)
-
-    if (
-      partes.length !== 3 ||
-      seleccionada.getFullYear() !== anio ||
-      seleccionada.getMonth() !== mes - 1 ||
-      seleccionada.getDate() !== dia
-    ) {
-      return 'Selecciona una fecha válida.'
-    }
-
-    if (
-      seleccionada.getDay() === 0 ||
-      seleccionada.getDay() === 6
-    ) {
-      return 'Selecciona un día de lunes a viernes.'
-    }
-
-    return ''
-  }
-
-  // Horario.
-  if (campo === 'hora') {
-    if (!datos.hora) return 'Selecciona un horario.'
-
-    if (!horarios.includes(datos.hora)) {
-      return 'Selecciona un horario válido.'
-    }
-
-    if (horasOcupadas.includes(datos.hora)) {
-      return 'Ese horario ya está reservado. Elige otro horario u otra fecha.'
-    }
-
-    // Evita seleccionar una hora que ya pasó hoy.
-    if (datos.fecha === obtenerFechaActual()) {
-      const ahora = new Date()
-      const [hora, minutos] = datos.hora.split(':').map(Number)
-
-      if (
-        hora * 60 + minutos <=
-        ahora.getHours() * 60 + ahora.getMinutes()
-      ) {
-        return 'Selecciona un horario futuro.'
-      }
-    }
-
-    return ''
-  }
-
-  // Motivo de consulta.
-  if (campo === 'motivo') {
-    if (datos.motivo.trim().length > 500) {
-      return 'El motivo no puede superar los 500 caracteres.'
-    }
-
-    return ''
-  }
-
-  // Confirmación.
-  if (campo === 'confirmarDatos') {
-    if (!datos.confirmarDatos) {
-      return 'Debes confirmar que los datos son correctos.'
-    }
-
-    return ''
-  }
-
-  return String(valor) ? '' : ''
+  return ''
 }
 
+
 /* =========================================================
-   7. COMPONENTE PRINCIPAL
+   12.VALIDAR EDAD DE LA MASCOTA
+========================================================= */
+
+function validarEdadMascota(
+  edadIngresada: string,
+  unidadEdad: UnidadEdad
+): string {
+
+  const valor = edadIngresada.trim()
+
+  if (!valor) {
+    return 'Debes ingresar la edad de tu mascota.'
+  }
+
+  const edad = Number(valor)
+
+  if (!Number.isInteger(edad)) {
+    return 'La edad debe ser un número entero.'
+  }
+
+  if (unidadEdad === 'meses') {
+
+    if (edad < 1 || edad > 11) {
+      return 'Ingresa una edad entre 1 y 11 meses.'
+    }
+
+    return ''
+  }
+
+  if (unidadEdad === 'anios') {
+
+    if (edad < 1 || edad > 30) {
+      return 'Ingresa una edad entre 1 y 30 años.'
+    }
+
+    return ''
+  }
+
+  return 'Selecciona meses o años.'
+}
+
+
+/* =========================================================
+   13. VALIDAR MOTIVO DE CONSULTA
+========================================================= */
+
+function validarMotivoConsulta(
+  textoIngresado: string
+): string {
+
+  const motivo = textoIngresado.trim()
+
+  if (!motivo) {
+    return 'Debes explicar el motivo de la consulta.'
+  }
+
+  if (motivo.length < 10) {
+    return 'Escribe al menos 10 caracteres explicando el motivo.'
+  }
+
+  if (motivo.length > 500) {
+    return 'El motivo no puede superar los 500 caracteres.'
+  }
+
+  if (!/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/.test(motivo)) {
+    return 'El motivo debe contener una explicación con letras.'
+  }
+
+  return ''
+}
+
+
+/* =========================================================
+   14. FUNCIÓN GENERAL DE VALIDACIÓN
+========================================================= */
+
+function validarCampo(
+  campo: Campo,
+  datos: DatosCita,
+  ocupadas: string[]
+): string {
+
+  switch (campo) {
+
+    /* -----------------------------------------
+       Nombre del dueño.
+    ----------------------------------------- */
+    case 'nombreDueno': {
+
+      const nombre = datos.nombreDueno.trim()
+
+      if (!nombre) {
+        return 'Debes ingresar tu nombre completo.'
+      }
+
+      if (nombre.length < 3 || nombre.length > 60) {
+        return 'El nombre debe tener entre 3 y 60 caracteres.'
+      }
+
+      return regexNombre.test(nombre)
+        ? ''
+        : 'El nombre solo puede contener letras.'
+    }
+
+    /* -----------------------------------------
+       Correo electrónico.
+    ----------------------------------------- */
+    case 'correo': {
+
+      return regexCorreo.test(datos.correo.trim())
+        ? ''
+        : 'Ingresa un correo electrónico válido.'
+    }
+
+    /* -----------------------------------------
+       Teléfono chileno.
+    ----------------------------------------- */
+    case 'telefono': {
+
+      const telefono = datos.telefono.replace(
+        /[\s-]/g,
+        ''
+      )
+
+      return regexTelefono.test(telefono)
+        ? ''
+        : 'Ingresa un celular chileno válido. Ej.: +56 9 1234 5678.'
+    }
+
+    /* -----------------------------------------
+       Nombre de la mascota.
+
+       Utiliza nuestra validación mejorada.
+    ----------------------------------------- */
+    case 'nombreMascota': {
+
+      return validarNombreMascota(
+        datos.nombreMascota
+      )
+    }
+
+    /* -----------------------------------------
+       Edad de la mascota.
+
+       Valida según meses o años.
+    ----------------------------------------- */
+    case 'edadMascota': {
+
+      return validarEdadMascota(
+        datos.edadMascota,
+        datos.unidadEdad
+      )
+    }
+
+    /* -----------------------------------------
+       Unidad de la edad.
+    ----------------------------------------- */
+    case 'unidadEdad': {
+
+      return ['meses', 'anios'].includes(
+        datos.unidadEdad
+      )
+        ? ''
+        : 'Selecciona meses o años.'
+    }
+
+    /* -----------------------------------------
+       Tipo de mascota.
+    ----------------------------------------- */
+    case 'tipoMascota': {
+
+      return ['Perro', 'Gato', 'Otro'].includes(
+        datos.tipoMascota
+      )
+        ? ''
+        : 'Selecciona el tipo de mascota.'
+    }
+
+    /* -----------------------------------------
+       Ave o Conejo.
+    ----------------------------------------- */
+    case 'otraEspecie': {
+
+      if (datos.tipoMascota !== 'Otro') {
+        return ''
+      }
+
+      return ['Ave', 'Conejo'].includes(
+        datos.otraEspecie
+      )
+        ? ''
+        : 'Indica si tu mascota es un ave o un conejo.'
+    }
+
+    /* -----------------------------------------
+       Validar veterinario y especie.
+    ----------------------------------------- */
+    case 'veterinarioId': {
+
+      const medico =
+        datos.veterinarioId == null
+          ? null
+          : obtenerVeterinarioPorId(
+              datos.veterinarioId
+            )
+
+      if (
+        !medico ||
+        medico.cargo !== 'Médico veterinario'
+      ) {
+        return 'Selecciona un médico veterinario.'
+      }
+
+      const especie = obtenerEspecie(datos)
+
+      if (
+        !especie ||
+        !medico.especies.includes(especie)
+      ) {
+        return 'Este veterinario no atiende la especie seleccionada.'
+      }
+
+      if (
+        datos.fecha &&
+        !atiendeEseDia(medico, datos.fecha)
+      ) {
+        return `${medico.nombre} no atiende en la fecha seleccionada.`
+      }
+
+      if (
+        datos.hora &&
+        !atiendeEsaHora(medico, datos.hora)
+      ) {
+        return `${medico.nombre} no atiende a esa hora.`
+      }
+
+      return ''
+    }
+
+    /* -----------------------------------------
+       Servicio veterinario.
+    ----------------------------------------- */
+    case 'servicio': {
+
+      const servicios = Object.values(
+        SERVICIOS_CITAS
+      ).flat()
+
+      return servicios.includes(datos.servicio)
+        ? ''
+        : 'Selecciona un servicio veterinario.'
+    }
+
+    /* -----------------------------------------
+       Fecha.
+    ----------------------------------------- */
+    case 'fecha': {
+
+      const fecha = fechaCorrecta(datos.fecha)
+
+      if (!fecha) {
+        return 'Selecciona una fecha válida.'
+      }
+
+      if (datos.fecha < fechaLocalHoy()) {
+        return 'No puedes reservar una fecha anterior a hoy.'
+      }
+
+      if ([0, 6].includes(fecha.getDay())) {
+        return 'Selecciona un día de lunes a viernes.'
+      }
+
+      const medico =
+        datos.veterinarioId == null
+          ? null
+          : obtenerVeterinarioPorId(
+              datos.veterinarioId
+            )
+
+      if (
+        medico &&
+        !atiendeEseDia(medico, datos.fecha)
+      ) {
+        return `${medico.nombre} no trabaja ese día.`
+      }
+
+      return ''
+    }
+
+    /* -----------------------------------------
+       Hora.
+    ----------------------------------------- */
+    case 'hora': {
+
+      if (
+        !datos.hora ||
+        !HORARIOS_CITAS.some(
+          (horario) => horario === datos.hora
+        )
+      ) {
+        return 'Selecciona un horario disponible.'
+      }
+
+      const medico =
+        datos.veterinarioId == null
+          ? null
+          : obtenerVeterinarioPorId(
+              datos.veterinarioId
+            )
+
+      if (!medico) {
+        return 'Primero selecciona un veterinario.'
+      }
+
+      if (
+        !atiendeEseDia(medico, datos.fecha) ||
+        !atiendeEsaHora(medico, datos.hora)
+      ) {
+        return 'El veterinario no atiende en ese día u horario.'
+      }
+
+      if (!esHoraFutura(datos.fecha, datos.hora)) {
+        return 'Selecciona una hora futura.'
+      }
+
+      if (ocupadas.includes(datos.hora)) {
+        return 'Este veterinario ya tiene una cita a esa hora.'
+      }
+
+      return ''
+    }
+
+    /* -----------------------------------------
+       Motivo de consulta.
+    ----------------------------------------- */
+    case 'motivo': {
+
+      return validarMotivoConsulta(
+        datos.motivo
+      )
+    }
+
+    /* -----------------------------------------
+       Confirmación final.
+    ----------------------------------------- */
+    case 'confirmarDatos': {
+
+      return datos.confirmarDatos
+        ? ''
+        : 'Confirma que los datos ingresados son correctos.'
+    }
+  }
+}
+
+
+/* =========================================================
+   15. COMPONENTE PRINCIPAL
 ========================================================= */
 
 export default function FormularioSolicitarCita() {
 
-  const [datos, setDatos] = useState<DatosCita>(datosIniciales)
-  const [errores, setErrores] = useState<ErroresCita>({})
-  const [visitados, setVisitados] = useState<CampoCita[]>([])
-  const [mostrarResumen, setMostrarResumen] = useState(false)
+  const { usuario } = useAuth()
 
-  // Se actualiza al cambiar fecha y antes de revisar.
-  const [horasOcupadas, setHorasOcupadas] = useState<string[]>([])
-
-  // Referencia al formulario para enfocar el primer error.
   const formularioRef = useRef<HTMLFormElement>(null)
 
+
+  /* -------------------------------------------------------
+     Valores iniciales del formulario.
+  ------------------------------------------------------- */
+
+  const [datos, setDatos] = useState<DatosCita>(() => ({
+
+    nombreDueno:
+      `${usuario?.nombre ?? ''} ${usuario?.apellidos ?? ''}`.trim(),
+
+    correo: usuario?.correo ?? '',
+    telefono: usuario?.telefono ?? '',
+
+    nombreMascota: '',
+    edadMascota: '',
+    unidadEdad: 'anios',
+
+    tipoMascota: '',
+    otraEspecie: '',
+
+    veterinarioId: null,
+
+    servicio: '',
+    fecha: '',
+    hora: '',
+    motivo: '',
+
+    confirmarDatos: false
+  }))
+
+
+  /* -------------------------------------------------------
+     Estados para validaciones y confirmación.
+  ------------------------------------------------------- */
+
+  const [errores, setErrores] =
+    useState<ErroresCita>({})
+
+  const [visitados, setVisitados] =
+    useState<Campo[]>([])
+
+  const [enviada, setEnviada] =
+    useState(false)
+
+  const [errorGeneral, setErrorGeneral] =
+    useState('')
+
+
+  /* -------------------------------------------------------
+     Completar datos del dueño.
+  ------------------------------------------------------- */
+
+  useEffect(() => {
+
+    if (!usuario) {
+      return
+    }
+
+    setDatos((anteriores) => ({
+
+      ...anteriores,
+
+      nombreDueno:
+        anteriores.nombreDueno ||
+        `${usuario.nombre} ${usuario.apellidos}`.trim(),
+
+      correo:
+        anteriores.correo || usuario.correo,
+
+      telefono:
+        anteriores.telefono || usuario.telefono
+    }))
+
+  }, [usuario])
+
+
+  /* -------------------------------------------------------
+     Obtener veterinario seleccionado.
+  ------------------------------------------------------- */
+
+  const medico =
+    datos.veterinarioId == null
+      ? null
+      : obtenerVeterinarioPorId(
+          datos.veterinarioId
+        )
+
+
+  /* -------------------------------------------------------
+     Consultar horas ocupadas por veterinario.
+     Cada médico tiene una agenda independiente.
+  ------------------------------------------------------- */
+
+  const ocupadas =
+    datos.fecha && datos.veterinarioId != null
+      ? horasOcupadas(
+          datos.fecha,
+          undefined,
+          datos.veterinarioId
+        )
+      : []
+
+
   /* =====================================================
-     8. VALIDAR UN CAMPO AL SALIR DE ÉL
+     16. ACTUALIZAR FORMULARIO
+
+     Cada vez que cambia un dato:
+     - Guardamos el valor nuevo.
+     - Limpiamos el error general.
+     - Volvemos a validar los campos visitados.
   ===================================================== */
 
-  function manejarSalida(campo: CampoCita) {
-    const ocupadas = obtenerHorasOcupadas(datos.fecha)
+  function actualizar(
+    nuevos: DatosCita,
+    campo: Campo
+  ) {
 
-    setVisitados((anterior) =>
-      anterior.includes(campo)
-        ? anterior
-        : [...anterior, campo]
-    )
+    setDatos(nuevos)
+    setErrorGeneral('')
 
-    setErrores((anterior) => ({
-      ...anterior,
-      [campo]: validarCampoCita(campo, datos, ocupadas)
-    }))
+    const nuevasOcupadas =
+      nuevos.fecha && nuevos.veterinarioId != null
+        ? horasOcupadas(
+            nuevos.fecha,
+            undefined,
+            nuevos.veterinarioId
+          )
+        : []
+
+    setErrores((anteriores) => {
+
+      const actualizados = { ...anteriores }
+
+      for (const visitado of visitados) {
+
+        actualizados[visitado] = validarCampo(
+          visitado,
+          nuevos,
+          nuevasOcupadas
+        )
+      }
+
+      // Cambiar la mascota invalida la selección anterior.
+      if (
+        campo === 'tipoMascota' ||
+        campo === 'otraEspecie'
+      ) {
+        actualizados.veterinarioId = ''
+        actualizados.hora = ''
+      }
+
+      // Cambiar la fecha obliga a elegir otra hora.
+      if (campo === 'fecha') {
+        actualizados.hora = ''
+      }
+
+      // Cambiar meses/años vuelve a validar la edad.
+      if (campo === 'unidadEdad') {
+        actualizados.edadMascota = ''
+      }
+
+      return actualizados
+    })
   }
 
+
   /* =====================================================
-     9. ACTUALIZAR CAMPOS EN TIEMPO REAL
+     17. MANEJAR CAMBIOS
   ===================================================== */
 
   function manejarCambio(
@@ -380,7 +884,12 @@ export default function FormularioSolicitarCita() {
       HTMLTextAreaElement
     >
   ) {
-    const campo = evento.target.name as CampoCita
+
+    if (enviada) {
+      return
+    }
+
+    const campo = evento.target.name as Campo
 
     const valor =
       evento.target instanceof HTMLInputElement &&
@@ -388,467 +897,1302 @@ export default function FormularioSolicitarCita() {
         ? evento.target.checked
         : evento.target.value
 
-    const nuevosDatos = {
+    const nuevos = {
       ...datos,
       [campo]: valor
     } as DatosCita
 
-    // Al cambiar fecha, reiniciamos la hora seleccionada.
+
+    // Si cambia el tipo de mascota,
+    // debe elegir nuevamente al veterinario.
+    if (campo === 'tipoMascota') {
+      nuevos.otraEspecie = ''
+      nuevos.veterinarioId = null
+      nuevos.hora = ''
+    }
+
+    // Si cambia Ave por Conejo o viceversa,
+    // también debe elegir otro veterinario.
+    if (campo === 'otraEspecie') {
+      nuevos.veterinarioId = null
+      nuevos.hora = ''
+    }
+
+    // Si cambia la fecha, limpiamos la hora anterior.
     if (campo === 'fecha') {
-      nuevosDatos.hora = ''
+      nuevos.hora = ''
     }
 
-    const ocupadas = obtenerHorasOcupadas(nuevosDatos.fecha)
-
-    setDatos(nuevosDatos)
-    setHorasOcupadas(ocupadas)
-    setMostrarResumen(false)
-
-    // Validamos mientras escribe si ya utilizó el campo.
-    if (visitados.includes(campo)) {
-      setErrores((anterior) => ({
-        ...anterior,
-        [campo]: validarCampoCita(campo, nuevosDatos, ocupadas),
-        ...(campo === 'fecha' ? { hora: '' } : {})
-      }))
+  
+    if (campo === 'unidadEdad') {
+      nuevos.edadMascota = ''
     }
+
+    actualizar(nuevos, campo)
   }
 
   /* =====================================================
-     10. VALIDAR TODOS LOS CAMPOS
+     18. SELECCIONAR VETERINARIO
   ===================================================== */
 
-  function manejarEnvio(evento: FormEvent<HTMLFormElement>) {
-    evento.preventDefault()
+  function seleccionarVeterinario(id: number) {
 
-    // Reconsultamos los horarios ocupados.
-    const ocupadas = obtenerHorasOcupadas(datos.fecha)
-    setHorasOcupadas(ocupadas)
-
-    const campos: CampoCita[] = [
-      'nombreDueno',
-      'correo',
-      'telefono',
-      'nombreMascota',
-      'tipoMascota',
-      'edadMascota',
-      'servicio',
-      'fecha',
-      'hora',
-      'motivo',
-      'confirmarDatos'
-    ]
-
-    const nuevosErrores: ErroresCita = {}
-
-    campos.forEach((campo) => {
-      const error = validarCampoCita(campo, datos, ocupadas)
-
-      if (error) nuevosErrores[campo] = error
-    })
-
-    setErrores(nuevosErrores)
-    setVisitados(campos)
-
-    const primerError = campos.find(
-      (campo) => Boolean(nuevosErrores[campo])
-    )
-
-    if (primerError) {
-      setMostrarResumen(false)
-
-      // Enfocamos el primer campo incorrecto.
-      const elemento = formularioRef.current?.elements.namedItem(
-        primerError
-      )
-
-      if (elemento instanceof HTMLElement) {
-        elemento.focus()
-      }
-
+    if (enviada) {
       return
     }
 
-    // Se muestra el resumen, pero todavía no se guarda.
-    setMostrarResumen(true)
+    const nuevos: DatosCita = {
+      ...datos,
+      veterinarioId: id,
+      hora: ''
+    }
+
+    actualizar(nuevos, 'veterinarioId')
+
+    setVisitados((anteriores) =>
+      anteriores.includes('veterinarioId')
+        ? anteriores
+        : [...anteriores, 'veterinarioId']
+    )
+
+    setErrores((anteriores) => ({
+      ...anteriores,
+
+      veterinarioId: validarCampo(
+        'veterinarioId',
+        nuevos,
+        []
+      )
+    }))
+  }
+  /* =====================================================
+     19. VALIDAR AL SALIR DEL CAMPO
+  ===================================================== */
+
+  function manejarSalida(campo: Campo) {
+
+    if (enviada) {
+      return
+    }
+
+    setVisitados((anteriores) =>
+      anteriores.includes(campo)
+        ? anteriores
+        : [...anteriores, campo]
+    )
+
+    setErrores((anteriores) => ({
+      ...anteriores,
+
+      [campo]: validarCampo(
+        campo,
+        datos,
+        ocupadas
+      )
+    }))
   }
 
   /* =====================================================
-     11. MOSTRAR ERRORES
+     20. MOSTRAR ERROR DE UN CAMPO
   ===================================================== */
 
-  function mostrarError(campo: CampoCita) {
-    const error = errores[campo]
+  function mostrarError(campo: Campo) {
 
-    if (!error) return null
+    if (!errores[campo]) {
+      return null
+    }
 
     return (
-      <small className="error-cita" role="alert">
-        {error}
+      <small
+        className="mensaje-error"
+        role="alert"
+      >
+        {errores[campo]}
       </small>
     )
   }
 
   /* =====================================================
-     12. FORMULARIO
+     21. ENVIAR SOLICITUD
+
+     Antes de guardar:
+     - Comprobamos que exista una sesión.
+     - Validamos todos los campos.
+     - Revisamos la disponibilidad del veterinario.
+     - Registramos la cita como Pendiente.
+  ===================================================== */
+
+  function enviar(
+    evento: FormEvent<HTMLFormElement>
+  ) {
+
+    evento.preventDefault()
+
+    if (enviada) {
+      return
+    }
+
+    if (!usuario) {
+
+      setErrorGeneral(
+        'Inicia sesión para solicitar una cita.'
+      )
+
+      return
+    }
+
+    // Consultamos nuevamente la agenda.
+    const actuales =
+      datos.fecha && datos.veterinarioId != null
+        ? horasOcupadas(
+            datos.fecha,
+            undefined,
+            datos.veterinarioId
+          )
+        : []
+
+    // Revisamos todos los campos del formulario.
+    const nuevosErrores: ErroresCita = {}
+
+    for (const campo of campos) {
+
+      const mensaje = validarCampo(
+        campo,
+        datos,
+        actuales
+      )
+
+      if (mensaje) {
+        nuevosErrores[campo] = mensaje
+      }
+    }
+
+    setErrores(nuevosErrores)
+    setVisitados(campos)
+
+    // Si existe un error, no guardamos la cita.
+    const primero = campos.find(
+      (campo) => Boolean(nuevosErrores[campo])
+    )
+
+    if (primero) {
+
+      const elemento =
+        formularioRef.current?.elements.namedItem(
+          primero
+        )
+
+      if (elemento instanceof HTMLElement) {
+        elemento.focus()
+      }
+
+      setErrorGeneral(
+        'Revisa los campos señalados antes de continuar.'
+      )
+
+      return
+    }
+
+    // Es obligatorio tener un veterinario seleccionado.
+    if (!medico || datos.veterinarioId == null) {
+
+      setErrorGeneral(
+        'Selecciona un veterinario.'
+      )
+
+      return
+    }
+
+    /* ---------------------------------------------------
+       GUARDAR EDAD EN EL FORMATO DEL SERVICIO ACTUAL
+    --------------------------------------------------- */
+
+    const edadEnAnios =
+      datos.unidadEdad === 'meses'
+        ? Number(datos.edadMascota) / 12
+        : Number(datos.edadMascota)
+
+
+    /* ---------------------------------------------------
+       REGISTRAR LA CITA
+    --------------------------------------------------- */
+
+    const resultado = crearCita({
+
+      // Usuario de la sesión.
+      correoUsuario: usuario.correo,
+
+      nombreUsuario:
+        `${usuario.nombre} ${usuario.apellidos}`.trim(),
+
+      // Información de contacto.
+      dueno: datos.nombreDueno.trim(),
+      propietario: datos.nombreDueno.trim(),
+      correo: datos.correo.trim(),
+      telefono: datos.telefono.trim(),
+
+      // Información de la mascota.
+      mascota: datos.nombreMascota.trim(),
+      tipoMascota: datos.tipoMascota,
+      otraEspecie: datos.otraEspecie,
+      edadMascota: edadEnAnios,
+
+      // Veterinario elegido.
+      veterinarioId: datos.veterinarioId,
+      veterinarioNombre: medico.nombre,
+
+      // Información de la consulta.
+      servicio: datos.servicio,
+      fecha: datos.fecha,
+      hora: datos.hora,
+      motivo: datos.motivo.trim()
+    })
+
+    // Mostrar un error si no se pudo registrar.
+    if (!resultado.ok) {
+
+      setErrorGeneral(resultado.mensaje)
+
+      return
+    }
+
+    // Confirmar que se guardó la solicitud.
+    setErrores({})
+    setErrorGeneral('')
+    setEnviada(true)
+  }
+
+
+  /* =====================================================
+     22. INTERFAZ VISUAL 
+     Contiene los campos, imágenes,
+     tarjetas y mensajes del formulario.
   ===================================================== */
 
   return (
-    <section className="seccion-formulario-cita">
+
+    <section className="seccion-solicitar-cita">
+
       <div className="contenedor">
 
-        <div className="titulo-seccion">
-          <span className="seccion-etiqueta">
-            Agenda tu atención
-          </span>
 
-          <h2>Completa los datos de tu cita</h2>
+        {/* =============================================
+            ENCABEZADO
+        ============================================= */}
+
+        <div className="encabezado-formulario-cita">
+
+          <span>Solicitud de atención</span>
+
+          <h2>Cuéntanos sobre tu mascota</h2>
 
           <p>
-            Ingresa la información necesaria para preparar
-            tu solicitud de atención veterinaria.
+            Completa los siguientes pasos
+            para solicitar una cita.
           </p>
+
         </div>
+
+
+        {/* =============================================
+            INDICADOR DE LOS TRES PASOS
+        ============================================= */}
+
+        <div
+          className="indicador-pasos"
+          aria-label="Pasos de la solicitud"
+        >
+
+          <div className="paso-indicador">
+            <span>1</span>
+
+            <div>
+              <strong>Tus datos</strong>
+              <small>Información de contacto</small>
+            </div>
+          </div>
+
+          <div className="linea-paso" />
+
+          <div className="paso-indicador">
+            <span className="paso-rosa">2</span>
+
+            <div>
+              <strong>Tu mascota</strong>
+              <small>Cuéntanos sobre ella</small>
+            </div>
+          </div>
+
+          <div className="linea-paso" />
+
+          <div className="paso-indicador">
+            <span className="paso-morado">3</span>
+
+            <div>
+              <strong>La cita</strong>
+              <small>Fecha y atención</small>
+            </div>
+          </div>
+
+        </div>
+
+
+        {/* =============================================
+            AVISO DE SESIÓN
+        ============================================= */}
+
+        <div className="aviso-sesion">
+
+          <div
+            className="aviso-sesion-icono"
+            aria-hidden="true"
+          >
+            🔒
+          </div>
+
+          <div className="aviso-sesion-texto">
+
+            <strong>
+              Tu solicitud quedará vinculada a tu cuenta
+            </strong>
+
+            <p>
+              Podrás consultar su estado desde «Mis citas».
+            </p>
+
+          </div>
+
+          <span className="aviso-proximamente">
+            Sesión activa
+          </span>
+
+        </div>
+
+
+        {/* =============================================
+            FORMULARIO
+        ============================================= */}
 
         <form
           ref={formularioRef}
           className="formulario-cita"
-          onSubmit={manejarEnvio}
+          onSubmit={enviar}
           noValidate
         >
 
-          {/* =====================================
-              BLOQUE 1 — DATOS DEL DUEÑO
-          ===================================== */}
 
-          <fieldset className="bloque-formulario-cita">
-            <legend>1. Tus datos</legend>
+          {/* =========================================
+              PASO 1 - DATOS DEL DUEÑO
+          ========================================= */}
 
-            <div className="grid-campos-cita">
+          <section className="bloque-formulario bloque-celeste">
 
-              <div className="campo-cita">
-                <label htmlFor="cita-dueno">
+            <div className="titulo-bloque">
+
+              <span className="numero-paso">1</span>
+
+              <div>
+                <h3>Datos del dueño</h3>
+                <p>¿Con quién debemos comunicarnos?</p>
+              </div>
+
+            </div>
+
+
+            <div className="grid-campos">
+
+              {/* NOMBRE DEL DUEÑO */}
+              <div className="grupo-campo">
+
+                <label htmlFor="nombreDueno">
                   Nombre completo *
                 </label>
 
                 <input
-                  id="cita-dueno"
+                  id="nombreDueno"
                   name="nombreDueno"
                   type="text"
+                  maxLength={60}
                   value={datos.nombreDueno}
-                  maxLength={61}
                   onChange={manejarCambio}
                   onBlur={() => manejarSalida('nombreDueno')}
-                  placeholder="Ingresa tu nombre completo"
-                  aria-invalid={Boolean(errores.nombreDueno)}
+                  placeholder="Ej.: Camila González"
                   autoComplete="name"
+                  aria-invalid={!!errores.nombreDueno}
                 />
 
                 {mostrarError('nombreDueno')}
+
               </div>
 
-              <div className="campo-cita">
-                <label htmlFor="cita-correo">
+
+              {/* CORREO */}
+              <div className="grupo-campo">
+
+                <label htmlFor="correoCita">
                   Correo electrónico *
                 </label>
 
                 <input
-                  id="cita-correo"
+                  id="correoCita"
                   name="correo"
                   type="email"
                   value={datos.correo}
                   onChange={manejarCambio}
                   onBlur={() => manejarSalida('correo')}
-                  placeholder="ejemplo@correo.cl"
-                  aria-invalid={Boolean(errores.correo)}
+                  placeholder="correo@ejemplo.cl"
                   autoComplete="email"
+                  aria-invalid={!!errores.correo}
                 />
 
                 {mostrarError('correo')}
+
               </div>
 
-              <div className="campo-cita">
-                <label htmlFor="cita-telefono">
+
+              {/* TELÉFONO */}
+              <div className="grupo-campo">
+
+                <label htmlFor="telefonoCita">
                   Teléfono *
                 </label>
 
                 <input
-                  id="cita-telefono"
+                  id="telefonoCita"
                   name="telefono"
                   type="tel"
                   value={datos.telefono}
                   onChange={manejarCambio}
                   onBlur={() => manejarSalida('telefono')}
                   placeholder="+56 9 1234 5678"
-                  aria-invalid={Boolean(errores.telefono)}
                   autoComplete="tel"
+                  aria-invalid={!!errores.telefono}
                 />
 
                 {mostrarError('telefono')}
+
               </div>
 
             </div>
-          </fieldset>
 
-          {/* =====================================
-              BLOQUE 2 — DATOS DE LA MASCOTA
-          ===================================== */}
+          </section>
 
-          <fieldset className="bloque-formulario-cita">
-            <legend>2. Tu mascota</legend>
 
-            <div className="grid-campos-cita">
+          {/* =========================================
+              PASO 2 - DATOS DE LA MASCOTA
+          ========================================= */}
 
-              <div className="campo-cita">
-                <label htmlFor="cita-mascota">
+          <section className="bloque-formulario bloque-rosa">
+
+            <div className="titulo-bloque">
+
+              <span className="numero-paso numero-paso-rosa">
+                2
+              </span>
+
+              <div>
+                <h3>Datos de la mascota</h3>
+
+                <p>
+                  Queremos conocer a tu compañero.
+                </p>
+              </div>
+
+            </div>
+
+
+            <div className="grid-mascota">
+
+
+              {/* =====================================
+                  NOMBRE DE LA MASCOTA
+              ===================================== */}
+
+              <div className="grupo-campo">
+
+                <label htmlFor="nombreMascota">
                   Nombre de la mascota *
                 </label>
 
                 <input
-                  id="cita-mascota"
+                  id="nombreMascota"
                   name="nombreMascota"
                   type="text"
+                  minLength={2}
+                  maxLength={40}
                   value={datos.nombreMascota}
                   onChange={manejarCambio}
-                  onBlur={() => manejarSalida('nombreMascota')}
-                  placeholder="Ej. Luna"
-                  aria-invalid={Boolean(errores.nombreMascota)}
+                  onBlur={() =>
+                    manejarSalida('nombreMascota')
+                  }
+                  placeholder="Ej.: Luna"
+                  aria-invalid={!!errores.nombreMascota}
+                  aria-describedby="ayudaNombreMascota"
                 />
+
+                <small
+                  id="ayudaNombreMascota"
+                  style={{
+                    color: '#6F6F78',
+                    marginTop: '6px'
+                  }}
+                >
+                  Entre 2 y 40 caracteres, sin números.
+                </small>
 
                 {mostrarError('nombreMascota')}
+
               </div>
 
-              <div className="campo-cita">
-                <label htmlFor="cita-tipo">
-                  Tipo de mascota *
+
+              {/* =====================================
+                  EDAD EN MESES O AÑOS
+              ===================================== */}
+
+              <div className="grupo-campo">
+
+                <label htmlFor="edadMascota">
+                  Edad aproximada *
                 </label>
 
-                <select
-                  id="cita-tipo"
-                  name="tipoMascota"
-                  value={datos.tipoMascota}
-                  onChange={manejarCambio}
-                  onBlur={() => manejarSalida('tipoMascota')}
-                  aria-invalid={Boolean(errores.tipoMascota)}
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns:
+                      'minmax(0, 1fr) minmax(105px, 120px)',
+                    gap: '10px',
+                    alignItems: 'start'
+                  }}
                 >
-                  <option value="">Selecciona una opción</option>
-                  <option value="Perro">Perro</option>
-                  <option value="Gato">Gato</option>
-                  <option value="Otro">Otro</option>
-                </select>
 
-                {mostrarError('tipoMascota')}
-              </div>
+                  {/* CANTIDAD */}
+                  <input
+                    id="edadMascota"
+                    name="edadMascota"
+                    type="number"
+                    min={1}
+                    max={
+                      datos.unidadEdad === 'meses'
+                        ? 11
+                        : 30
+                    }
+                    step={1}
+                    value={datos.edadMascota}
+                    onChange={manejarCambio}
+                    onBlur={() =>
+                      manejarSalida('edadMascota')
+                    }
+                    placeholder={
+                      datos.unidadEdad === 'meses'
+                        ? 'Ej.: 5'
+                        : 'Ej.: 2'
+                    }
+                    aria-label="Cantidad de edad"
+                    aria-invalid={!!errores.edadMascota}
+                  />
 
-              <div className="campo-cita">
-                <label htmlFor="cita-edad">
-                  Edad aproximada (años) *
-                </label>
+                  {/* UNIDAD: MESES O AÑOS */}
+                  <select
+                    id="unidadEdadMascota"
+                    name="unidadEdad"
+                    value={datos.unidadEdad}
+                    onChange={manejarCambio}
+                    aria-label="Unidad de edad"
+                  >
 
-                <input
-                  id="cita-edad"
-                  name="edadMascota"
-                  type="number"
-                  min="0"
-                  max="30"
-                  step="any"
-                  value={datos.edadMascota}
-                  onChange={manejarCambio}
-                  onBlur={() => manejarSalida('edadMascota')}
-                  placeholder="Ej. 3"
-                  aria-invalid={Boolean(errores.edadMascota)}
-                />
+                    <option value="meses">
+                      Meses
+                    </option>
+
+                    <option value="anios">
+                      Años
+                    </option>
+
+                  </select>
+
+                </div>
+
+                <small
+                  style={{
+                    color: '#6F6F78',
+                    marginTop: '6px'
+                  }}
+                >
+                  {datos.unidadEdad === 'meses'
+                    ? 'Ingresa entre 1 y 11 meses.'
+                    : 'Ingresa entre 1 y 30 años.'}
+                </small>
 
                 {mostrarError('edadMascota')}
+                {mostrarError('unidadEdad')}
+
               </div>
 
             </div>
-          </fieldset>
 
-          {/* =====================================
-              BLOQUE 3 — DATOS DE LA CITA
-          ===================================== */}
 
-          <fieldset className="bloque-formulario-cita">
-            <legend>3. La cita</legend>
+            {/* =====================================
+                TARJETAS DE MASCOTAS
+            ===================================== */}
 
-            <div className="grid-campos-cita">
+            <div className="grupo-opciones">
 
-              <div className="campo-cita">
-                <label htmlFor="cita-servicio">
-                  Tipo de atención *
+              <div
+                className="titulo-opciones"
+                id="tituloTiposMascota"
+              >
+                Tipo de mascota *
+              </div>
+
+              <div
+                className="opciones-mascota"
+                role="radiogroup"
+                aria-labelledby="tituloTiposMascota"
+              >
+
+                {tiposMascota.map((tipo) => (
+
+                  <label
+                    className="tarjeta-opcion"
+                    key={tipo.valor}
+                  >
+
+                    <input
+                      type="radio"
+                      name="tipoMascota"
+                      value={tipo.valor}
+                      checked={
+                        datos.tipoMascota === tipo.valor
+                      }
+                      onChange={manejarCambio}
+                      onBlur={() =>
+                        manejarSalida('tipoMascota')
+                      }
+                    />
+
+                    <div
+                      className={
+                        `contenedor-icono-mascota ${tipo.color}`
+                      }
+                    >
+
+                      <img
+                        src={`/img/${tipo.imagen}`}
+                        alt={tipo.titulo}
+                        className="imagen-tipo-mascota"
+                      />
+
+                    </div>
+
+                    <strong>{tipo.titulo}</strong>
+
+                    <small>{tipo.detalle}</small>
+
+                  </label>
+
+                ))}
+
+              </div>
+
+              {mostrarError('tipoMascota')}
+
+            </div>
+
+
+            {/* =====================================
+                AVE O CONEJO
+                Solo aparece al seleccionar "Otro".
+            ===================================== */}
+
+            {datos.tipoMascota === 'Otro' && (
+
+              <div className="grupo-campo campo-otra-especie">
+
+                <label htmlFor="otraEspecieCita">
+                  ¿Qué tipo de mascota tienes? *
                 </label>
 
                 <select
-                  id="cita-servicio"
+                  id="otraEspecieCita"
+                  name="otraEspecie"
+                  value={datos.otraEspecie}
+                  onChange={manejarCambio}
+                  onBlur={() =>
+                    manejarSalida('otraEspecie')
+                  }
+                  aria-invalid={!!errores.otraEspecie}
+                >
+
+                  <option value="">
+                    Selecciona una especie
+                  </option>
+
+                  <option value="Ave">
+                    Ave
+                  </option>
+
+                  <option value="Conejo">
+                    Conejo
+                  </option>
+
+                </select>
+
+                {mostrarError('otraEspecie')}
+
+              </div>
+
+            )}
+
+          </section>
+
+
+          {/* =========================================
+              PASO 3 - INFORMACIÓN DE LA CITA
+          ========================================= */}
+
+          <section className="bloque-formulario bloque-morado">
+
+            <div className="titulo-bloque">
+
+              <span className="numero-paso numero-paso-morado">
+                3
+              </span>
+
+              <div>
+                <h3>Información de la cita</h3>
+
+                <p>
+                  Selecciona atención, profesional,
+                  fecha y horario.
+                </p>
+              </div>
+
+            </div>
+
+
+            {/* =====================================
+                SERVICIO VETERINARIO
+            ===================================== */}
+
+            <div className="grupo-opciones">
+
+              <label
+                htmlFor="servicioCita"
+                className="titulo-opciones"
+              >
+                ¿Qué atención necesitas? *
+              </label>
+
+              <div className="grupo-campo selector-servicio-cita">
+
+                <select
+                  id="servicioCita"
                   name="servicio"
                   value={datos.servicio}
                   onChange={manejarCambio}
-                  onBlur={() => manejarSalida('servicio')}
-                  aria-invalid={Boolean(errores.servicio)}
+                  onBlur={() =>
+                    manejarSalida('servicio')
+                  }
+                  aria-invalid={!!errores.servicio}
                 >
-                  <option value="">Selecciona un servicio</option>
 
-                  {servicios.map((servicio) => (
-                    <option key={servicio} value={servicio}>
-                      {servicio}
-                    </option>
-                  ))}
+                  <option value="">
+                    Selecciona un servicio
+                  </option>
+
+                  {Object.entries(SERVICIOS_CITAS).map(
+                    ([grupo, opciones]) => (
+
+                      <optgroup
+                        key={grupo}
+                        label={grupo}
+                      >
+
+                        {opciones.map((servicio) => (
+
+                          <option
+                            key={servicio}
+                            value={servicio}
+                          >
+                            {servicio}
+                          </option>
+
+                        ))}
+
+                      </optgroup>
+
+                    )
+                  )}
+
                 </select>
 
                 {mostrarError('servicio')}
+
               </div>
 
-              <div className="campo-cita">
-                <label htmlFor="cita-fecha">
+            </div>
+
+
+            {/* =====================================
+                SELECTOR DE VETERINARIOS
+            ===================================== */}
+
+            <SelectorVeterinarioCita
+              tipoMascota={datos.tipoMascota}
+              otraEspecie={datos.otraEspecie}
+              veterinarioId={datos.veterinarioId}
+              onSeleccionar={seleccionarVeterinario}
+              error={errores.veterinarioId}
+            />
+
+
+            {/* =====================================
+                FECHA Y HORA
+            ===================================== */}
+
+            <div className="grid-fecha">
+
+              {/* FECHA */}
+              <div className="grupo-campo">
+
+                <label htmlFor="fechaCita">
                   Fecha *
                 </label>
 
                 <input
-                  id="cita-fecha"
+                  id="fechaCita"
                   name="fecha"
                   type="date"
-                  min={obtenerFechaActual()}
+                  min={fechaLocalHoy()}
                   value={datos.fecha}
                   onChange={manejarCambio}
-                  onBlur={() => manejarSalida('fecha')}
-                  aria-invalid={Boolean(errores.fecha)}
+                  onBlur={() =>
+                    manejarSalida('fecha')
+                  }
+                  disabled={
+                    datos.veterinarioId == null
+                  }
+                  aria-invalid={!!errores.fecha}
                 />
 
                 {mostrarError('fecha')}
+
               </div>
 
-              <div className="campo-cita">
-                <label htmlFor="cita-hora">
-                  Horario *
+
+              {/* HORA */}
+              <div className="grupo-campo">
+
+                <label htmlFor="horaCita">
+                  Hora *
                 </label>
 
                 <select
-                  id="cita-hora"
+                  id="horaCita"
                   name="hora"
                   value={datos.hora}
                   onChange={manejarCambio}
-                  onBlur={() => manejarSalida('hora')}
-                  aria-invalid={Boolean(errores.hora)}
+                  onBlur={() =>
+                    manejarSalida('hora')
+                  }
+                  disabled={
+                    !medico ||
+                    !datos.fecha ||
+                    !atiendeEseDia(
+                      medico,
+                      datos.fecha
+                    )
+                  }
+                  aria-invalid={!!errores.hora}
                 >
-                  <option value="">Selecciona un horario</option>
 
-                  {horarios.map((hora) => {
-                    const ocupada = horasOcupadas.includes(hora)
+                  <option value="">
+                    Selecciona un horario
+                  </option>
+
+                  {HORARIOS_CITAS.map((hora) => {
+
+                    // Horario fuera de la jornada.
+                    const fueraDeJornada =
+                      !atiendeEsaHora(medico, hora)
+
+                    // Hora que ya tiene una cita.
+                    const reservado =
+                      ocupadas.includes(hora)
+
+                    // Hora que ya pasó, si la fecha es hoy.
+                    const pasado =
+                      !esHoraFutura(
+                        datos.fecha,
+                        hora
+                      )
 
                     return (
+
                       <option
                         key={hora}
                         value={hora}
-                        disabled={ocupada}
+                        disabled={
+                          fueraDeJornada ||
+                          reservado ||
+                          pasado
+                        }
                       >
-                        {hora} hrs
-                        {ocupada ? ' (reservado)' : ''}
+
+                        {hora}
+
+                        {fueraDeJornada
+                          ? ' (fuera de jornada)'
+                          : reservado
+                            ? ' (reservado)'
+                            : pasado
+                              ? ' (ya pasó)'
+                              : ''}
+
                       </option>
+
                     )
                   })}
+
                 </select>
 
                 {mostrarError('hora')}
-              </div>
 
-              <div className="campo-cita campo-cita-completo">
-                <label htmlFor="cita-motivo">
-                  Motivo de la consulta (opcional)
-                </label>
-
-                <textarea
-                  id="cita-motivo"
-                  name="motivo"
-                  rows={4}
-                  maxLength={500}
-                  value={datos.motivo}
-                  onChange={manejarCambio}
-                  onBlur={() => manejarSalida('motivo')}
-                  placeholder="Cuéntanos por qué necesitas la atención..."
-                  aria-invalid={Boolean(errores.motivo)}
-                />
-
-                {mostrarError('motivo')}
-
-                <small className="contador-cita">
-                  {datos.motivo.length} / 500 caracteres
-                </small>
-              </div>
-
-              {/* Confirmación obligatoria */}
-              <div className="campo-cita campo-cita-completo">
-
-                <label className="confirmacion-cita">
-                  <input
-                    type="checkbox"
-                    name="confirmarDatos"
-                    checked={datos.confirmarDatos}
-                    onChange={manejarCambio}
-                    onBlur={() => manejarSalida('confirmarDatos')}
-                    aria-invalid={Boolean(errores.confirmarDatos)}
-                  />
-
-                  <span>
-                    Confirmo que los datos ingresados son correctos.
-                  </span>
-                </label>
-
-                {mostrarError('confirmarDatos')}
               </div>
 
             </div>
-          </fieldset>
 
-          {/* =====================================
-              BOTÓN REVISAR
-          ===================================== */}
 
-          <div className="acciones-formulario-cita">
-            <button
-              type="submit"
-              className="boton-solicitar-cita"
-            >
-              Revisar solicitud →
-            </button>
-          </div>
+            {/* =====================================
+                RECORDATORIO DEL HORARIO DEL MÉDICO
+            ===================================== */}
+
+            {!medico && (
+
+              <p className="aviso-horario-veterinario">
+                Elige un veterinario para consultar
+                sus fechas y horarios.
+              </p>
+
+            )}
+
+            {medico && (
+
+              <p className="aviso-horario-veterinario">
+
+                <strong>
+                  Horario de {medico.nombre}:
+                </strong>
+
+                {' '}
+
+                {medico.dias.join(', ')}
+
+                {' · '}
+
+                {medico.horario} hrs.
+
+              </p>
+
+            )}
+
+
+            {/* Avisar si el médico no atiende ese día. */}
+            {medico &&
+              datos.fecha &&
+              !atiendeEseDia(medico, datos.fecha) && (
+
+                <p
+                  className="mensaje-error"
+                  role="alert"
+                >
+                  {medico.nombre} no atiende ese día.
+                  Selecciona otra fecha.
+                </p>
+
+              )}
+
+
+            {/* =====================================
+                MOTIVO DE LA CONSULTA
+            ===================================== */}
+
+            <div className="grupo-campo motivo-consulta">
+
+              <label htmlFor="motivoCita">
+                Cuéntanos el motivo de la consulta *
+              </label>
+
+              <textarea
+                id="motivoCita"
+                name="motivo"
+                minLength={10}
+                maxLength={500}
+                required
+                value={datos.motivo}
+                onChange={manejarCambio}
+                onBlur={() =>
+                  manejarSalida('motivo')
+                }
+                placeholder="Ej.: Mi gatito lleva dos días sin querer comer y necesito una revisión veterinaria."
+                aria-invalid={!!errores.motivo}
+                aria-describedby="ayudaMotivoCita"
+              />
+
+              {/* Descripción de la validación */}
+              <small
+                id="ayudaMotivoCita"
+                style={{
+                  color: '#6F6F78',
+                  marginTop: '6px'
+                }}
+              >
+                Describe brevemente qué necesita tu mascota.
+                Mínimo 10 caracteres.
+              </small>
+
+              {/* Mensaje de error */}
+              {mostrarError('motivo')}
+
+              {/* Contador de caracteres */}
+              <div className="detalle-textarea">
+
+                <span>
+                  Campo obligatorio
+                </span>
+
+                <span>
+                  {datos.motivo.length} / 500
+                </span>
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          {/* =========================================
+              PASO FINAL - CONFIRMACIÓN
+          ========================================= */}
+
+          <section className="bloque-confirmacion">
+
+            <div className="confirmacion-superior">
+
+              <div>
+
+                <span className="etiqueta-final">
+                  Último paso
+                </span>
+
+                <h3>Revisa tu solicitud</h3>
+
+                <p>
+                  Verifica que todos los datos
+                  sean correctos.
+                </p>
+
+              </div>
+
+              <div className="estado-solicitud">
+
+                <span className="punto-estado" />
+
+                Pendiente
+
+              </div>
+
+            </div>
+
+
+            {/* =====================================
+                RESUMEN DE LA MASCOTA
+            ===================================== */}
+
+            {datos.nombreMascota && (
+
+              <div className="resumen-veterinario-elegido">
+
+                <strong>
+                  Mascota:
+                </strong>
+
+                {' '}
+
+                {datos.nombreMascota.trim()}
+
+                {datos.edadMascota && (
+
+                  <span>
+                    {' · '}
+                    {datos.edadMascota}
+
+                    {' '}
+
+                    {datos.unidadEdad === 'meses'
+                      ? Number(datos.edadMascota) === 1
+                        ? 'mes'
+                        : 'meses'
+                      : Number(datos.edadMascota) === 1
+                        ? 'año'
+                        : 'años'}
+                  </span>
+
+                )}
+
+              </div>
+
+            )}
+
+
+            {/* =====================================
+                RESUMEN DEL VETERINARIO ELEGIDO
+            ===================================== */}
+
+            {medico && (
+
+              <div className="resumen-veterinario-elegido">
+
+                <strong>
+                  Veterinario elegido:
+                </strong>
+
+                {' '}
+
+                {medico.nombre}
+
+                {' · '}
+
+                {medico.area}
+
+              </div>
+
+            )}
+
+
+            {/* =====================================
+                CONFIRMAR DATOS
+            ===================================== */}
+
+            <div className="confirmacion-formulario">
+
+              <label className="check-confirmacion">
+
+                <input
+                  type="checkbox"
+                  name="confirmarDatos"
+                  checked={datos.confirmarDatos}
+                  onChange={manejarCambio}
+                  onBlur={() =>
+                    manejarSalida('confirmarDatos')
+                  }
+                  aria-invalid={!!errores.confirmarDatos}
+                />
+
+                <span>
+                  Confirmo que los datos ingresados
+                  son correctos.
+                </span>
+
+              </label>
+
+              {mostrarError('confirmarDatos')}
+
+            </div>
+
+
+            {/* =====================================
+                BOTÓN PARA SOLICITAR CITA
+            ===================================== */}
+
+            <div className="acciones-formulario-cita">
+
+              <button
+                type="submit"
+                className="boton-solicitar-cita"
+                disabled={enviada}
+              >
+
+                {enviada
+                  ? 'Solicitud enviada ✓'
+                  : 'Solicitar cita →'}
+
+              </button>
+
+              <p>
+                Tu solicitud quedará registrada como{' '}
+                <strong>Pendiente</strong>.
+              </p>
+
+            </div>
+
+
+            {/* ERROR GENERAL */}
+            {errorGeneral && (
+
+              <p
+                className="mensaje-error"
+                role="alert"
+              >
+                {errorGeneral}
+              </p>
+
+            )}
+
+
+            {/* =====================================
+                CONFIRMACIÓN DE SOLICITUD REGISTRADA.
+            ===================================== */}
+
+            {enviada && (
+
+              <div
+                className="mensaje-exito-cita mostrar"
+                role="status"
+                aria-live="polite"
+              >
+
+                <div className="mensaje-exito-icono">
+                  ✓
+                </div>
+
+                <div className="mensaje-exito-contenido">
+
+                  <h3>¡Solicitud enviada!</h3>
+
+                  <p>
+                    Tu cita para{' '}
+                    <strong>
+                      {datos.nombreMascota.trim()}
+                    </strong>
+                    {' '}con{' '}
+                    <strong>
+                      {medico?.nombre}
+                    </strong>
+                    {' '}quedó registrada como{' '}
+                    <strong>Pendiente</strong>.
+                  </p>
+
+                  <Link
+                    to="/mis-citas"
+                    className="boton-ver-mis-citas"
+                  >
+                    Ver mis citas →
+                  </Link>
+
+                </div>
+
+              </div>
+
+            )}
+
+          </section>
 
         </form>
 
-        {/* =====================================
-            RESUMEN
-        ===================================== */}
-
-        {mostrarResumen && (
-          <div className="resumen-solicitud-cita" role="status">
-
-            <h3>Revisa los datos de tu cita</h3>
-
-            <p><strong>Dueño:</strong> {datos.nombreDueno}</p>
-            <p><strong>Correo:</strong> {datos.correo}</p>
-            <p><strong>Teléfono:</strong> {datos.telefono}</p>
-            <p><strong>Mascota:</strong> {datos.nombreMascota}</p>
-            <p><strong>Tipo:</strong> {datos.tipoMascota}</p>
-            <p><strong>Edad:</strong> {datos.edadMascota} años</p>
-            <p><strong>Servicio:</strong> {datos.servicio}</p>
-            <p><strong>Fecha:</strong> {datos.fecha}</p>
-            <p><strong>Hora:</strong> {datos.hora} hrs</p>
-
-            {datos.motivo.trim() && (
-              <p>
-                <strong>Motivo:</strong> {datos.motivo}
-              </p>
-            )}
-
-            <p className="aviso-cita">
-              Los datos son válidos.
-              La cita todavía no ha sido registrada.
-            </p>
-
-          </div>
-        )}
-
       </div>
+
     </section>
   )
 }

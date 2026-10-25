@@ -3,22 +3,34 @@
    SOLICITAR CITA
    HERO SOLICITAR CITA
 
-   Presentación principal con:
-   - Etiqueta.
-   - Título.
+   Contiene:
+   - Etiqueta informativa.
+   - Título principal.
    - Descripción.
    - Beneficios.
-   - Ilustración de mascotas.
+   - Imagen original de mascotas.
+
 ========================================================= */
 
 export default function HeroSolicitarCita() {
   return (
     <section className="hero-cita">
 
+      {/* Decoraciones originales */}
+      <div
+        className="decoracion-cita decoracion-cita-1"
+        aria-hidden="true"
+      />
+
+      <div
+        className="decoracion-cita decoracion-cita-2"
+        aria-hidden="true"
+      />
+
       <div className="contenedor hero-cita-contenido">
 
         {/* =========================================
-           INFORMACIÓN DEL HERO
+            TEXTO PRINCIPAL
         ========================================= */}
 
         <div className="hero-cita-texto">
@@ -37,7 +49,7 @@ export default function HeroSolicitarCita() {
             y selecciona el día y horario que prefieras.
           </p>
 
-          {/* Beneficios */}
+          {/* Beneficios de solicitar una cita */}
           <div className="hero-cita-beneficios">
 
             <span>
@@ -57,7 +69,7 @@ export default function HeroSolicitarCita() {
         </div>
 
         {/* =========================================
-         ILUSTRACIÓN DE MASCOTAS
+            IMAGEN ORIGINAL 
         ========================================= */}
 
         <div className="hero-cita-imagen">

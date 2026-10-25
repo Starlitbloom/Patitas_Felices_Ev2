@@ -1,583 +1,1781 @@
 
 /* =========================================================
-   SOLICITAR CITA
-   VETERINARIA PATITAS FELICES
-    
-   ESTILOS:
-   1. Hero Solicitar Cita
-   2. Formulario de cita
-   3. Campos y validaciones
-   4. Resumen de solicitud
-   5. Diseño responsivo
+   SOLICITAR CITA 
+
+   Contiene:
+   1. Paleta de colores.
+   2. Hero de Solicitar Cita.
+   3. Formulario de citas.
+   4. Tarjetas de mascotas.
+   5. Selector de veterinarios.
+   6. Validaciones y mensajes.
+   7. Confirmación de solicitud.
+   8. Sección de ayuda.
+   9. Diseño responsive.
+========================================================= *
+/* =========================================================
+   1. PALETA DE COLORES Y CONTENEDOR
 ========================================================= */
+
+/* Colores originales de Patitas Felices. */
+.solicitar-cita-v2 {
+  --cita-beige: #F5EFE6;
+  --cita-rosa: #FFD6E7;
+  --cita-celeste: #D6ECFA;
+  --cita-morado: #E6D6F7;
+  --cita-texto: #2E2E38;
+  --cita-gris: #6F6F78;
+  --cita-azul: #72A9D0;
+
+  color: var(--cita-texto);
+}
+
+/* Evita que los bordes aumenten el tamaño de elementos. */
+.solicitar-cita-v2,
+.solicitar-cita-v2 * {
+  box-sizing: border-box;
+}
+
+/* Centra el contenido de nuestra página. */
+.solicitar-cita-v2 .contenedor {
+  width: min(1180px, 90%);
+  margin-inline: auto;
+}
 
 /* =========================================================
-   1. HERO SOLICITAR CITA
+   2. HERO - PRESENTACIÓN DE SOLICITAR CITA
 ========================================================= */
 
-.hero-cita {
+.solicitar-cita-v2 .hero-cita {
   position: relative;
-  padding: 75px 25px;
+  overflow: hidden;
+  padding: 70px 0 75px;
 
   background: linear-gradient(
     135deg,
-    #f8fcff 0%,
-    #d6ecfa 42%,
-    #e9e4f4 75%,
-    #f6efe6 100%
+    #F8FCFF 0%,
+    #FFF8FB 52%,
+    #FAF7FF 100%
   );
-
-  overflow: hidden;
 }
 
-/* Texto e imagen en dos columnas */
-
-.hero-cita .hero-cita-contenido {
-  width: 90%;
-  max-width: 1180px;
-  margin: 0 auto;
+/* Distribución de texto e imagen en dos columnas. */
+.solicitar-cita-v2 .hero-cita-contenido {
+  position: relative;
+  z-index: 2;
 
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  grid-template-columns: 1.05fr 0.95fr;
   align-items: center;
-  gap: 55px;
+  gap: 65px;
 }
 
-/* Información principal */
-
-.hero-cita .hero-cita-texto {
+.solicitar-cita-v2 .hero-cita-texto {
+  max-width: 650px;
   min-width: 0;
 }
 
-.hero-cita .etiqueta-cita {
+/* Etiqueta superior del Hero. */
+.solicitar-cita-v2 .etiqueta-cita {
   display: inline-block;
-  margin-bottom: 20px;
-  padding: 9px 18px;
+  padding: 8px 16px;
+  margin-bottom: 17px;
 
-  background: #ffd6e7;
-  border-radius: 30px;
+  border-radius: 999px;
+  background: var(--cita-rosa);
 
-  color: #303044;
+  color: var(--cita-texto);
   font-size: 14px;
   font-weight: 700;
 }
 
-/* Título */
+/* Título principal. */
+.solicitar-cita-v2 .hero-cita-texto h1 {
+  margin: 0 0 20px;
 
-.hero-cita .hero-cita-texto h1 {
-  max-width: 620px;
-  margin: 0 0 22px;
-
-  color: #303044;
-  font-size: clamp(32px, 3.5vw, 47px);
+  color: var(--cita-texto);
+  font-size: clamp(36px, 5vw, 62px);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.08;
+  letter-spacing: -1.5px;
 }
 
-.hero-cita .hero-cita-texto h1 span {
-  color: #72a9d0;
+/* Parte destacada del título en celeste. */
+.solicitar-cita-v2 .hero-cita-texto h1 span {
+  color: var(--cita-azul);
 }
 
-/* Descripción */
+/* Descripción principal. */
+.solicitar-cita-v2 .hero-cita-texto > p {
+  max-width: 580px;
+  margin: 0 0 28px;
 
-.hero-cita .hero-cita-texto > p {
-  max-width: 550px;
-  margin-bottom: 25px;
-
-  color: #666677;
+  color: var(--cita-gris);
   font-size: 17px;
-  line-height: 1.75;
+  line-height: 1.7;
 }
 
-/* Beneficios */
-
-.hero-cita .hero-cita-beneficios {
+/* Beneficios que aparecen bajo el texto. */
+.solicitar-cita-v2 .hero-cita-beneficios {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.hero-cita .hero-cita-beneficios span {
-  display: inline-block;
+.solicitar-cita-v2 .hero-cita-beneficios span {
   padding: 9px 14px;
 
+  border: 1px solid #E8E6ED;
+  border-radius: 999px;
   background: rgba(255, 255, 255, 0.9);
-  border-radius: 24px;
 
-  color: #444455;
-  font-size: 13px;
-  font-weight: 600;
-
-  box-shadow: 0 5px 15px rgba(46, 46, 56, 0.06);
+  font-size: 12px;
+  font-weight: 700;
 }
 
-/* Imagen del Hero */
+/* =========================================================
+   3. IMAGEN Y DECORACIONES DEL HERO
+========================================================= */
 
-.hero-cita .hero-cita-imagen {
-  width: 100%;
-  min-width: 0;
-  min-height: 320px;
+.solicitar-cita-v2 .hero-cita-imagen {
+  position: relative;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  min-height: 390px;
 }
+/* Imagen principal de mascotas. */
+.solicitar-cita-v2 .imagen-hero-mascotas {
+  position: relative;
+  z-index: 2;
 
-.hero-cita .hero-cita-imagen img {
   display: block;
-
-  width: 100%;
-  max-width: 390px;
-  max-height: 360px;
+  width: 520px;
+  max-width: 100%;
+  max-height: 390px;
   height: auto;
 
   object-fit: contain;
 
   filter: drop-shadow(
-    0 12px 18px rgba(46, 46, 56, 0.08)
+    0 18px 28px rgba(46, 46, 56, 0.12)
+  );
+
+  transition: transform 0.3s ease;
+}
+.solicitar-cita-v2 .imagen-hero-mascotas:hover {
+  transform: translateY(-5px);
+}
+
+/* Círculos decorativos del fondo. */
+.solicitar-cita-v2 .decoracion-cita {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.solicitar-cita-v2 .decoracion-cita-1 {
+  width: 230px;
+  height: 230px;
+  top: -100px;
+  left: -80px;
+
+  background: rgba(214, 236, 250, 0.75);
+}
+
+.solicitar-cita-v2 .decoracion-cita-2 {
+  width: 260px;
+  height: 260px;
+  right: -110px;
+  bottom: -120px;
+
+  background: rgba(255, 214, 231, 0.72);
+}
+
+/* =========================================================
+   4. SECCIÓN PRINCIPAL DEL FORMULARIO
+========================================================= */
+
+.solicitar-cita-v2 .seccion-solicitar-cita {
+  padding: 70px 0 80px;
+
+  background: linear-gradient(
+    135deg,
+    #FDFBF8,
+    #FAF7FF
   );
 }
 
-
-/* =========================================================
-   2. SECCIÓN FORMULARIO SOLICITAR CITA
-========================================================= */
-
-.seccion-formulario-cita {
-  padding: 80px 25px;
-  background: #fffaf6;
-}
-
-.seccion-formulario-cita > .contenedor {
-  width: 90%;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-/* Título de sección */
-
-.seccion-formulario-cita .titulo-seccion {
-  margin-bottom: 40px;
+/* Encabezado antes de completar el formulario. */
+.solicitar-cita-v2 .encabezado-formulario-cita {
+  max-width: 720px;
+  margin: 0 auto 32px;
   text-align: center;
 }
 
-.seccion-formulario-cita .titulo-seccion h2 {
-  margin-bottom: 15px;
-  color: #303044;
+.solicitar-cita-v2 .encabezado-formulario-cita > span {
+  display: inline-block;
+  margin-bottom: 10px;
+
+  color: var(--cita-azul);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
-.seccion-formulario-cita .titulo-seccion p {
-  color: #666677;
+.solicitar-cita-v2 .encabezado-formulario-cita h2 {
+  margin: 0 0 12px;
+
+  color: var(--cita-texto);
+  font-size: clamp(28px, 3.5vw, 39px);
+  font-weight: 700;
+}
+
+.solicitar-cita-v2 .encabezado-formulario-cita p {
+  margin: 0;
+
+  color: var(--cita-gris);
+  font-size: 14px;
   line-height: 1.7;
 }
 
-/* Contenedor principal del formulario */
+/* =========================================================
+   5. INDICADOR DE LOS TRES PASOS
 
-.seccion-formulario-cita .formulario-cita {
-  padding: 40px;
+   Paso 1: Datos del dueño.
+   Paso 2: Datos de la mascota.
+   Paso 3: Información de la cita.
+========================================================= */
 
-  background: #ffffff;
-  border-radius: 30px;
+.solicitar-cita-v2 .indicador-pasos {
+  display: flex;
+  align-items: center;
 
-  box-shadow:
-    0 12px 35px rgba(46, 46, 56, 0.07);
+  max-width: 930px;
+  margin: 0 auto 25px;
+  padding: 20px 30px;
+
+  border: 1px solid #EBE8EF;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.85);
+
+  box-shadow: 0 10px 28px rgba(46, 46, 56, 0.05);
+}
+.solicitar-cita-v2 .paso-indicador {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  min-width: 180px;
+}
+
+.solicitar-cita-v2 .paso-indicador > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+  background: var(--cita-celeste);
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.solicitar-cita-v2 .paso-indicador > .paso-rosa {
+  background: var(--cita-rosa);
+}
+
+.solicitar-cita-v2 .paso-indicador > .paso-morado {
+  background: var(--cita-morado);
+}
+.solicitar-cita-v2 .paso-indicador div {
+  display: flex;
+  flex-direction: column;
+}
+
+.solicitar-cita-v2 .paso-indicador strong {
+  margin-bottom: 3px;
+  font-size: 13px;
+}
+.solicitar-cita-v2 .paso-indicador small {
+  color: var(--cita-gris);
+  font-size: 10px;
+}
+
+/* Líneas que conectan los pasos. */
+.solicitar-cita-v2 .linea-paso {
+  flex: 1;
+  height: 2px;
+  margin: 0 12px;
+
+  background: linear-gradient(
+    90deg,
+    var(--cita-celeste),
+    var(--cita-rosa),
+    var(--cita-morado)
+  );
+}
+
+/* =========================================================
+   6. AVISO DE SESIÓN
+
+   Indica que la cita se vincula con la cuenta
+   del usuario que inició sesión.
+========================================================= */
+
+.solicitar-cita-v2 .aviso-sesion {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  max-width: 930px;
+  margin: 0 auto 30px;
+  padding: 18px 22px;
+
+  border: 1px solid #DDEAF4;
+  border-radius: 22px;
+
+  background: linear-gradient(
+    135deg,
+    #F5FBFF,
+    #FBF8FF
+  );
+}
+.solicitar-cita-v2 .aviso-sesion-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 45px;
+  height: 45px;
+  flex-shrink: 0;
+
+  border-radius: 15px;
+  background: var(--cita-celeste);
+
+  font-size: 19px;
+}
+
+.solicitar-cita-v2 .aviso-sesion-texto {
+  flex: 1;
+}
+
+.solicitar-cita-v2 .aviso-sesion-texto strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.solicitar-cita-v2 .aviso-sesion-texto p {
+  margin: 0;
+
+  color: var(--cita-gris);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.solicitar-cita-v2 .aviso-proximamente {
+  padding: 7px 11px;
+
+  border-radius: 20px;
+  background: var(--cita-morado);
+
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   7. BLOQUES GENERALES DEL FORMULARIO
+========================================================= */
+.solicitar-cita-v2 .formulario-cita {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.solicitar-cita-v2 .bloque-formulario,
+.solicitar-cita-v2 .bloque-confirmacion {
+  position: relative;
+
+  margin-bottom: 22px;
+  padding: 30px 35px 32px;
+
+  border: 1px solid #EFEAF0;
+  border-radius: 28px;
+  background: #FFFFFF;
+
+  box-shadow: 0 12px 30px rgba(46, 46, 56, 0.06);
+}
+.solicitar-cita-v2 .bloque-formulario {
+  overflow: hidden;
+}
+
+/* Línea de color en la parte superior. */
+.solicitar-cita-v2 .bloque-formulario::before {
+  content: '';
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 5px;
+}
+
+.solicitar-cita-v2 .bloque-celeste::before {
+  background: var(--cita-celeste);
+}
+
+.solicitar-cita-v2 .bloque-rosa::before {
+  background: var(--cita-rosa);
+}
+
+.solicitar-cita-v2 .bloque-morado::before {
+  background: var(--cita-morado);
+}
+
+/* =========================================================
+   8. TÍTULOS DE LOS BLOQUES
+========================================================= */
+
+.solicitar-cita-v2 .titulo-bloque {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 25px;
+}
+
+.solicitar-cita-v2 .numero-paso {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+  width: 45px;
+  height: 45px;
+
+  border-radius: 50%;
+  background: var(--cita-celeste);
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.solicitar-cita-v2 .numero-paso-rosa {
+  background: var(--cita-rosa);
+}
+
+.solicitar-cita-v2 .numero-paso-morado {
+  background: var(--cita-morado);
+}
+
+.solicitar-cita-v2 .titulo-bloque h3 {
+  margin: 0 0 3px;
+
+  color: var(--cita-texto);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.solicitar-cita-v2 .titulo-bloque p {
+  margin: 0;
+
+  color: var(--cita-gris);
+  font-size: 12px;
+}
+
+/* =========================================================
+   9. DISTRIBUCIÓN DE LOS CAMPOS
+========================================================= */
+.solicitar-cita-v2 .grid-campos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.solicitar-cita-v2 .grid-mascota {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.solicitar-cita-v2 .grid-fecha {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 25px;
+}
+
+.solicitar-cita-v2 .grupo-campo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* =========================================================
+   10. INPUTS, SELECT Y TEXTAREA
+   Estilo de todos los campos del formulario.
+========================================================= */
+.solicitar-cita-v2 .grupo-campo label,
+.solicitar-cita-v2 .titulo-opciones {
+  display: block;
+  margin-bottom: 8px;
+
+  color: var(--cita-texto);
+  font-size: 13px;
+  font-weight: 700;
+}
+.solicitar-cita-v2 .grupo-campo input,
+.solicitar-cita-v2 .grupo-campo select,
+.solicitar-cita-v2 .grupo-campo textarea {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+  padding: 13px 15px;
+
+  border: 1px solid #E3E1E7;
+  border-radius: 14px;
+  background: #FFFEFD;
+
+  color: var(--cita-texto);
+  font: inherit;
+  font-size: 13px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Destacar el campo que se está utilizando. */
+.solicitar-cita-v2 .grupo-campo input:focus,
+.solicitar-cita-v2 .grupo-campo select:focus,
+.solicitar-cita-v2 .grupo-campo textarea:focus {
+  border-color: var(--cita-azul);
+
+  box-shadow: 0 0 0 4px rgba(
+    114, 169, 208, 0.12
+  );
+}
+
+/* Campos bloqueados hasta seleccionar doctor o fecha. */
+.solicitar-cita-v2 .grupo-campo input:disabled,
+.solicitar-cita-v2 .grupo-campo select:disabled {
+  background: #F4F4F7;
+  color: #858596;
+  cursor: not-allowed;
+}
+
+/* Motivo de la consulta. */
+.solicitar-cita-v2 .grupo-campo textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.solicitar-cita-v2 .motivo-consulta {
+  margin-top: 22px;
+}
+
+/* Contador de caracteres del motivo. */
+.solicitar-cita-v2 .detalle-textarea {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 6px;
+
+  color: var(--cita-gris);
+  font-size: 10px;
+}
+/* =========================================================
+   11. SERVICIOS VETERINARIOS
+========================================================= */
+.solicitar-cita-v2 .ayuda-servicio-cita {
+  margin: 0 0 15px;
+
+  color: var(--cita-gris);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.solicitar-cita-v2 .selector-servicio-cita {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.solicitar-cita-v2 .selector-servicio-cita select {
+  cursor: pointer;
+}
+
+/* =========================================================
+   12. TARJETAS DE PERRO, GATO Y OTRO
+   Al seleccionar una mascota, su tarjeta
+   cambia de color automáticamente.
+========================================================= */
+.solicitar-cita-v2 .grupo-opciones {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.solicitar-cita-v2 .opciones-mascota {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+.solicitar-cita-v2 .tarjeta-opcion {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 220px;
+  padding: 22px 15px;
+
+  border: 2px solid #EFECEF;
+  border-radius: 18px;
+  background: #FFFDFE;
+
+  text-align: center;
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.solicitar-cita-v2 .tarjeta-opcion:hover {
+  transform: translateY(-2px);
+  border-color: var(--cita-rosa);
+}
+
+/* Ocultar el círculo del radio sin eliminar su función. */
+.solicitar-cita-v2 .tarjeta-opcion input[type='radio'],
+.solicitar-cita-v2 .tarjeta-veterinario-cita input[type='radio'] {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  opacity: 0;
+}
+
+/* Tarjeta de mascota seleccionada. */
+.solicitar-cita-v2 .tarjeta-opcion:has(input:checked) {
+  border-color: #EEAFCB;
+  background: #FFF5F9;
+
+  box-shadow: 0 8px 20px rgba(
+    255, 182, 211, 0.18
+  );
+}
+/* Navegación accesible con teclado. */
+.solicitar-cita-v2 .tarjeta-opcion:focus-within,
+.solicitar-cita-v2 .tarjeta-veterinario-cita:focus-within {
+  outline: 3px solid var(--cita-azul);
+  outline-offset: 3px;
+}
+
+/* Contenedor circular de los iconos de mascotas. */
+.solicitar-cita-v2 .contenedor-icono-mascota {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+  width: 115px;
+  height: 115px;
+
+  margin-bottom: 12px;
+  overflow: hidden;
+  border-radius: 50%;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Imagen original de Perro, Gato u Otro. */
+.solicitar-cita-v2 .imagen-tipo-mascota {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+.solicitar-cita-v2 .tarjeta-opcion:hover
+.contenedor-icono-mascota {
+  transform: translateY(-4px) scale(1.05);
+}
+
+.solicitar-cita-v2 .tarjeta-opcion:has(input:checked)
+.contenedor-icono-mascota {
+  transform: scale(1.07);
+
+  box-shadow: 0 8px 20px rgba(
+    46, 46, 56, 0.13
+  );
+}
+
+.solicitar-cita-v2 .tarjeta-opcion strong {
+  margin-bottom: 5px;
+
+  color: var(--cita-texto);
+  font-size: 14px;
+}
+
+.solicitar-cita-v2 .tarjeta-opcion small {
+  color: var(--cita-gris);
+  font-size: 11px;
 }
 
 
 /* =========================================================
-   3. BLOQUES DEL FORMULARIO
+   13. CAMPO ADICIONAL: AVE O CONEJO
 ========================================================= */
 
-.seccion-formulario-cita .bloque-formulario-cita {
-  min-width: 0;
-  margin: 0 0 30px;
-  padding: 30px;
-
-  border: 1px solid #e9e5ee;
-  border-radius: 24px;
-
-  background: #fcfbff;
+.solicitar-cita-v2 .campo-otra-especie {
+  margin-top: 22px;
 }
 
-/* Título de cada bloque */
+.solicitar-cita-v2 .campo-otra-especie select {
+  max-width: 420px;
+  cursor: pointer;
+}
 
-.seccion-formulario-cita .bloque-formulario-cita legend {
-  float: none;
-  width: auto;
-  padding: 0 12px;
-  margin: 0 0 15px;
+/* =========================================================
+   14. SELECTOR DE VETERINARIOS
+   Cada tarjeta tendrá:
+   - Fotografía original.
+   - Nombre del médico.
+   - Especialidad.
+   - Experiencia.
+   - Días y horario.
+   - Botón para seleccionar.
+========================================================= */
+/* Contenedor principal del selector. */
+.solicitar-cita-v2 .selector-veterinario-cita {
+  width: 100%;
 
-  color: #303044;
+  margin: 32px 0;
+  padding: 30px 25px;
+
+  border: 1px solid #EADFEC;
+  border-radius: 24px;
+
+  background: linear-gradient(
+    135deg,
+    #FFFAFD,
+    #F4F9FF 55%,
+    #F8F5FF
+  );
+}
+/* =========================================================
+   15. ENCABEZADO DEL SELECTOR DE DOCTORES
+========================================================= */
+
+.solicitar-cita-v2 .encabezado-veterinarios-cita {
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.solicitar-cita-v2 .etiqueta-veterinarios-cita {
+  display: inline-block;
+
+  margin-bottom: 12px;
+  padding: 8px 18px;
+
+  border-radius: 999px;
+  background: var(--cita-rosa);
+
+  color: #704B63;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.solicitar-cita-v2 .encabezado-veterinarios-cita h4 {
+  margin: 0 0 10px;
+
+  color: var(--cita-texto);
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.solicitar-cita-v2 .encabezado-veterinarios-cita p {
+  max-width: 550px;
+  margin: 0 auto;
+
+  color: var(--cita-gris);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   16. DISTRIBUCIÓN DE TARJETAS DE VETERINARIOS
+========================================================= */
+
+.solicitar-cita-v2 .grid-veterinarios-cita {
+  display: grid;
+
+  grid-template-columns: repeat(
+    3,
+    minmax(0, 1fr)
+  );
+
+  gap: 20px;
+  align-items: stretch;
+}
+/* =========================================================
+   17. TARJETA INDIVIDUAL DEL VETERINARIO.
+========================================================= */
+
+.solicitar-cita-v2 .tarjeta-veterinario-cita {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  min-width: 0;
+  height: 100%;
+
+  padding: 24px 18px 20px;
+
+  border: 2px solid #E8E5ED;
+  border-radius: 22px;
+  background: #FFFFFF;
+
+  text-align: center;
+  cursor: pointer;
+
+  box-shadow: 0 7px 22px rgba(
+    48, 48, 68, 0.05
+  );
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+/* Efecto cuando se pasa el mouse sobre la tarjeta. */
+.solicitar-cita-v2 .tarjeta-veterinario-cita:hover {
+  transform: translateY(-5px);
+  border-color: #E7A1BD;
+
+  box-shadow: 0 12px 28px rgba(
+    197, 120, 155, 0.14
+  );
+}
+
+/* =========================================================
+   18. FOTOGRAFÍAS DE LOS VETERINARIOS
+========================================================= */
+
+.solicitar-cita-v2 .foto-veterinario-cita {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 140px;
+  height: 140px;
+
+  margin-bottom: 18px;
+  padding: 5px;
+
+  overflow: hidden;
+  border-radius: 50%;
+
+  background: linear-gradient(
+    135deg,
+    var(--cita-rosa),
+    var(--cita-celeste),
+    var(--cita-morado)
+  );
+}
+
+.solicitar-cita-v2 .foto-veterinario-cita img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+
+  border: 4px solid #FFFFFF;
+  border-radius: 50%;
+}
+
+/* =========================================================
+   19. NOMBRE DEL VETERINARIO
+========================================================= */
+
+.solicitar-cita-v2 .tarjeta-veterinario-cita h5 {
+  margin: 0 0 8px;
+
+  color: var(--cita-texto);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+/* =========================================================
+   20. ESPECIALIDAD DEL VETERINARIO
+========================================================= */
+
+.solicitar-cita-v2 .especialidad-veterinario-cita {
+  margin: 0 0 12px;
+
+  color: #72718A;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+/* =========================================================
+   21. EXPERIENCIA DEL VETERINARIO
+
+   Etiqueta celeste con sus años de experiencia.
+========================================================= */
+
+.solicitar-cita-v2 .experiencia-veterinario-cita {
+  display: inline-block;
+
+  margin-bottom: 15px;
+  padding: 7px 12px;
+
+  border-radius: 20px;
+  background: #EAF5FC;
+
+  color: #4A85AB;
+  font-size: 12px;
+  font-weight: 700;
+}
+/* =========================================================
+   22. DÍAS Y HORARIOS DEL VETERINARIO
+
+   Los días y horas se obtienen de los datos
+   originales creados por las compañeras.
+========================================================= */
+
+.solicitar-cita-v2 .horario-veterinario-cita {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  width: 100%;
+
+  margin-top: auto;
+  margin-bottom: 18px;
+  padding: 14px 10px;
+
+  border-radius: 15px;
+  background: #F8F8FC;
+}
+
+.solicitar-cita-v2 .horario-veterinario-cita strong {
+  color: #55556B;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.solicitar-cita-v2 .horario-veterinario-cita small {
+  color: #77778B;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   23. BOTÓN PARA ELEGIR VETERINARIO
+========================================================= */
+
+.solicitar-cita-v2 .boton-elegir-veterinario {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 42px;
+
+  padding: 11px 12px;
+
+  border-radius: 13px;
+  background: var(--cita-celeste);
+
+  color: #376D96;
+  font-size: 13px;
+  font-weight: 700;
+
+  transition: background-color 0.25s ease;
+}
+
+/* =========================================================
+   24. VETERINARIO SELECCIONADO
+========================================================= */
+
+.solicitar-cita-v2
+.tarjeta-veterinario-cita.veterinario-seleccionado {
+  border-color: #E7A1BD;
+  background: #FFF7FB;
+
+  box-shadow: 0 10px 28px rgba(
+    220, 145, 175, 0.18
+  );
+}
+
+/* Botón rosado cuando el veterinario está elegido. */
+.solicitar-cita-v2
+.veterinario-seleccionado
+.boton-elegir-veterinario {
+  background: var(--cita-rosa);
+  color: #8B4569;
+}
+
+/* Resaltar también la fotografía del doctor. */
+.solicitar-cita-v2
+.veterinario-seleccionado
+.foto-veterinario-cita {
+  background: linear-gradient(
+    135deg,
+    #F2A9C8,
+    var(--cita-rosa)
+  );
+}
+/* =========================================================
+   25. MENSAJE SI NO HAY VETERINARIOS
+========================================================= */
+.solicitar-cita-v2 .aviso-veterinarios-cita {
+  padding: 20px;
+
+  border: 1px solid var(--cita-celeste);
+  border-radius: 15px;
+  background: #EEF7FD;
+
+  color: #456B85;
+  font-size: 14px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+/* =========================================================
+   26. INFORMACIÓN DE HORARIOS
+========================================================= */
+.solicitar-cita-v2 .aviso-horario-veterinario {
+  margin: 18px 0;
+  padding: 15px 18px;
+
+  border-left: 4px solid var(--cita-azul);
+  border-radius: 12px;
+  background: #EDF8FF;
+
+  color: #456B85;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   27. RESUMEN DEL VETERINARIO SELECCIONADO
+   Aparece antes de confirmar la cita.
+========================================================= */
+.solicitar-cita-v2 .resumen-veterinario-elegido {
+  margin: 20px 0;
+  padding: 18px 20px;
+
+  border: 1px solid var(--cita-rosa);
+  border-radius: 15px;
+  background: #FFF3F8;
+
+  color: #704B63;
+  font-size: 14px;
+  line-height: 1.7;
+}
+/* =========================================================
+   28. VALIDACIONES Y MENSAJES DE ERROR
+========================================================= */
+.solicitar-cita-v2 .mensaje-error {
+  display: block;
+  margin-top: 6px;
+
+  color: #C94562;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.solicitar-cita-v2
+.selector-veterinario-cita
+.mensaje-error {
+  margin-top: 14px;
+}
+/* Resaltar los campos con valores incorrectos. */
+.solicitar-cita-v2 .campo-error,
+.solicitar-cita-v2
+[aria-invalid='true']:not([type='checkbox']) {
+  border-color: #E38A9A !important;
+  background-color: #FFF7F9 !important;
+}
+/* Accesibilidad para navegación con teclado. */
+.solicitar-cita-v2 .formulario-cita input:focus-visible,
+.solicitar-cita-v2 .formulario-cita select:focus-visible,
+.solicitar-cita-v2 .formulario-cita textarea:focus-visible,
+.solicitar-cita-v2 .formulario-cita button:focus-visible {
+  outline: 3px solid var(--cita-azul);
+  outline-offset: 3px;
+}
+/* =========================================================
+   29. BLOQUE DE CONFIRMACIÓN FINAL
+========================================================= */
+.solicitar-cita-v2 .bloque-confirmacion {
+  margin-top: 25px;
+}
+
+.solicitar-cita-v2 .confirmacion-superior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid #EFECEF;
+}
+
+.solicitar-cita-v2 .etiqueta-final {
+  display: inline-block;
+
+  margin-bottom: 7px;
+  padding: 6px 11px;
+
+  border-radius: 20px;
+  background: var(--cita-rosa);
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.solicitar-cita-v2 .confirmacion-superior h3 {
+  margin: 0 0 4px;
+
+  color: var(--cita-texto);
   font-size: 20px;
   font-weight: 700;
 }
 
-/* Campos distribuidos en dos columnas */
+.solicitar-cita-v2 .confirmacion-superior p {
+  margin: 0;
 
-.seccion-formulario-cita .grid-campos-cita {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 23px;
+  color: var(--cita-gris);
+  font-size: 12px;
+  line-height: 1.6;
 }
-
-/* Campo individual */
-
-.seccion-formulario-cita .campo-cita {
-  min-width: 0;
-
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-
-/* Campo completo */
-
-.seccion-formulario-cita .campo-cita-completo {
-  grid-column: 1 / -1;
-}
-
-/* Etiquetas */
-
-.seccion-formulario-cita .campo-cita label {
-  color: #303044;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-/* Inputs, select y textarea */
-
-.seccion-formulario-cita .campo-cita input,
-.seccion-formulario-cita .campo-cita select,
-.seccion-formulario-cita .campo-cita textarea {
-  width: 100%;
-  padding: 13px 15px;
-
-  background: #ffffff;
-  border: 1px solid #dfe4ed;
-  border-radius: 15px;
-
-  color: #303044;
-  font: inherit;
-  font-size: 14px;
-
-  transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-/* Al seleccionar un campo */
-
-.seccion-formulario-cita .campo-cita input:focus,
-.seccion-formulario-cita .campo-cita select:focus,
-.seccion-formulario-cita .campo-cita textarea:focus {
-  outline: none;
-
-  border-color: #72a9d0;
-
-  box-shadow:
-    0 0 0 3px rgba(114, 169, 208, 0.15);
-}
-
-.seccion-formulario-cita .campo-cita textarea {
-  min-height: 115px;
-  resize: vertical;
-}
-
 
 /* =========================================================
-   4. VALIDACIONES
+   30. ESTADO DE LA SOLICITUD
 ========================================================= */
+.solicitar-cita-v2 .estado-solicitud {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 
-/* Campo incorrecto */
+  padding: 8px 13px;
 
-.seccion-formulario-cita .campo-cita [aria-invalid="true"] {
-  border: 2px solid #e65b75;
-  background: #fff8fa;
+  border-radius: 20px;
+  background: #FFF6E8;
+
+  color: #A06E28;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
-/* Mensajes de error */
+.solicitar-cita-v2 .punto-estado {
+  width: 8px;
+  height: 8px;
 
-.seccion-formulario-cita .error-cita {
-  color: #c13250;
+  border-radius: 50%;
+  background: #E7A548;
+}
+
+/* =========================================================
+   31. CASILLA PARA CONFIRMAR DATOS
+========================================================= */
+.solicitar-cita-v2 .confirmacion-formulario {
+  margin: 20px 0;
+  padding: 16px 18px;
+
+  border-radius: 16px;
+  background: #FBFAFC;
+}
+
+.solicitar-cita-v2 .check-confirmacion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: var(--cita-texto);
   font-size: 12px;
   font-weight: 600;
-  line-height: 1.5;
+
+  cursor: pointer;
 }
 
+.solicitar-cita-v2 .check-confirmacion input {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
 
+  accent-color: var(--cita-azul);
+}
 /* =========================================================
-   5. BOTÓN REVISAR SOLICITUD
+   32. BOTÓN SOLICITAR CITA
 ========================================================= */
-
-.seccion-formulario-cita .acciones-formulario-cita {
+.solicitar-cita-v2 .acciones-formulario-cita {
   display: flex;
-  justify-content: center;
-  margin-top: 30px;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
 }
 
-.seccion-formulario-cita .boton-solicitar-cita {
-  padding: 15px 35px;
+.solicitar-cita-v2 .boton-solicitar-cita {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 
-  background: #72a9d0;
-  border: none;
-  border-radius: 28px;
+  min-width: 235px;
+  padding: 14px 25px;
 
-  color: #ffffff;
-  font-size: 15px;
+  border: 0;
+  border-radius: 999px;
+
+  background: linear-gradient(
+    135deg,
+    var(--cita-rosa),
+    #FFC0DB
+  );
+
+  color: var(--cita-texto);
+  font: inherit;
+  font-size: 13px;
   font-weight: 700;
 
   cursor: pointer;
 
-  box-shadow:
-    0 8px 20px rgba(114, 169, 208, 0.18);
+  box-shadow: 0 8px 20px rgba(
+    255, 182, 211, 0.24
+  );
 
   transition:
-    background 0.3s ease,
-    transform 0.3s ease;
+    transform 0.25s ease,
+    background 0.25s ease;
+}
+.solicitar-cita-v2
+.boton-solicitar-cita:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: #FFC0DB;
 }
 
-.seccion-formulario-cita .boton-solicitar-cita:hover {
-  background: #5b98c4;
-  transform: translateY(-3px);
+.solicitar-cita-v2 .boton-solicitar-cita:disabled {
+  opacity: 0.75;
+  cursor: default;
 }
 
-.seccion-formulario-cita .boton-solicitar-cita:focus-visible {
-  outline: 3px solid #72a9d0;
-  outline-offset: 3px;
+.solicitar-cita-v2 .acciones-formulario-cita p {
+  margin: 0;
+
+  color: var(--cita-gris);
+  font-size: 10px;
 }
-
-
 /* =========================================================
-   6. RESUMEN DE SOLICITUD
+   33. MENSAJE DE SOLICITUD REGISTRADA
 ========================================================= */
+.solicitar-cita-v2 .mensaje-exito-cita {
+  display: none;
 
-.seccion-formulario-cita .resumen-solicitud-cita {
-  margin-top: 35px;
-  padding: 35px;
+  grid-template-columns: 62px minmax(0, 1fr);
+  align-items: center;
+  gap: 20px;
+
+  width: 100%;
+  max-width: 720px;
+
+  margin: 28px auto 0;
+  padding: 26px 30px;
+
+  border: 1px solid var(--cita-celeste);
+  border-radius: 24px;
 
   background: linear-gradient(
     135deg,
-    #f1f9ff,
-    #fff3f8
+    #F4FBFF,
+    #FFF7FB
   );
 
-  border: 1px solid #d6ecfa;
-  border-radius: 26px;
-
-  box-shadow:
-    0 10px 25px rgba(46, 46, 56, 0.06);
+  box-shadow: 0 12px 30px rgba(
+    46, 46, 56, 0.08
+  );
 }
 
-.seccion-formulario-cita .resumen-solicitud-cita h3 {
-  margin-bottom: 23px;
-
-  color: #303044;
-  font-size: 24px;
+.solicitar-cita-v2 .mensaje-exito-cita.mostrar {
+  display: grid;
+  animation: aparecerMensajeCita 0.4s ease;
 }
 
-.seccion-formulario-cita .resumen-solicitud-cita p {
-  margin-bottom: 12px;
+.solicitar-cita-v2 .mensaje-exito-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  color: #666677;
-  font-size: 15px;
+  width: 62px;
+  height: 62px;
+
+  border-radius: 50%;
+  background: var(--cita-celeste);
+
+  color: #4F8DB8;
+  font-size: 29px;
+  font-weight: 800;
+}
+
+.solicitar-cita-v2 .mensaje-exito-contenido h3 {
+  margin: 0 0 7px;
+
+  color: var(--cita-texto);
+  font-size: 22px;
+}
+
+.solicitar-cita-v2 .mensaje-exito-contenido p {
+  margin: 0;
+
+  color: var(--cita-gris);
+  font-size: 13px;
   line-height: 1.6;
 }
 
-.seccion-formulario-cita .resumen-solicitud-cita strong {
-  color: #303044;
+.solicitar-cita-v2 .mensaje-exito-contenido strong {
+  color: #4F8DB8;
 }
 
-/* Aviso: todavía no se registra la cita */
-
-.seccion-formulario-cita .aviso-cita {
-  margin-top: 25px;
-  padding: 16px;
-
-  background: #fff3d9;
-  border-radius: 16px;
-
-  color: #725725;
-  font-size: 14px;
-  text-align: center;
+.solicitar-cita-v2 .mensaje-exito-ayuda {
+  margin-top: 4px !important;
 }
-
-
 /* =========================================================
-   7. RESPONSIVE — TABLETS
+   34. BOTÓN PARA IR A MIS CITAS
+========================================================= */
+.solicitar-cita-v2 .boton-ver-mis-citas {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 15px;
+  padding: 11px 19px;
+
+  border-radius: 999px;
+  background: var(--cita-rosa);
+
+  color: var(--cita-texto);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+
+  transition:
+    transform 0.25s ease,
+    background-color 0.25s ease;
+}
+.solicitar-cita-v2 .boton-ver-mis-citas:hover {
+  transform: translateY(-2px);
+  background: #FFC9DF;
+}
+/* =========================================================
+   35. ANIMACIÓN DEL MENSAJE DE ÉXITO
+========================================================= */
+@keyframes aparecerMensajeCita {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* =========================================================
+   36. SECCIÓN "ESTAMOS PARA ORIENTARTE"
+========================================================= */
+.solicitar-cita-v2 .seccion-ayuda-cita {
+  padding: 65px 0;
+
+  background: linear-gradient(
+    120deg,
+    var(--cita-morado),
+    var(--cita-rosa)
+  );
+}
+
+.solicitar-cita-v2 .ayuda-cita-contenido {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.35fr)
+    minmax(0, 0.65fr)
+    minmax(150px, 0.55fr);
+
+  align-items: center;
+  gap: 38px;
+
+  min-height: 230px;
+  padding: 38px 48px;
+
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.9);
+
+  box-shadow: 0 15px 35px rgba(
+    46, 46, 56, 0.08
+  );
+}
+
+.solicitar-cita-v2 .etiqueta-ayuda {
+  display: inline-block;
+
+  margin-bottom: 12px;
+  padding: 8px 15px;
+
+  border-radius: 999px;
+  background: var(--cita-celeste);
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.solicitar-cita-v2 .ayuda-cita-contenido h2 {
+  margin: 0 0 12px;
+
+  color: var(--cita-texto);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.solicitar-cita-v2 .ayuda-cita-contenido p {
+  max-width: 600px;
+  margin: 0;
+
+  color: var(--cita-gris);
+  font-size: 14px;
+  line-height: 1.7;
+}
+/* =========================================================
+   37. IMAGEN DE LA SECCIÓN DE AYUDA
+========================================================= */
+
+.solicitar-cita-v2 .ayuda-cita-imagen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.solicitar-cita-v2 .ayuda-cita-imagen img {
+  display: block;
+
+  width: 190px;
+  max-width: 100%;
+  max-height: 170px;
+  height: auto;
+
+  object-fit: contain;
+
+  transition: transform 0.3s ease;
+}
+
+.solicitar-cita-v2 .ayuda-cita-imagen img:hover {
+  transform: translateY(-4px);
+}
+/* =========================================================
+   38. BOTÓN PARA IR A CONTACTO
+========================================================= */
+
+.solicitar-cita-v2 .boton-contacto-cita {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-width: 155px;
+  padding: 15px 25px;
+
+  border-radius: 999px;
+  background: var(--cita-celeste);
+
+  color: var(--cita-texto);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+
+  box-shadow: 0 8px 20px rgba(
+    114, 169, 208, 0.15
+  );
+
+  transition:
+    transform 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.solicitar-cita-v2 .boton-contacto-cita:hover {
+  transform: translateY(-3px);
+  background: #C8E5F7;
+}
+
+.solicitar-cita-v2 .boton-contacto-cita span {
+  font-size: 16px;
+}
+/* =========================================================
+   39. RESPONSIVE - TABLETS GRANDES
 ========================================================= */
 
 @media (max-width: 992px) {
 
-  .hero-cita .hero-cita-contenido {
-    gap: 30px;
+  .solicitar-cita-v2 .hero-cita-contenido {
+    gap: 35px;
   }
 
-  .hero-cita .hero-cita-imagen img {
-    max-width: 310px;
+  .solicitar-cita-v2 .hero-cita-texto h1 {
+    font-size: 42px;
   }
 
-  .seccion-formulario-cita .formulario-cita {
-    padding: 30px;
-  }
-}
-
-
-/* =========================================================
-   8. RESPONSIVE — CELULARES
-========================================================= */
-
-@media (max-width: 768px) {
-
-  /* Hero en una columna */
-
-  .hero-cita {
-    padding: 50px 20px;
-  }
-
-  .hero-cita .hero-cita-contenido {
-    width: 100%;
+  .solicitar-cita-v2 .ayuda-cita-contenido {
     grid-template-columns: 1fr;
-    gap: 25px;
-  }
-
-  .hero-cita .hero-cita-texto {
+    gap: 20px;
     text-align: center;
   }
 
-  .hero-cita .hero-cita-texto h1 {
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 34px;
+  .solicitar-cita-v2 .ayuda-cita-contenido p {
+    margin: 0 auto;
   }
 
-  .hero-cita .hero-cita-texto > p {
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 15px;
+  .solicitar-cita-v2 .boton-contacto-cita {
+    justify-self: center;
   }
 
-  .hero-cita .hero-cita-beneficios {
+}
+/* =========================================================
+   40. RESPONSIVE - TARJETAS DE VETERINARIOS
+========================================================= */
+
+@media (max-width: 950px) {
+
+  .solicitar-cita-v2 .grid-veterinarios-cita {
+    grid-template-columns: repeat(
+      2,
+      minmax(0, 1fr)
+    );
+  }
+
+}
+/* =========================================================
+   41. RESPONSIVE - PANTALLAS MEDIANAS
+======================================================== */
+@media (max-width: 900px) {
+
+  .solicitar-cita-v2 .hero-cita-contenido {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .solicitar-cita-v2 .hero-cita-texto {
+    margin-inline: auto;
+  }
+
+  .solicitar-cita-v2 .hero-cita-beneficios {
     justify-content: center;
   }
 
-  .hero-cita .hero-cita-imagen {
+  .solicitar-cita-v2 .hero-cita-imagen {
+    min-height: 270px;
+  }
+
+  .solicitar-cita-v2 .imagen-hero-mascotas {
+    max-height: 300px;
+  }
+
+  .solicitar-cita-v2 .indicador-pasos {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .solicitar-cita-v2 .paso-indicador {
+    min-width: 0;
+  }
+
+  .solicitar-cita-v2 .linea-paso {
+    display: none;
+  }
+
+  .solicitar-cita-v2 .grid-campos {
+    grid-template-columns: repeat(
+      2,
+      minmax(0, 1fr)
+    );
+  }
+
+}
+/* =========================================================
+   42. RESPONSIVE - CELULARES
+========================================================= */
+@media (max-width: 650px) {
+
+  .solicitar-cita-v2 .contenedor {
+    width: 92%;
+  }
+
+  /* Hero */
+  .solicitar-cita-v2 .hero-cita {
+    padding: 55px 0 60px;
+  }
+
+  .solicitar-cita-v2 .hero-cita-texto h1 {
+    font-size: 36px;
+  }
+
+  .solicitar-cita-v2 .hero-cita-texto > p {
+    font-size: 15px;
+  }
+
+  .solicitar-cita-v2 .hero-cita-imagen {
     min-height: 250px;
   }
 
-  .hero-cita .hero-cita-imagen img {
-    max-width: 270px;
+  .solicitar-cita-v2 .imagen-hero-mascotas {
+    max-height: 270px;
   }
 
   /* Formulario */
-
-  .seccion-formulario-cita {
-    padding: 55px 18px;
+  .solicitar-cita-v2 .seccion-solicitar-cita {
+    padding: 55px 0 65px;
   }
 
-  .seccion-formulario-cita .formulario-cita {
-    padding: 25px 20px;
+  .solicitar-cita-v2 .encabezado-formulario-cita h2 {
+    font-size: 30px;
   }
 
-  .seccion-formulario-cita .bloque-formulario-cita {
-    padding: 23px 18px;
+  .solicitar-cita-v2 .aviso-sesion {
+    align-items: flex-start;
+    flex-wrap: wrap;
   }
 
-  .seccion-formulario-cita .grid-campos-cita {
+  .solicitar-cita-v2 .bloque-formulario,
+  .solicitar-cita-v2 .bloque-confirmacion {
+    padding: 26px 20px;
+  }
+
+  /* Todos estos grupos pasan a una columna. */
+  .solicitar-cita-v2 .grid-campos,
+  .solicitar-cita-v2 .grid-mascota,
+  .solicitar-cita-v2 .grid-fecha {
     grid-template-columns: 1fr;
-    gap: 20px;
   }
 
-  .seccion-formulario-cita .campo-cita-completo {
-    grid-column: 1;
+  /* Mascotas */
+  .solicitar-cita-v2 .opciones-mascota {
+    grid-template-columns: 1fr;
   }
+
+  .solicitar-cita-v2 .tarjeta-opcion {
+    min-height: 115px;
+    padding: 18px;
+  }
+
+  .solicitar-cita-v2 .contenedor-icono-mascota {
+    width: 80px;
+    height: 80px;
+  }
+  /* Confirmación */
+  .solicitar-cita-v2 .confirmacion-superior {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .solicitar-cita-v2 .boton-solicitar-cita {
+    width: 100%;
+  }
+
+  .solicitar-cita-v2 .mensaje-exito-cita.mostrar {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .solicitar-cita-v2 .mensaje-exito-icono {
+    margin: 0 auto;
+  }
+
+  /* Sección de ayuda */
+  .solicitar-cita-v2 .ayuda-cita-contenido {
+    padding: 28px 22px;
+  }
+
+  .solicitar-cita-v2 .ayuda-cita-contenido h2 {
+    font-size: 28px;
+  }
+
+  .solicitar-cita-v2 .ayuda-cita-imagen img {
+    width: 145px;
+  }
+
+  /* Selector de veterinarios */
+  .solicitar-cita-v2 .selector-veterinario-cita {
+    margin: 25px 0;
+    padding: 22px 14px;
+  }
+
+  .solicitar-cita-v2 .grid-veterinarios-cita {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .solicitar-cita-v2 .tarjeta-veterinario-cita {
+    padding: 22px 18px;
+  }
+
+  .solicitar-cita-v2 .foto-veterinario-cita {
+    width: 125px;
+    height: 125px;
+  }
+
+  .solicitar-cita-v2 .encabezado-veterinarios-cita h4 {
+    font-size: 22px;
+  }
+
 }
-
 
 /* =========================================================
-   9. PANTALLAS PEQUEÑAS
+   43. ACCESIBILIDAD - REDUCIR ANIMACIONES
 ========================================================= */
+@media (prefers-reduced-motion: reduce) {
 
-@media (max-width: 480px) {
-
-  .hero-cita .hero-cita-texto h1 {
-    font-size: 29px;
+  .solicitar-cita-v2 .tarjeta-veterinario-cita,
+  .solicitar-cita-v2 .tarjeta-opcion,
+  .solicitar-cita-v2 .boton-solicitar-cita,
+  .solicitar-cita-v2 .imagen-hero-mascotas {
+    transition: none;
   }
 
-  .hero-cita .etiqueta-cita {
-    font-size: 12px;
+  .solicitar-cita-v2 .mensaje-exito-cita.mostrar {
+    animation: none;
   }
-
-  .seccion-formulario-cita .formulario-cita {
-    padding: 20px 15px;
-  }
-
-  .seccion-formulario-cita .bloque-formulario-cita {
-    padding: 20px 14px;
-  }
-
-  .seccion-formulario-cita .resumen-solicitud-cita {
-    padding: 25px 20px;
-  }
-  
-/* =========================================================
- VALIDACIONES ADICIONALES
-   SOLICITAR CITA
-========================================================= */
-
-/* Contador de caracteres */
-
-.seccion-formulario-cita .contador-cita {
-  align-self: flex-end;
-  color: #888899;
-  font-size: 12px;
-}
-
-/* Confirmación de datos */
-
-.seccion-formulario-cita .confirmacion-cita {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  padding: 18px 20px;
-
-  background: #f5f9ff;
-  border: 1px solid #d6ecfa;
-  border-radius: 17px;
-
-  cursor: pointer;
-}
-
-.seccion-formulario-cita .confirmacion-cita input {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-
-  accent-color: #72a9d0;
-}
-
-.seccion-formulario-cita .confirmacion-cita span {
-  color: #303044;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-/* Mensaje de error */
-
-.seccion-formulario-cita .error-cita {
-  display: block;
-  color: #c13250;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.5;
-}
-
-/* Campos con error */
-
-.seccion-formulario-cita
-.campo-cita [aria-invalid="true"]:not([type="checkbox"]) {
-  border: 2px solid #e65b75;
-  background: #fff8fa;
-}
 
 }
