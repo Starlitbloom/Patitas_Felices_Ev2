@@ -47,7 +47,7 @@ export default function InformacionContacto({
     {
       titulo: 'Horario de atención',
       descripcion: 'Lunes a viernes',
-      dato: '09:00 - 19:00 hrs',
+      dato: horario, // Usar el horario recibido desde ContactoPage
       icono: '◷',
       clase: 'tarjeta-horario'
     }

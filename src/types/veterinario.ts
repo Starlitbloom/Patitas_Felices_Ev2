@@ -9,7 +9,8 @@ export type Cargo = 'Médico veterinario' | 'Técnico veterinario' | 'Recepcioni
 export interface Veterinario {
   id: number
   nombre: string
-  cargo: Cargo
+  cargo: Cargo  
+  titulo: string // Título profesional del integrante del equipo
   area: string // área o servicio principal (ej: "Cirugía menor")
   especies: Especie[] // vacío si no atiende pacientes (recepción)
   experiencia: number // años

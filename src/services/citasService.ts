@@ -1,20 +1,18 @@
-
 /* =========================================================
-   SERVICIO DE CITAS
-   VETERINARIA PATITAS FELICES
-
-   Incluye:
-   - Crear citas.
-   - Listar citas.
-   - Consultar citas por usuario.
-   - Filtrar citas.
-   - Modificar citas.
-   - Eliminar citas.
-   - Seleccionar veterinario.
-   - Validar especie, fecha y horario.
-   - Evitar reservas duplicadas por veterinario.
+   PATITAS FELICES - SERVICIO DE CITAS
+   
+   FUNCIONALIDADES:
+   1. Crear solicitudes de citas.
+   2. Consultar las citas guardadas.
+   3. Filtrar citas de un usuario.
+   4. Modificar citas.
+   5. Cancelar o eliminar citas.
+   6. Comprobar especie, servicio y veterinario.
+   7. Comprobar días de atención.
+   8. Comprobar horarios del médico.
+   9. Considerar la duración de cada atención.
+   10. Evitar reservas superpuestas.
 ========================================================= */
-
 import {
   CLAVES,
   guardarColeccion,
@@ -25,57 +23,85 @@ import {
   obtenerVeterinarioPorId
 } from './veterinariosService'
 
+import {
+  CATALOGO_CITAS,
+  citaCompatibleConCatalogo,
+  obtenerEspecieCita,
+  obtenerServicioCita,
+  profesionalPorConfirmar
+} from './catalogoCitasService'
+
 import type {
   ResultadoOperacion
 } from '../types/usuario'
-
-import type {
-  Especie
-} from '../types/veterinario'
-
-
 /* =========================================================
-   1. TIPOS DE DATOS
+   1. ESTADOS DE LAS CITAS
+   Pendiente:
+   La clínica todavía no la confirma.
+   Confirmada:
+   La clínica aceptó la cita.
+   Completada:
+   La atención ya se realizó.
+   Cancelada:
+   La cita no se realizará y libera el horario.
 ========================================================= */
-
 export type EstadoCita =
   | 'Pendiente'
   | 'Confirmada'
   | 'Completada'
   | 'Cancelada'
-
-
+/* =========================================================
+   2. ESTRUCTURA DE UNA CITA
+========================================================= */
 export interface Cita {
+
+  // Identificador único.
   id: string | number
 
+  // Datos del usuario conectado.
   correoUsuario: string
   nombreUsuario: string
 
+  // Datos del dueño.
   dueno: string
   propietario: string
   correo: string
   telefono: string
 
+  // Datos de la mascota.
   mascota: string
   tipoMascota: string
   otraEspecie?: string
   edadMascota: number
 
-  // Opcionales para poder leer citas antiguas.
+  // Veterinario seleccionado.
   veterinarioId?: number | null
   veterinarioNombre?: string
 
+  // Información de la atención.
   servicio: string
   fecha: string
   hora: string
   motivo: string
-
+  // Duración de la reserva en minutos.
+  duracionMinutos?: number
+  // Indica si la clínica debe confirmar
+  // el profesional que realizará el servicio.
+  profesionalPorConfirmar?: boolean
+  // Estado y fecha de registro.
   estado: EstadoCita
   fechaRegistro: string
 }
+/* =========================================================
+   3. TIPO PARA CREAR UNA CITA
 
-
-// Las nuevas citas requieren un veterinario.
+   Al crear una cita:
+   - El formulario envía sus datos.
+   - El servicio genera automáticamente el ID.
+   - El estado inicial es Pendiente.
+   - Se registra la fecha de creación.
+   - Se calcula la duración de la atención.
+========================================================= */
 export type NuevaCita = Omit<
   Cita,
   | 'id'
@@ -83,234 +109,583 @@ export type NuevaCita = Omit<
   | 'fechaRegistro'
   | 'veterinarioId'
   | 'veterinarioNombre'
+  | 'duracionMinutos'
+  | 'profesionalPorConfirmar'
 > & {
   veterinarioId: number
   veterinarioNombre: string
 }
-
-
-// Campos que pueden modificarse posteriormente.
-export type CambiosCita = Partial<
-  Pick<
-    Cita,
-    | 'fecha'
-    | 'hora'
-    | 'servicio'
-    | 'motivo'
-    | 'estado'
-    | 'veterinarioId'
-  >
->
-
-
-type ErrorCita = {
-  campo: string
-  mensaje: string
-}
-
-
 /* =========================================================
-   2. HORARIOS DE ATENCIÓN
+   4. TIPO PARA MODIFICAR UNA CITA
 ========================================================= */
-
+export type CambiosCita = Partial<Pick<
+  Cita,
+  | 'fecha'
+  | 'hora'
+  | 'servicio'
+  | 'motivo'
+  | 'estado'
+  | 'veterinarioId'
+>>
+/* =========================================================
+   5. HORARIOS DISPONIBLES
+========================================================= */
 export const HORARIOS_CITAS = [
+
   '09:00',
   '10:00',
   '11:00',
   '12:00',
+  '13:00',
+  '14:00',
   '15:00',
   '16:00',
   '17:00',
   '18:00'
+
 ] as const
-
-
 /* =========================================================
-   3. SERVICIOS VETERINARIOS DE LA EP1
+   6. SERVICIOS DISPONIBLES
 ========================================================= */
+export const SERVICIOS_CITAS: Record<
+  string,
+  string[]
+> = CATALOGO_CITAS.reduce<Record<string, string[]>>(
 
-export const SERVICIOS_CITAS: Record<string, string[]> = {
+  (grupos, servicio) => {
 
-  Consultas: [
-    'Consulta general',
-    'Consulta urgencia',
-    'Control postoperatorio',
-    'Consulta ave / conejo',
-    'Segunda opinión médica'
-  ],
+    // Si todavía no existe el grupo, lo creamos.
+    if (!grupos[servicio.grupo]) {
 
-  Vacunación: [
-    'Vacuna antirrábica canina',
-    'Vacuna séxtuple canina',
-    'Vacuna bivalente felina',
-    'Vacuna triple felina',
-    'Vacuna Bordetella canina',
-    'Vacuna antirrábica felina'
-  ],
+      grupos[servicio.grupo] = []
+    }
 
-  Cirugía: [
-    'Esterilización hembra canina',
-    'Esterilización macho canino',
-    'Esterilización hembra felina',
-    'Esterilización macho felino',
-    'Extirpación de tumor cutáneo',
-    'Cesárea de urgencia'
-  ],
+    // Agregamos el servicio al grupo.
+    grupos[servicio.grupo].push(
+      servicio.nombre
+    )
 
-  Desparasitación: [
-    'Desparasitación interna pequeños',
-    'Desparasitación interna medianos',
-    'Desparasitación interna grandes',
-    'Desparasitación interna felina',
-    'Desparasitación externa'
-  ],
+    return grupos
+  },
 
-  Exámenes: [
-    'Hemograma completo',
-    'Perfil bioquímico completo',
-    'Radiografía',
-    'Ecografía abdominal',
-    'Test de leishmaniasis'
-  ],
+  {}
+)
+/* =========================================================
+   7. CONVERTIR HORAS A MINUTOS
+========================================================= */
+function horaAMinutos(
+  hora: string
+): number | null {
 
-  Otros: [
-    'Corte de uñas',
-    'Limpieza dental',
-    'Microchip identificación',
-    'Hospitalización'
+  // Comprobar formato HH:mm.
+  if (!/^\d{2}:\d{2}$/.test(hora)) {
+
+    return null
+  }
+
+  const [horas, minutos] = hora
+    .split(':')
+    .map(Number)
+
+  // Comprobar valores válidos.
+  if (horas > 23 || minutos > 59) {
+
+    return null
+  }
+
+  return horas * 60 + minutos
+}
+/* =========================================================
+   8. COMPROBAR SI DOS CITAS SE SUPERPONEN
+========================================================= */
+function seSuperponen(
+
+  inicioA: number,
+  finA: number,
+
+  inicioB: number,
+  finB: number
+
+): boolean {
+
+  return (
+    inicioA < finB &&
+    inicioB < finA
+  )
+}
+/* =========================================================
+   9. OBTENER LA DURACIÓN DEL SERVICIO
+========================================================= */
+function duracionParaAgenda(
+  nombreServicio: string
+): number {
+
+  const servicio = obtenerServicioCita(
+    nombreServicio
+  )
+
+  // Compatibilidad con servicios antiguos.
+  if (!servicio) {
+
+    return 60
+  }
+
+  // Hospitalización: evaluación inicial.
+  if (servicio.codigo === 'OT004') {
+
+    return 60
+  }
+
+  return servicio.duracionMinutos
+}
+/* =========================================================
+   10. OBTENER DURACIÓN DE UNA CITA GUARDADA
+========================================================= */
+function duracionDeCita(
+  cita: Cita
+): number {
+
+  if (
+
+    typeof cita.duracionMinutos === 'number' &&
+
+    Number.isFinite(cita.duracionMinutos) &&
+
+    cita.duracionMinutos > 0
+
+  ) {
+
+    return cita.duracionMinutos
+  }
+
+  return duracionParaAgenda(
+    cita.servicio
+  )
+}
+/* =========================================================
+   11. CONVERTIR FECHA A OBJETO DATE
+========================================================= */
+function fechaAObjeto(
+  fecha: string
+): Date | null {
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+
+    return null
+  }
+
+  const [anio, mes, dia] = fecha
+    .split('-')
+    .map(Number)
+
+  const objeto = new Date(
+    anio,
+    mes - 1,
+    dia
+  )
+
+  if (
+
+    objeto.getFullYear() !== anio ||
+
+    objeto.getMonth() !== mes - 1 ||
+
+    objeto.getDate() !== dia
+
+  ) {
+
+    return null
+  }
+
+  return objeto
+}
+/* =========================================================
+   12. REVISAR LA JORNADA DEL VETERINARIO
+
+   Validamos:
+   - Que el veterinario exista.
+   - Que sea médico veterinario.
+   - Que atienda el día seleccionado.
+   - Que la hora corresponda a su jornada.
+   - Que la atención alcance a terminar
+     antes del horario de salida del médico.
+========================================================= */
+function errorJornada(
+
+  fecha: string,
+  hora: string,
+  veterinarioId: number,
+  servicio: string
+
+): string | null {
+
+  const medico = obtenerVeterinarioPorId(
+    veterinarioId
+  )
+
+  if (
+    !medico ||
+    medico.cargo !== 'Médico veterinario'
+  ) {
+
+    return 'Selecciona un médico veterinario válido.'
+  }
+  /* -----------------------------------------
+     Comprobar día de atención.
+  ----------------------------------------- */
+  const fechaElegida = fechaAObjeto(
+    fecha
+  )
+
+  if (!fechaElegida) {
+
+    return 'Selecciona una fecha válida.'
+  }
+
+  const dias = [
+
+    'Domingo',
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado'
+
   ]
+
+  const nombreDia = dias[
+    fechaElegida.getDay()
+  ]
+
+  if (!medico.dias.includes(nombreDia)) {
+
+    return `${medico.nombre} no atiende ese día.`
+  }
+  /* -----------------------------------------
+     Obtener la hora de entrada y salida.
+     medico.horario tiene este formato:
+     "10:00 - 19:00"
+  ----------------------------------------- */
+  const rango = medico.horario.match(
+    /^(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})$/
+  )
+
+  const inicio = horaAMinutos(
+    hora
+  )
+
+  const entrada = rango
+    ? horaAMinutos(rango[1])
+    : null
+
+  const salida = rango
+    ? horaAMinutos(rango[2])
+    : null
+
+
+  if (
+
+    inicio === null ||
+
+    entrada === null ||
+
+    salida === null
+
+  ) {
+
+    return 'No fue posible validar el horario del veterinario.'
+  }
+  /* -----------------------------------------
+     Comprobar duración de la atención.
+     ----------------------------------------- */
+  const duracion = duracionParaAgenda(
+    servicio
+  )
+
+  const fin = inicio + duracion
+
+  if (
+    inicio < entrada ||
+    fin > salida
+  ) {
+
+    return `La atención no alcanza a realizarse dentro del horario de ${medico.nombre}.`
+  }
+
+  return null
+}
+/* =========================================================
+   13. BUSCAR CONFLICTOS DE HORARIOS
+========================================================= */
+function hayConflicto(
+
+  fecha: string,
+  hora: string,
+  duracionNueva: number,
+
+  veterinarioId?: number | null,
+
+  idExcluir?: string | number
+
+): boolean {
+
+  const inicioNuevo = horaAMinutos(
+    hora
+  )
+
+  if (inicioNuevo === null) {
+
+    return false
+  }
+
+  const finNuevo = inicioNuevo + duracionNueva
+
+  /* Recorremos las citas guardadas. */
+  return listarCitas().some((cita) => {
+    // Solo revisamos la fecha seleccionada.
+    if (cita.fecha !== fecha) {
+
+      return false
+    }
+    // Las canceladas liberan el horario.
+    if (
+      cita.estado?.toLowerCase() === 'cancelada'
+    ) {
+
+      return false
+    }
+    // Al editar, ignoramos la misma cita.
+    if (
+
+      idExcluir !== undefined &&
+
+      String(cita.id) === String(idExcluir)
+
+    ) {
+
+      return false
+    }
+    /* -----------------------------------------
+       Comparar veterinarios.
+    ----------------------------------------- */
+    if (
+
+      veterinarioId != null &&
+
+      cita.veterinarioId != null &&
+
+      cita.veterinarioId !== veterinarioId
+
+    ) {
+
+      return false
+    }
+    /* -----------------------------------------
+       Obtener los minutos de la cita existente.
+    ----------------------------------------- */
+    const inicioExistente = horaAMinutos(
+      cita.hora
+    )
+
+    if (inicioExistente === null) {
+
+      return false
+    }
+
+    const finExistente =
+      inicioExistente +
+      duracionDeCita(cita)
+
+
+    /* -----------------------------------------
+       Comparar ambos intervalos.
+    ----------------------------------------- */
+
+    return seSuperponen(
+
+      inicioNuevo,
+      finNuevo,
+
+      inicioExistente,
+      finExistente
+
+    )
+
+  })
 }
 
-
 /* =========================================================
-   4. LISTAR TODAS LAS CITAS
-
+   14. LISTAR TODAS LAS CITAS
 ========================================================= */
 
 export function listarCitas(): Cita[] {
-  return leerColeccion<Cita>(CLAVES.citas)
+
+  return leerColeccion<Cita>(
+    CLAVES.citas
+  )
 }
 
 
 /* =========================================================
-   5. READ - CITAS DEL USUARIO CONECTADO
+   15. LISTAR CITAS DEL USUARIO
 ========================================================= */
 
 export function listarCitasUsuario(
   correo: string
 ): Cita[] {
 
-  const buscado = correo.trim().toLowerCase()
+  const correoBuscado = correo
+    .trim()
+    .toLowerCase()
 
-  return listarCitas().filter((cita) =>
-    (cita.correoUsuario || cita.correo || '')
+  return listarCitas().filter((cita) => {
+
+    const correoCita = (
+      cita.correoUsuario ||
+      cita.correo ||
+      ''
+    )
       .trim()
-      .toLowerCase() === buscado
-  )
-}
+      .toLowerCase()
 
+    return correoCita === correoBuscado
 
-/* =========================================================
-   6. FILTROS PARA MIS CITAS Y ADMINISTRAR CITAS
-========================================================= */
-
-export function filtrarCitas(
-  citas: Cita[],
-  texto: string,
-  estado: string
-): Cita[] {
-
-  const buscado = texto.trim().toLowerCase()
-
-  return citas.filter((cita) => {
-
-    const mismoEstado =
-      !estado ||
-      (cita.estado || '').toLowerCase() ===
-        estado.toLowerCase()
-
-    const valores = [
-      cita.mascota,
-      cita.dueno,
-      cita.correo,
-      cita.servicio,
-      cita.fecha,
-      cita.veterinarioNombre || ''
-    ]
-
-    const coincideTexto =
-      !buscado ||
-      valores.some((valor) =>
-        (valor || '').toLowerCase().includes(buscado)
-      )
-
-    return mismoEstado && coincideTexto
   })
 }
 
 
 /* =========================================================
-   7. COMPROBAR HORARIOS OCUPADOS
-
-   Cada veterinario tiene su propia agenda.
-
-   Parámetros:
-   - fecha
-   - idExcluir: para editar una cita
-   - veterinarioId: médico cuya agenda revisamos
+   16. FILTRAR CITAS
+   Permite buscar por:
+   - Mascota.
+   - Dueño.
+   - Correo.
+   - Servicio.
+   - Fecha.
+   - Nombre del veterinario.
 ========================================================= */
+export function filtrarCitas(
 
-export function horasOcupadas(
-  fecha: string,
-  idExcluir?: string | number,
-  veterinarioId?: number | null
-): string[] {
+  citas: Cita[],
+  texto: string,
+  estado: string
 
-  return listarCitas()
-    .filter((cita) => {
+): Cita[] {
 
-      // Solo citas del mismo día.
-      if (cita.fecha !== fecha) {
-        return false
-      }
+  const buscar = texto
+    .trim()
+    .toLowerCase()
 
-      // Excluir la cita que estamos modificando.
-      if (cita.id === idExcluir) {
-        return false
-      }
+  return citas.filter((cita) => {
+    // Comprobar estado.
+    const coincideEstado =
 
-      // Las citas canceladas no ocupan horario.
-      if (
-        (cita.estado || '').toLowerCase() ===
-        'cancelada'
-      ) {
-        return false
-      }
+      !estado ||
 
-      // Sin médico indicado: consultar todos.
-      if (veterinarioId == null) {
-        return true
-      }
+      cita.estado?.toLowerCase() ===
+      estado.toLowerCase()
+    // Comprobar texto buscado.
+    const coincideTexto =
 
-      // Las citas antiguas sin médico siguen ocupadas.
-      return (
-        cita.veterinarioId == null ||
-        cita.veterinarioId === veterinarioId
+      !buscar ||
+
+      [
+
+        cita.mascota,
+        cita.dueno,
+        cita.correo,
+        cita.servicio,
+        cita.fecha,
+        cita.veterinarioNombre
+
+      ].some((dato) =>
+
+        (dato || '')
+          .toLowerCase()
+          .includes(buscar)
+
       )
-    })
-    .map((cita) => cita.hora)
+
+    return (
+      coincideEstado &&
+      coincideTexto
+    )
+
+  })
 }
 
+/* =========================================================
+   17. HORAS NO DISPONIBLES
+========================================================= */
+export function horasOcupadas(
+
+  fecha: string,
+
+  idExcluir?: string | number,
+
+  veterinarioId?: number | null,
+
+  servicio?: string
+
+): string[] {
+
+  const duracion = duracionParaAgenda(
+    servicio ?? ''
+  )
+  /* Revisamos cada hora del selector. */
+  return HORARIOS_CITAS.filter((hora) => {
+    /* -----------------------------------------
+       Comprobar conflicto con otras citas.
+    ----------------------------------------- */
+    const choca = hayConflicto(
+
+      fecha,
+      hora,
+      duracion,
+
+      veterinarioId,
+      idExcluir
+
+    )
+    /* -----------------------------------------
+       Comprobar jornada y duración.
+    ----------------------------------------- */
+    const fueraDeJornada =
+
+      veterinarioId != null &&
+      Boolean(servicio)
+
+        ? Boolean(
+
+            errorJornada(
+
+              fecha,
+              hora,
+              veterinarioId,
+              servicio!
+
+            )
+
+          )
+
+        : false
+
+
+    return (
+      choca ||
+      fueraDeJornada
+    )
+
+  })
+}
 
 /* =========================================================
-   8. OBTENER FECHA LOCAL
+   18. OBTENER FECHA LOCAL DE HOY
 ========================================================= */
-
 export function fechaLocalHoy(): string {
 
   const hoy = new Date()
-
-  const anio = hoy.getFullYear()
 
   const mes = String(
     hoy.getMonth() + 1
@@ -320,554 +695,652 @@ export function fechaLocalHoy(): string {
     hoy.getDate()
   ).padStart(2, '0')
 
-  return `${anio}-${mes}-${dia}`
+  return `${hoy.getFullYear()}-${mes}-${dia}`
 }
 
-
 /* =========================================================
-   9. VALIDAR FECHA Y HORA
+   19. VALIDAR DISPONIBILIDAD ANTES DE GUARDAR
 ========================================================= */
+function validarDisponibilidad(
 
-function validarFechaYHora(
   fecha: string,
   hora: string,
+  servicio: string,
+
   veterinarioId?: number | null,
+
   idExcluir?: string | number
-): ErrorCita | null {
 
-  // Formato AAAA-MM-DD.
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
-    return {
-      campo: 'fecha',
-      mensaje: 'Selecciona una fecha válida.'
-    }
+): string | null {
+  /* -----------------------------------------
+     Validar fecha.
+  ----------------------------------------- */
+  const fechaElegida = fechaAObjeto(
+    fecha
+  )
+
+  if (!fechaElegida) {
+
+    return 'Selecciona una fecha válida.'
   }
 
-  const [anio, mes, dia] = fecha
-    .split('-')
-    .map(Number)
-
-  const elegida = new Date(anio, mes - 1, dia)
-
-  // Comprobar que la fecha exista.
-  if (
-    elegida.getFullYear() !== anio ||
-    elegida.getMonth() !== mes - 1 ||
-    elegida.getDate() !== dia
-  ) {
-    return {
-      campo: 'fecha',
-      mensaje: 'Selecciona una fecha válida.'
-    }
-  }
-
-  // No permitir fechas anteriores.
   if (fecha < fechaLocalHoy()) {
-    return {
-      campo: 'fecha',
-      mensaje: 'La fecha no puede ser anterior a hoy.'
-    }
-  }
 
-  // No permitir sábados ni domingos.
-  if ([0, 6].includes(elegida.getDay())) {
-    return {
-      campo: 'fecha',
-      mensaje: 'Selecciona un día de lunes a viernes.'
-    }
+    return 'La fecha no puede ser anterior a hoy.'
   }
+  /* -----------------------------------------
+     No permitimos sábados ni domingos.
+  ----------------------------------------- */
+  if (
+    [0, 6].includes(
+      fechaElegida.getDay()
+    )
+  ) {
 
-  // Comprobar horario permitido.
-  if (!HORARIOS_CITAS.some(
-    (opcion) => opcion === hora
-  )) {
-    return {
-      campo: 'hora',
-      mensaje: 'Selecciona un horario válido.'
-    }
+    return 'Selecciona un día de lunes a viernes.'
   }
+  /* -----------------------------------------
+     La hora debe estar en nuestro selector.
+  ----------------------------------------- */
+  if (
 
-  // Si es hoy, no permitir horas pasadas.
+    !HORARIOS_CITAS.some(
+      (opcion) => opcion === hora
+    )
+
+  ) {
+
+    return 'Selecciona un horario válido.'
+  }
+  /* -----------------------------------------
+     Si la cita es hoy, la hora debe ser futura.
+  ----------------------------------------- */
   if (fecha === fechaLocalHoy()) {
 
     const ahora = new Date()
 
-    const [h, m] = hora.split(':').map(Number)
+    const inicio = horaAMinutos(
+      hora
+    )!
 
-    const minutosCita = h * 60 + m
+    const minutoActual =
 
-    const minutosActuales =
       ahora.getHours() * 60 +
+
       ahora.getMinutes()
 
-    if (minutosCita <= minutosActuales) {
-      return {
-        campo: 'hora',
-        mensaje: 'El horario seleccionado ya pasó.'
-      }
-    }
-  }
+    if (inicio <= minutoActual) {
 
-  // Verificar la agenda del médico seleccionado.
-  const ocupadas = horasOcupadas(
-    fecha,
-    idExcluir,
-    veterinarioId
+      return 'El horario seleccionado ya pasó.'
+    }
+
+  }
+  /* -----------------------------------------
+     Comprobar jornada del veterinario.
+  ----------------------------------------- */
+  if (veterinarioId != null) {
+
+    const error = errorJornada(
+
+      fecha,
+      hora,
+      veterinarioId,
+      servicio
+
+    )
+
+    if (error) {
+
+      return error
+    }
+
+  }
+  /* -----------------------------------------
+     Comprobar superposición según duración.
+  ----------------------------------------- */
+  const duracion = duracionParaAgenda(
+    servicio
   )
 
-  if (ocupadas.includes(hora)) {
-    return {
-      campo: 'hora',
-      mensaje:
-        'Ese horario ya está reservado para el veterinario. Elige otro.'
-    }
+  if (
+
+    hayConflicto(
+
+      fecha,
+      hora,
+      duracion,
+
+      veterinarioId,
+      idExcluir
+
+    )
+
+  ) {
+
+    return 'Ese horario se superpone con otra cita de este veterinario.'
   }
 
   return null
 }
-
-
 /* =========================================================
-   10. IDENTIFICAR ESPECIE
+   20. VALIDAR ESPECIE, SERVICIO Y MÉDICO
+======================================================== */
+function validarCompatibilidad(
 
-   Convertimos la selección del formulario al
-   formato utilizado en el módulo de Equipo.
-========================================================= */
-
-function especieDeCita(
-  tipoMascota: string,
-  otraEspecie?: string
-): Especie | null {
-
-  if (tipoMascota === 'Perro') {
-    return 'Perros'
-  }
-
-  if (tipoMascota === 'Gato') {
-    return 'Gatos'
-  }
-
-  if (
-    tipoMascota === 'Otro' &&
-    otraEspecie === 'Ave'
-  ) {
-    return 'Aves'
-  }
-
-  if (
-    tipoMascota === 'Otro' &&
-    otraEspecie === 'Conejo'
-  ) {
-    return 'Conejos'
-  }
-
-  return null
-}
-
-
-/* =========================================================
-   11. VALIDAR VETERINARIO
-
-   Comprobar:
-   - Que exista.
-   - Que sea médico veterinario.
-   - Que atienda la especie.
-   - Que trabaje el día elegido.
-   - Que atienda a la hora seleccionada.
-========================================================= */
-
-function validarMedico(
   cita: Pick<
+
     Cita,
-    | 'veterinarioId'
+
     | 'tipoMascota'
     | 'otraEspecie'
-    | 'fecha'
-    | 'hora'
+    | 'servicio'
+    | 'veterinarioId'
+
   >
-): ErrorCita | null {
 
-  const id = cita.veterinarioId
+): string | null {
+  /* -----------------------------------------
+     Identificar especie.
+  ---------------------------------------- */
+  const especie = obtenerEspecieCita(
 
-  if (id == null || !Number.isInteger(id)) {
-    return {
-      campo: 'veterinarioId',
-      mensaje: 'Selecciona un veterinario.'
-    }
-  }
-
-  // Utilizamos el servicio existente del equipo.
-  const medico = obtenerVeterinarioPorId(id)
-
-  if (
-    !medico ||
-    medico.cargo !== 'Médico veterinario'
-  ) {
-    return {
-      campo: 'veterinarioId',
-      mensaje:
-        'El profesional seleccionado no es un médico veterinario válido.'
-    }
-  }
-
-  // Validar que atienda la especie.
-  const especie = especieDeCita(
     cita.tipoMascota,
-    cita.otraEspecie
+
+    cita.otraEspecie ?? ''
+
+  )
+
+  if (!especie) {
+
+    return 'Selecciona una especie válida.'
+  }
+  /* -----------------------------------------
+     Identificar servicio y comprobar especie.
+  ----------------------------------------- */
+  const servicio = obtenerServicioCita(
+    cita.servicio
   )
 
   if (
-    !especie ||
-    !medico.especies.includes(especie)
+
+    !servicio ||
+
+    !servicio.especies.includes(especie)
+
   ) {
-    return {
-      campo: 'veterinarioId',
-      mensaje:
-        'Ese veterinario no atiende la especie seleccionada.'
-    }
+
+    return 'El servicio seleccionado no corresponde a la especie.'
   }
-
-  // Comprobar su día de atención.
-  const [anio, mes, dia] = cita.fecha
-    .split('-')
-    .map(Number)
-
-  const elegida = new Date(anio, mes - 1, dia)
-
-  const dias = [
-    'Domingo',
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado'
-  ]
-
-  const nombreDia = dias[elegida.getDay()]
-
-  if (!medico.dias.includes(nombreDia)) {
-    return {
-      campo: 'fecha',
-      mensaje:
-        `${medico.nombre} no atiende ese día de la semana.`
-    }
-  }
-
-  // Comprobar el horario del médico.
-  const horas = medico.horario.match(
-    /^(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})$/
-  )
-
+  /* -----------------------------------------
+     Comprobar veterinario.
+  ----------------------------------------- */
   if (
-    !horas ||
-    cita.hora < horas[1] ||
-    cita.hora >= horas[2]
+
+    cita.veterinarioId == null ||
+
+    !citaCompatibleConCatalogo(
+
+      especie,
+      cita.servicio,
+      cita.veterinarioId
+
+    )
+
   ) {
-    return {
-      campo: 'hora',
-      mensaje:
-        `El horario de ${medico.nombre} es ${medico.horario}.`
-    }
+
+    return 'El veterinario no realiza ese servicio para esta especie.'
   }
 
   return null
 }
-
-
 /* =========================================================
-   12. VALIDAR SERVICIO VETERINARIO
+   21. CREAR UNA CITA
 ========================================================= */
-
-function servicioValido(
-  servicio: string
-): boolean {
-
-  return Object.values(SERVICIOS_CITAS)
-    .some((lista) => lista.includes(servicio))
-}
-
-
-/* =========================================================
-   13. CREATE - REGISTRAR CITA
-
-   Se vuelve a validar todo antes de guardar.
-   Las citas nuevas quedan en estado Pendiente.
-========================================================= */
-
 export function crearCita(
+
   datos: NuevaCita
+
 ): ResultadoOperacion<Cita> {
-
-  // Comprobar datos principales.
+  /* -----------------------------------------
+     Validar datos obligatorios.
+  ----------------------------------------- */
   if (
+
     !datos.correoUsuario?.trim() ||
+
     !datos.dueno?.trim() ||
-    !datos.mascota?.trim()
+
+    !datos.mascota?.trim() ||
+
+    !datos.motivo?.trim()
+
   ) {
+
     return {
+
       ok: false,
+
       campo: 'mascota',
-      mensaje: 'Completa los datos de la solicitud.'
-    }
-  }
 
-  // Servicio válido.
-  if (!servicioValido(datos.servicio)) {
+      mensaje: 'Completa los datos obligatorios de la solicitud.'
+
+    }
+
+  }
+  /* -----------------------------------------
+     Validar edad de la mascota.
+  ----------------------------------------- */
+  if (
+
+    !Number.isFinite(datos.edadMascota) ||
+
+    datos.edadMascota <= 0 ||
+
+    datos.edadMascota > 30
+
+  ) {
+
     return {
+
       ok: false,
-      campo: 'servicio',
-      mensaje: 'Selecciona un servicio válido.'
+
+      campo: 'edadMascota',
+
+      mensaje: 'Ingresa una edad válida para la mascota.'
+
     }
+
   }
 
-  // Fecha, hora y disponibilidad.
-  const errorFecha = validarFechaYHora(
-    datos.fecha,
-    datos.hora,
-    datos.veterinarioId
+
+  /* -----------------------------------------
+     Validar especie, servicio y médico.
+  ----------------------------------------- */
+
+  const errorCatalogo = validarCompatibilidad(
+    datos
   )
 
-  if (errorFecha) {
+  if (errorCatalogo) {
+
     return {
+
       ok: false,
-      ...errorFecha
+
+      campo: 'servicio',
+
+      mensaje: errorCatalogo
+
     }
+
   }
+  /* -----------------------------------------
+     Comprobar disponibilidad nuevamente.
+  ----------------------------------------- */
+  const errorAgenda = validarDisponibilidad(
 
-  // Comprobar médico y especie.
-  const errorMedico = validarMedico(datos)
+    datos.fecha,
+    datos.hora,
+    datos.servicio,
 
-  if (errorMedico) {
+    datos.veterinarioId
+
+  )
+
+  if (errorAgenda) {
+
     return {
-      ok: false,
-      ...errorMedico
-    }
-  }
 
-  // Obtener el nombre oficial del veterinario.
+      ok: false,
+
+      campo: 'hora',
+
+      mensaje: errorAgenda
+
+    }
+
+  }
+  /* -----------------------------------------
+     Obtener el nombre desde los datos originales.
+  ----------------------------------------- */
   const medico = obtenerVeterinarioPorId(
     datos.veterinarioId
   )!
+  /* -----------------------------------------
+     Construir la nueva cita.
+  ----------------------------------------- */
+  const cita: Cita = {
 
-  // Crear la cita.
-  const nueva: Cita = {
     ...datos,
 
     veterinarioNombre: medico.nombre,
 
-    id:
-      `c-${Date.now().toString(36)}-` +
-      Math.random().toString(36).slice(2, 8),
+    // Guardamos la duración del procedimiento.
+    duracionMinutos: duracionParaAgenda(
+      datos.servicio
+    ),
 
+    // Para servicios sin profesional asignado
+    // registramos que la clínica debe confirmarlo.
+    profesionalPorConfirmar: profesionalPorConfirmar(
+      datos.servicio
+    ),
+
+    // Generamos un identificador.
+    id: `c-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+
+    // Las citas nuevas comienzan Pendientes.
     estado: 'Pendiente',
 
+    // Fecha en que se ingresó la solicitud.
     fechaRegistro: new Date().toISOString()
-  }
 
-  // Guardar en el almacenamiento del equipo.
+  }
+  /* -----------------------------------------
+     Guardar en localStorage.
+  ----------------------------------------- */
   try {
+
     guardarColeccion(
+
       CLAVES.citas,
-      [...listarCitas(), nueva]
+
+      [
+        ...listarCitas(),
+        cita
+      ]
+
     )
 
     return {
+
       ok: true,
-      dato: nueva
+
+      dato: cita
+
     }
 
   } catch {
 
     return {
+
       ok: false,
+
       campo: 'general',
-      mensaje:
-        'No se pudo guardar la cita. Inténtalo nuevamente.'
+
+      mensaje: 'No fue posible guardar la cita en este navegador.'
+
     }
+
   }
+
 }
-
-
 /* =========================================================
-   14. UPDATE - MODIFICAR CITA
-
-   Permite:
-   - Cambiar fecha.
-   - Cambiar hora.
-   - Cambiar servicio.
-   - Cambiar motivo.
-   - Cambiar veterinario.
-   - Cambiar estado.
-
-   Se usará desde Mis Citas y Administrar Citas.
+   22. MODIFICAR UNA CITA
 ========================================================= */
-
 export function actualizarCita(
-  id: string | number,
-  cambios: CambiosCita
-): ResultadoOperacion<Cita> {
 
+  id: string | number,
+
+  cambios: CambiosCita
+
+): ResultadoOperacion<Cita> {
+  /* -----------------------------------------
+     Buscar la cita.
+  ----------------------------------------- */
   const citas = listarCitas()
 
   const indice = citas.findIndex(
-    (cita) => cita.id === id
+
+    (cita) => String(cita.id) === String(id)
+
   )
 
-  if (indice === -1) {
-    return {
-      ok: false,
-      campo: 'id',
-      mensaje: 'La cita no existe.'
-    }
-  }
+  if (indice < 0) {
 
+    return {
+
+      ok: false,
+
+      campo: 'id',
+
+      mensaje: 'La cita no existe.'
+
+    }
+
+  }
+  /* -----------------------------------------
+     Preparar la cita actualizada.
+  ----------------------------------------- */
   const anterior = citas[indice]
 
   const actualizada: Cita = {
-    ...anterior,
-    ...cambios
-  }
 
-  // Validar estados.
-  const estadosValidos: EstadoCita[] = [
+    ...anterior,
+
+    ...cambios
+
+  }
+  /* -----------------------------------------
+     Validar estado.
+  ----------------------------------------- */
+  const estados: EstadoCita[] = [
+
     'Pendiente',
     'Confirmada',
     'Completada',
     'Cancelada'
+
   ]
 
-  if (!estadosValidos.includes(actualizada.estado)) {
+  if (!estados.includes(actualizada.estado)) {
+
     return {
+
       ok: false,
+
       campo: 'estado',
-      mensaje: 'El estado de la cita no es válido.'
-    }
-  }
 
-  // Validar servicio si fue modificado.
-  if (
-    cambios.servicio !== undefined &&
-    !servicioValido(actualizada.servicio)
-  ) {
-    return {
-      ok: false,
-      campo: 'servicio',
-      mensaje: 'Selecciona un servicio válido.'
-    }
-  }
+      mensaje: 'Estado de cita inválido.'
 
-  // Comprobar si necesitamos revisar la agenda.
-  const cambioAgenda =
+    }
+
+  }
+  /* -----------------------------------------
+     Si se cambia el médico,
+     actualizar su nombre automáticamente.
+  ----------------------------------------- */
+  if (cambios.veterinarioId !== undefined) {
+
+    const medico =
+
+      cambios.veterinarioId == null
+
+        ? null
+
+        : obtenerVeterinarioPorId(
+            cambios.veterinarioId
+          )
+
+    actualizada.veterinarioNombre =
+      medico?.nombre ?? ''
+
+  }
+  /* -----------------------------------------
+     Si se cambia el servicio, actualizar
+     la duración y la confirmación del médico.
+  ----------------------------------------- */
+  if (cambios.servicio !== undefined) {
+
+    actualizada.duracionMinutos =
+      duracionParaAgenda(
+        actualizada.servicio
+      )
+
+    actualizada.profesionalPorConfirmar =
+      profesionalPorConfirmar(
+        actualizada.servicio
+      )
+
+  }
+  /* -----------------------------------------
+     Detectar cambios relacionados con la reserva.
+  ----------------------------------------- */
+  const cambiaReserva =
+
     cambios.fecha !== undefined ||
+
     cambios.hora !== undefined ||
+
+    cambios.servicio !== undefined ||
+
     cambios.veterinarioId !== undefined ||
+
     (
-      String(anterior.estado).toLowerCase() ===
-        'cancelada' &&
-      String(actualizada.estado).toLowerCase() !==
-        'cancelada'
+      anterior.estado === 'Cancelada' &&
+
+      actualizada.estado !== 'Cancelada'
     )
+  if (cambiaReserva) {
 
-  if (
-    cambioAgenda &&
-    actualizada.estado !== 'Cancelada'
-  ) {
+    /* ---------------------------------------
+       Revisar compatibilidad.
+    --------------------------------------- */
+    if (
 
-    const errorFecha = validarFechaYHora(
-      actualizada.fecha,
-      actualizada.hora,
-      actualizada.veterinarioId,
-      id
-    )
+      actualizada.veterinarioId != null ||
 
-    if (errorFecha) {
-      return {
-        ok: false,
-        ...errorFecha
-      }
-    }
+      cambios.servicio !== undefined
 
-    // Las citas antiguas no tenían veterinario.
-    if (actualizada.veterinarioId != null) {
+    ) {
 
-      const errorMedico = validarMedico(actualizada)
+      const errorCatalogo = validarCompatibilidad(
+        actualizada
+      )
 
-      if (errorMedico) {
+      if (errorCatalogo) {
+
         return {
+
           ok: false,
-          ...errorMedico
+
+          campo: 'servicio',
+
+          mensaje: errorCatalogo
+
         }
+
       }
+
     }
-  }
 
-  // Actualizar el nombre del médico si corresponde.
-  if (actualizada.veterinarioId != null) {
+    /* ---------------------------------------
+       Revisar disponibilidad.
+    --------------------------------------- */
+    if (actualizada.estado !== 'Cancelada') {
 
-    const medico = obtenerVeterinarioPorId(
-      actualizada.veterinarioId
-    )
+      const error = validarDisponibilidad(
 
-    if (medico) {
-      actualizada.veterinarioNombre = medico.nombre
+        actualizada.fecha,
+        actualizada.hora,
+        actualizada.servicio,
+
+        actualizada.veterinarioId,
+
+        id
+
+      )
+
+      if (error) {
+
+        return {
+
+          ok: false,
+
+          campo: 'hora',
+
+          mensaje: error
+
+        }
+
+      }
+
     }
-  }
 
-  // Guardar solamente la cita actualizada.
+  }
+  /* -----------------------------------------
+     Guardar la cita modificada.
+  ----------------------------------------- */
+  citas[indice] = actualizada
+
   try {
 
-    citas[indice] = actualizada
-
-    guardarColeccion(CLAVES.citas, citas)
+    guardarColeccion(
+      CLAVES.citas,
+      citas
+    )
 
     return {
+
       ok: true,
+
       dato: actualizada
+
     }
 
   } catch {
 
     return {
+
       ok: false,
+
       campo: 'general',
-      mensaje: 'No se pudo actualizar la cita.'
+
+      mensaje: 'No fue posible actualizar la cita.'
+
     }
+
   }
+
 }
-
-
 /* =========================================================
-   15. DELETE - ELIMINAR CITA
-
-   Eliminar borra el registro.
-   Cancelar conserva la cita con estado Cancelada.
+   23. ELIMINAR UNA CITA
 ========================================================= */
-
 export function eliminarCita(
+
   id: string | number
+
 ): boolean {
 
   const citas = listarCitas()
 
   const restantes = citas.filter(
-    (cita) => cita.id !== id
-  )
 
+    (cita) => String(cita.id) !== String(id)
+
+  )
+  /* Si no encontramos el ID, devolvemos false. */
   if (restantes.length === citas.length) {
+
     return false
   }
-
+  /* Guardar el listado sin la cita eliminada. */
   try {
 
     guardarColeccion(
+
       CLAVES.citas,
+
       restantes
+
     )
 
     return true
 
   } catch {
+
     return false
+
   }
+
 }
