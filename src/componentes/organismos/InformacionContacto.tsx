@@ -1,9 +1,7 @@
-
 /* =========================================================
     CONTACTO
     INFORMACIÓN DE CONTACTO
 ========================================================= */
-
 import { Etiqueta } from '../atomos/Etiqueta'
 
 // Datos recibidos desde ContactoPage.

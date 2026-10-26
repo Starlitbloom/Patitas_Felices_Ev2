@@ -1,0 +1,1418 @@
+
+/* =========================================================
+   VETERINARIA PATITAS FELICES
+   MIS CITAS
+   
+   Incluye:
+   - Encabezado de Mis Citas.
+   - Tarjetas de citas.
+   - Estados de las solicitudes.
+   - Filtro por estado.
+   - Modificación de fecha y hora.
+   - Cancelación de citas.
+   - Mensajes de éxito y error.
+   - Sección de ayuda.
+   - Diseño responsive.
+========================================================= */
+/* =========================================================
+   1. COLORES GENERALES
+========================================================= */
+.mis-citas-v2 {
+  --beige: #F5EFE6;
+  --rosa: #FFD6E7;
+  --rosa-fuerte: #ECA5BD;
+  --celeste: #D6ECFA;
+  --azul: #72A9D0;
+  --morado: #E6D6F7;
+  --texto: #2E2E38;
+  --gris: #6F6F78;
+  --blanco: #FFFFFF;
+
+  color: var(--texto);
+  background: #FFFDFB;
+  min-height: 100vh;
+}
+
+.mis-citas-v2 *,
+.mis-citas-v2 *::before,
+.mis-citas-v2 *::after {
+  box-sizing: border-box;
+}
+
+.mis-citas-v2 .contenedor {
+  width: min(1180px, 90%);
+  margin: 0 auto;
+}
+
+.mis-citas-v2 button,
+.mis-citas-v2 input,
+.mis-citas-v2 select {
+  font: inherit;
+}
+
+.mis-citas-v2 button {
+  cursor: pointer;
+}
+
+.mis-citas-v2 a {
+  text-decoration: none;
+}
+
+
+/* =========================================================
+   2. ENCABEZADO PRINCIPAL - HERO
+========================================================= */
+
+.mis-citas-v2 .hero-mis-citas {
+  position: relative;
+  overflow: hidden;
+  padding: 45px 0 55px;
+
+  background: linear-gradient(
+    135deg,
+    #F8FCFF 0%,
+    #FFF8FB 50%,
+    #FAF7FF 100%
+  );
+}
+
+.mis-citas-v2 .hero-mis-citas-contenido {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 35px;
+
+  min-height: 390px;
+}
+
+.mis-citas-v2 .hero-mis-citas-texto {
+  max-width: 590px;
+}
+
+.mis-citas-v2 .etiqueta-mis-citas {
+  display: inline-block;
+  padding: 9px 18px;
+  margin-bottom: 18px;
+
+  background: var(--rosa);
+  border-radius: 30px;
+
+  color: #785768;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.mis-citas-v2 .hero-mis-citas h1 {
+  margin: 0 0 20px;
+
+  font-size: clamp(36px, 4.5vw, 58px);
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  font-weight: 800;
+}
+
+.mis-citas-v2 .hero-mis-citas h1 span {
+  display: block;
+  color: var(--azul);
+}
+
+.mis-citas-v2 .hero-mis-citas-texto p {
+  max-width: 530px;
+  margin: 0 0 28px;
+
+  color: var(--gris);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+
+/* =========================================================
+   3. BOTÓN SOLICITAR NUEVA CITA
+========================================================= */
+
+.mis-citas-v2 .boton-nueva-cita {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  padding: 15px 25px;
+
+  background: var(--rosa);
+  color: #654C59;
+
+  border: 1px solid #F1C1D3;
+  border-radius: 30px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  box-shadow: 0 7px 18px rgba(223, 155, 179, 0.17);
+
+  transition: all 0.25s ease;
+}
+
+.mis-citas-v2 .boton-nueva-cita:hover {
+  background: #F7BED3;
+  transform: translateY(-3px);
+
+  box-shadow: 0 10px 22px rgba(223, 155, 179, 0.23);
+}
+
+.mis-citas-v2 .boton-nueva-cita span {
+  font-size: 18px;
+}
+
+
+/* =========================================================
+   4. IMAGEN PRINCIPAL
+========================================================= */
+
+.mis-citas-v2 .hero-mis-citas-imagen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+}
+
+.mis-citas-v2 .imagen-mis-citas {
+  width: 100%;
+  max-width: 475px;
+  height: auto;
+
+  object-fit: contain;
+
+  filter: drop-shadow(
+    0 12px 18px rgba(107, 86, 113, 0.10)
+  );
+
+  transition: transform 0.3s ease;
+}
+
+.mis-citas-v2 .imagen-mis-citas:hover {
+  transform: translateY(-5px);
+}
+
+
+/* =========================================================
+   5. DECORACIONES DEL HERO
+========================================================= */
+
+.mis-citas-v2 .decoracion-mis-citas {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.mis-citas-v2 .decoracion-uno {
+  width: 260px;
+  height: 260px;
+
+  top: -120px;
+  left: -100px;
+
+  background: rgba(255, 214, 231, 0.46);
+}
+
+.mis-citas-v2 .decoracion-dos {
+  width: 210px;
+  height: 210px;
+
+  right: -90px;
+  bottom: -100px;
+
+  background: rgba(214, 236, 250, 0.6);
+}
+
+
+/* =========================================================
+   6. SECCIÓN PRINCIPAL DE MIS CITAS
+========================================================= */
+
+.mis-citas-v2 .seccion-mis-citas {
+  padding: 65px 0 80px;
+
+  background: #FFFDFB;
+}
+
+.mis-citas-v2 .encabezado-citas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  margin-bottom: 30px;
+}
+
+.mis-citas-v2 .encabezado-citas > div:first-child > span {
+  display: inline-block;
+  padding: 7px 15px;
+  margin-bottom: 13px;
+
+  background: var(--celeste);
+  color: #4A7998;
+
+  border-radius: 25px;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.mis-citas-v2 .encabezado-citas h2 {
+  margin: 0 0 9px;
+
+  font-size: clamp(26px, 3vw, 35px);
+  font-weight: 800;
+}
+
+.mis-citas-v2 .encabezado-citas p {
+  margin: 0;
+
+  color: var(--gris);
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   7. CONTADOR DE CITAS
+========================================================= */
+
+.mis-citas-v2 .contador-citas {
+  flex-shrink: 0;
+
+  width: 110px;
+  height: 105px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(
+    140deg,
+    #FFE5EE,
+    #FFF8FB
+  );
+
+  border: 1px solid #F5CFDE;
+  border-radius: 25px;
+}
+
+.mis-citas-v2 .contador-citas strong {
+  font-size: 33px;
+  font-weight: 800;
+  color: #BB7897;
+}
+
+.mis-citas-v2 .contador-citas span {
+  color: #92697B;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   8. FILTRO POR ESTADO
+
+   Permite seleccionar:
+   - Todas.
+   - Pendientes.
+   - Confirmadas.
+   - Completadas.
+   - Canceladas.
+========================================================= */
+
+.mis-citas-v2 .filtros-mis-citas {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 18px 22px;
+  margin-bottom: 28px;
+
+  background: #FFFFFF;
+  border: 1px solid #F0E7F2;
+  border-radius: 20px;
+
+  box-shadow: 0 6px 20px rgba(92, 75, 104, 0.04);
+}
+
+.mis-citas-v2 .filtros-mis-citas label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--texto);
+}
+
+.mis-citas-v2 .filtros-mis-citas select {
+  width: min(250px, 100%);
+  padding: 12px 15px;
+
+  background: #FAF7FF;
+  border: 1px solid #DCC8EE;
+  border-radius: 12px;
+
+  color: var(--texto);
+  outline: none;
+
+  cursor: pointer;
+}
+
+.mis-citas-v2 .filtros-mis-citas select:focus {
+  border-color: #AA8BCD;
+  box-shadow: 0 0 0 3px rgba(170, 139, 205, 0.15);
+}
+
+
+/* =========================================================
+   9. CONTENEDOR DE TARJETAS
+========================================================= */
+
+.mis-citas-v2 .contenedor-citas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 25px;
+  align-items: start;
+}
+
+
+/* =========================================================
+   10. TARJETA DE CADA CITA
+========================================================= */
+
+.mis-citas-v2 .tarjeta-cita {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  padding: 28px;
+
+  background: #FFFFFF;
+  border: 1px solid #F1EAF1;
+  border-radius: 26px;
+
+  box-shadow: 0 7px 25px rgba(87, 66, 91, 0.065);
+
+  transition: transform 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+.mis-citas-v2 .tarjeta-cita:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(87, 66, 91, 0.10);
+}
+
+/* Línea pastel decorativa. */
+.mis-citas-v2 .tarjeta-cita::before {
+  content: '';
+
+  position: absolute;
+  z-index: 0;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 6px;
+
+  background: linear-gradient(
+    90deg,
+    var(--rosa),
+    var(--celeste),
+    var(--morado)
+  );
+}
+
+/* Ilustración suave detrás del contenido. */
+.mis-citas-v2 .tarjeta-cita::after {
+  content: '';
+
+  position: absolute;
+  z-index: 0;
+
+  right: -25px;
+  bottom: -20px;
+
+  width: 160px;
+  height: 160px;
+
+  background-image: var(--imagen-mascota);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+
+  opacity: 0.055;
+
+  pointer-events: none;
+}
+
+/* Mantener el texto delante del dibujo. */
+.mis-citas-v2 .tarjeta-cita > * {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* =========================================================
+   11. PARTE SUPERIOR DE LA TARJETA
+========================================================= */
+
+.mis-citas-v2 .cita-superior {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 22px;
+}
+
+.mis-citas-v2 .cita-mascota {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+}
+
+.mis-citas-v2 .icono-mascota-cita {
+  width: 65px;
+  height: 65px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #FFF0F5;
+  border: 1px solid #F9D9E6;
+  border-radius: 20px;
+
+  padding: 8px;
+}
+
+.mis-citas-v2 .imagen-icono-mascota {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.mis-citas-v2 .informacion-mascota-cita {
+  min-width: 0;
+}
+
+.mis-citas-v2 .informacion-mascota-cita h3,
+.mis-citas-v2 .cita-mascota h3 {
+  margin: 0 0 5px;
+  color: var(--texto);
+  font-size: 19px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.mis-citas-v2 .informacion-mascota-cita span,
+.mis-citas-v2 .cita-mascota span {
+  color: var(--gris);
+  font-size: 13px;
+}
+
+/* =========================================================
+   12. ESTADOS DE LAS CITAS
+========================================================= */
+.mis-citas-v2 .estado-cita {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 7px 12px;
+  border-radius: 25px;
+
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* Pendiente = amarillo pastel. */
+.mis-citas-v2 .estado-pendiente {
+  background: #FFF2D6;
+  color: #A27A29;
+  border: 1px solid #F8E4B5;
+}
+
+/* Confirmada = verde pastel. */
+.mis-citas-v2 .estado-confirmada {
+  background: #E3F6E9;
+  color: #388259;
+  border: 1px solid #C9EAD3;
+}
+
+/* Completada = celeste pastel. */
+.mis-citas-v2 .estado-completada {
+  background: #E1F1FF;
+  color: #417FA7;
+  border: 1px solid #CBE6F9;
+}
+
+/* Cancelada = rosa pastel. */
+.mis-citas-v2 .estado-cancelada {
+  background: #FCE7EA;
+  color: #B75C72;
+  border: 1px solid #F5CDD7;
+}
+
+/* =========================================================
+   13. DATOS DE CADA CITA
+
+   Mostramos:
+   - Servicio.
+   - Fecha.
+   - Hora.
+   - Propietario.
+   - Veterinario.
+   - Edad de la mascota.
+========================================================= */
+.mis-citas-v2 .datos-cita {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 15px;
+
+  padding: 19px;
+
+  background: #FAF9FD;
+  border: 1px solid #F2EDF7;
+  border-radius: 18px;
+
+  margin-bottom: 19px;
+}
+
+.mis-citas-v2 .dato-cita {
+  min-width: 0;
+}
+
+.mis-citas-v2 .dato-cita span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #87818D;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mis-citas-v2 .dato-cita strong {
+  display: block;
+  color: var(--texto);
+
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   14. MOTIVO DE CONSULTA
+========================================================= */
+.mis-citas-v2 .motivo-cita {
+  padding: 17px 19px;
+  margin-bottom: 19px;
+
+  background: #FFF9FB;
+  border: 1px solid #FAE7EF;
+  border-left: 4px solid #EAB1C7;
+  border-radius: 14px;
+}
+
+.mis-citas-v2 .motivo-cita span {
+  display: block;
+  margin-bottom: 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+  color: #A17287;
+}
+
+.mis-citas-v2 .motivo-cita p {
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.7;
+  color: #55515C;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   15. AVISO DE PROFESIONAL POR CONFIRMAR
+========================================================= */
+.mis-citas-v2 .aviso-confirmacion-profesional {
+  padding: 12px 16px;
+  margin: 0 0 18px;
+
+  background: #FFF6E5;
+  color: #8A6738;
+
+  border: 1px solid #F5E3BB;
+  border-radius: 13px;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   16. BOTONES DE LAS CITAS
+========================================================= */
+.mis-citas-v2 .acciones-cita {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+}
+
+.mis-citas-v2 .boton-modificar-cita,
+.mis-citas-v2 .boton-cancelar-cita,
+.mis-citas-v2 .boton-guardar-cambios,
+.mis-citas-v2 .boton-cerrar-edicion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 43px;
+  padding: 11px 16px;
+
+  border-radius: 25px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  transition: all 0.2s ease;
+}
+
+/* Modificar = celeste. */
+.mis-citas-v2 .boton-modificar-cita {
+  background: #E4F4FC;
+  color: #4C85A8;
+  border: 1px solid #C5E3F2;
+}
+
+.mis-citas-v2 .boton-modificar-cita:hover {
+  background: #CEEBFA;
+  transform: translateY(-2px);
+}
+
+/* Cancelar = rosa. */
+.mis-citas-v2 .boton-cancelar-cita {
+  background: #FFF0F4;
+  color: #B85E76;
+  border: 1px solid #F5D1DD;
+}
+
+.mis-citas-v2 .boton-cancelar-cita:hover {
+  background: #FFDCE7;
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   17. FORMULARIO PARA MODIFICAR UNA CITA
+========================================================= */
+.mis-citas-v2 .formulario-editar-cita {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  margin-top: 18px;
+  padding: 22px;
+
+  background: linear-gradient(
+    135deg,
+    #F9F5FF,
+    #F2F9FE
+  );
+
+  border: 1px solid #E8DDF3;
+  border-radius: 20px;
+}
+
+.mis-citas-v2 .campo-editar-cita {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mis-citas-v2 .campo-editar-cita label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6A5E79;
+}
+
+.mis-citas-v2 .campo-editar-cita input,
+.mis-citas-v2 .campo-editar-cita select {
+  width: 100%;
+  min-height: 43px;
+
+  padding: 10px 12px;
+
+  background: white;
+  color: var(--texto);
+
+  border: 1px solid #DCD2E7;
+  border-radius: 12px;
+
+  font-size: 13px;
+  outline: none;
+}
+
+.mis-citas-v2 .campo-editar-cita input:focus,
+.mis-citas-v2 .campo-editar-cita select:focus {
+  border-color: #AA8BCD;
+  box-shadow: 0 0 0 3px rgba(170, 139, 205, 0.15);
+}
+
+.mis-citas-v2 .campo-editar-cita input:disabled,
+.mis-citas-v2 .campo-editar-cita select:disabled {
+  background: #F0EEF3;
+  color: #96919E;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   18. MENSAJE DE ERROR AL MODIFICAR
+========================================================= */
+.mis-citas-v2 .mensaje-error-edicion {
+  grid-column: 1 / -1;
+
+  padding: 12px 15px;
+  margin: 0;
+
+  background: #FFF0F2;
+  color: #AB405D;
+
+  border: 1px solid #F4CDD7;
+  border-radius: 12px;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+/* =========================================================
+   19. BOTONES GUARDAR Y VOLVER
+========================================================= */
+.mis-citas-v2 .acciones-edicion-cita {
+  grid-column: 1 / -1;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-top: 5px;
+}
+
+/* Guardar cambios = morado. */
+.mis-citas-v2 .boton-guardar-cambios {
+  background: #E8D9F8;
+  color: #735492;
+  border: 1px solid #D8C0EE;
+}
+
+.mis-citas-v2 .boton-guardar-cambios:hover {
+  background: #DCC6F3;
+  transform: translateY(-2px);
+}
+
+/* Volver = neutro. */
+.mis-citas-v2 .boton-cerrar-edicion {
+  background: white;
+  color: #74707B;
+  border: 1px solid #E3E0E8;
+}
+
+.mis-citas-v2 .boton-cerrar-edicion:hover {
+  background: #F4F2F7;
+}
+/* =========================================================
+   20. CONFIRMACIÓN DE CANCELACIÓN
+======================================== */
+.mis-citas-v2 .confirmacion-cancelar-cita {
+  padding: 21px;
+  margin-top: 17px;
+
+  background: #FFF5F7;
+
+  border: 1px solid #F5D5DE;
+  border-radius: 17px;
+}
+
+.mis-citas-v2 .confirmacion-cancelar-cita strong {
+  display: block;
+  margin-bottom: 8px;
+
+  color: #975369;
+  font-size: 14px;
+}
+
+.mis-citas-v2 .confirmacion-cancelar-cita p {
+  margin: 0 0 13px;
+
+  color: #8F7881;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   21. MENSAJES DE ÉXITO Y ERROR
+
+   Ejemplos:
+   "La cita fue modificada correctamente."
+   "La cita fue cancelada."
+========================================================= */
+.mis-citas-v2 .mensaje-gestion-cita {
+  padding: 16px 20px;
+  margin: 0 0 24px;
+
+  background: #ECF9F0;
+  color: #3B7955;
+
+  border: 1px solid #CEEED8;
+  border-radius: 15px;
+
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.mis-citas-v2 .mensaje-gestion-error {
+  background: #FFF0F2;
+  color: #AE4E64;
+  border-color: #F4CED8;
+}
+/* ========================================================
+   22. CUANDO EL USUARIO NO TIENE CITAS
+========================================================= */
+.mis-citas-v2 .sin-citas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 360px;
+
+  padding: 55px 25px;
+  text-align: center;
+
+  background: linear-gradient(
+    135deg,
+    #FFF8FB,
+    #F9FCFF
+  );
+
+  border: 1px dashed #E9CFE1;
+  border-radius: 30px;
+}
+
+.mis-citas-v2 .icono-sin-citas {
+  width: 85px;
+  height: 85px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 20px;
+
+  background: var(--rosa);
+  color: #B77590;
+
+  border-radius: 50%;
+  font-size: 43px;
+}
+
+.mis-citas-v2 .sin-citas > span {
+  margin-bottom: 12px;
+
+  color: #A47791;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.mis-citas-v2 .sin-citas h2 {
+  margin: 0 0 13px;
+
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 800;
+}
+
+.mis-citas-v2 .sin-citas p {
+  max-width: 530px;
+
+  margin: 0 0 22px;
+
+  color: var(--gris);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* =========================================================
+   23. BOTÓN SOLICITAR PRIMERA CITA
+========================================================= */
+.mis-citas-v2 .boton-sin-citas {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  padding: 13px 23px;
+
+  background: #E0EEFA;
+  color: #467B9F;
+
+  border: 1px solid #C6E2F4;
+  border-radius: 25px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  transition: all 0.2s ease;
+}
+
+.mis-citas-v2 .boton-sin-citas:hover {
+  background: #C8E5F8;
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   24. SECCIÓN "ESTAMOS PARA AYUDARTE"
+========================================================= */
+.mis-citas-v2 .ayuda-mis-citas {
+  padding: 20px 0 85px;
+
+  background: #FFFDFB;
+}
+
+.mis-citas-v2 .tarjeta-ayuda-mis-citas {
+  position: relative;
+  overflow: hidden;
+
+  display: grid;
+  grid-template-columns: 1fr 260px auto;
+  align-items: center;
+  gap: 28px;
+
+  padding: 35px 40px;
+
+  background: linear-gradient(
+    125deg,
+    #FFF0F5,
+    #F4F9FF
+  );
+
+  border: 1px solid #F4DAE5;
+  border-radius: 30px;
+}
+
+.mis-citas-v2 .texto-ayuda-mis-citas {
+  position: relative;
+  z-index: 2;
+}
+
+.mis-citas-v2 .etiqueta-ayuda {
+  display: inline-block;
+
+  margin-bottom: 12px;
+  padding: 7px 15px;
+
+  background: #FFFFFF;
+  color: #A0718B;
+
+  border-radius: 30px;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.mis-citas-v2 .tarjeta-ayuda-mis-citas h2 {
+  margin: 0 0 13px;
+
+  color: var(--texto);
+  font-size: 29px;
+  font-weight: 800;
+}
+
+.mis-citas-v2 .tarjeta-ayuda-mis-citas p {
+  max-width: 450px;
+  margin: 0;
+
+  color: var(--gris);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* =========================================================
+   25. BENEFICIOS DE AYUDA
+========================================================= */
+.mis-citas-v2 .beneficios-ayuda-citas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-top: 20px;
+}
+
+.mis-citas-v2 .beneficios-ayuda-citas span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 9px 14px;
+
+  background: white;
+  border-radius: 25px;
+
+  font-size: 12px;
+  font-weight: 700;
+  color: #8A7384;
+}
+
+.mis-citas-v2 .beneficios-ayuda-citas span:first-child {
+  color: #B37791;
+}
+
+.mis-citas-v2 .beneficios-ayuda-citas span:last-child {
+  color: #669FC3;
+}
+
+/* =========================================================
+   26. ILUSTRACIÓN DE LA SECCIÓN DE AYUDA
+========================================================= */
+.mis-citas-v2 .imagen-ayuda-citas {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 210px;
+}
+
+.mis-citas-v2 .imagen-ayuda-citas img {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+
+  object-fit: contain;
+
+  filter: drop-shadow(
+    0 10px 15px rgba(116, 91, 121, 0.12)
+  );
+
+  transition: transform 0.3s ease;
+}
+
+.mis-citas-v2 .imagen-ayuda-citas:hover img {
+  transform: translateY(-4px);
+}
+
+.mis-citas-v2 .circulo-ayuda {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.mis-citas-v2 .circulo-ayuda-rosa {
+  width: 175px;
+  height: 175px;
+
+  background: rgba(255, 214, 231, 0.7);
+
+  top: 8px;
+  left: 12px;
+}
+
+.mis-citas-v2 .circulo-ayuda-celeste {
+  width: 150px;
+  height: 150px;
+
+  background: rgba(214, 236, 250, 0.8);
+
+  bottom: 0;
+  right: 0;
+}
+
+/* =========================================================
+   27. BOTÓN DE CONTACTO
+========================================================= */
+.mis-citas-v2 .accion-ayuda-citas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  position: relative;
+  z-index: 2;
+}
+
+.mis-citas-v2 .boton-ayuda {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  padding: 14px 23px;
+
+  background: #FFD6E7;
+  color: #8D5B76;
+
+  border: 1px solid #F0BDD0;
+  border-radius: 25px;
+
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+
+  transition: all 0.2s ease;
+}
+
+.mis-citas-v2 .boton-ayuda:hover {
+  background: #F8C0D5;
+  transform: translateY(-2px);
+}
+
+.mis-citas-v2 .accion-ayuda-citas small {
+  color: var(--gris);
+  font-size: 11px;
+  text-align: center;
+}
+
+/* =========================================================
+   28. ACCESIBILIDAD
+========================================================= */
+.mis-citas-v2 a:focus-visible,
+.mis-citas-v2 button:focus-visible,
+.mis-citas-v2 select:focus-visible,
+.mis-citas-v2 input:focus-visible {
+  outline: 3px solid #9D82C0;
+  outline-offset: 3px;
+}
+
+.mis-citas-v2 button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   29. RESPONSIVE - TABLET
+========================================================= */
+@media (max-width: 1000px) {
+
+  .mis-citas-v2 .tarjeta-ayuda-mis-citas {
+    grid-template-columns: 1fr 220px;
+  }
+
+  .mis-citas-v2 .accion-ayuda-citas {
+    grid-column: 1 / -1;
+    align-items: flex-start;
+  }
+
+}
+
+/* =========================================================
+   30. RESPONSIVE - TABLET PEQUEÑA
+========================================================= */
+@media (max-width: 850px) {
+
+  .mis-citas-v2 .hero-mis-citas-contenido {
+    grid-template-columns: 1fr 1fr;
+    min-height: auto;
+  }
+
+  .mis-citas-v2 .contenedor-citas {
+    grid-template-columns: 1fr;
+  }
+
+  .mis-citas-v2 .tarjeta-ayuda-mis-citas {
+    padding: 30px;
+  }
+
+}
+
+/* =========================================================
+   31. RESPONSIVE - CELULARES
+========================================================= */
+@media (max-width: 650px) {
+
+  /* Hero en una sola columna. */
+  .mis-citas-v2 .hero-mis-citas {
+    padding: 40px 0;
+  }
+
+  .mis-citas-v2 .hero-mis-citas-contenido {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .mis-citas-v2 .hero-mis-citas-texto {
+    max-width: 100%;
+  }
+
+  .mis-citas-v2 .hero-mis-citas h1 {
+    font-size: 36px;
+    letter-spacing: -1px;
+  }
+
+  .mis-citas-v2 .hero-mis-citas-texto p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .mis-citas-v2 .hero-mis-citas-imagen {
+    max-width: 310px;
+    margin: 0 auto;
+  }
+
+  /* Encabezado de las solicitudes. */
+  .mis-citas-v2 .seccion-mis-citas {
+    padding: 40px 0 60px;
+  }
+
+  .mis-citas-v2 .encabezado-citas {
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .mis-citas-v2 .encabezado-citas h2 {
+    font-size: 26px;
+  }
+
+  .mis-citas-v2 .encabezado-citas p {
+    font-size: 13px;
+  }
+
+  .mis-citas-v2 .contador-citas {
+    width: 75px;
+    height: 80px;
+    border-radius: 18px;
+  }
+
+  .mis-citas-v2 .contador-citas strong {
+    font-size: 25px;
+  }
+
+  /* Filtro debajo de su etiqueta. */
+  .mis-citas-v2 .filtros-mis-citas {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+  }
+
+  .mis-citas-v2 .filtros-mis-citas select {
+    width: 100%;
+  }
+
+  /* Tarjeta adaptada a celulares. */
+  .mis-citas-v2 .tarjeta-cita {
+    padding: 20px;
+    border-radius: 22px;
+  }
+
+  .mis-citas-v2 .cita-superior {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .mis-citas-v2 .icono-mascota-cita {
+    width: 55px;
+    height: 55px;
+  }
+
+  .mis-citas-v2 .datos-cita {
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .mis-citas-v2 .dato-cita strong {
+    font-size: 12px;
+  }
+
+  /* Botones uno debajo del otro. */
+  .mis-citas-v2 .acciones-cita {
+    flex-direction: column;
+  }
+
+  .mis-citas-v2 .acciones-cita button {
+    width: 100%;
+  }
+
+  /* Campos de modificación en una columna. */
+  .mis-citas-v2 .formulario-editar-cita {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .mis-citas-v2 .acciones-edicion-cita {
+    flex-direction: column;
+  }
+
+  .mis-citas-v2 .acciones-edicion-cita button {
+    width: 100%;
+  }
+
+  /* Confirmación de cancelación. */
+  .mis-citas-v2 .confirmacion-cancelar-cita {
+    padding: 16px;
+  }
+
+  /* Tarjeta de ayuda. */
+  .mis-citas-v2 .ayuda-mis-citas {
+    padding: 15px 0 60px;
+  }
+
+  .mis-citas-v2 .tarjeta-ayuda-mis-citas {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 30px 20px;
+    gap: 15px;
+  }
+
+  .mis-citas-v2 .tarjeta-ayuda-mis-citas h2 {
+    font-size: 26px;
+  }
+
+  .mis-citas-v2 .beneficios-ayuda-citas {
+    justify-content: center;
+  }
+
+  .mis-citas-v2 .imagen-ayuda-citas {
+    min-height: 180px;
+    max-width: 220px;
+    margin: 0 auto;
+  }
+
+  .mis-citas-v2 .accion-ayuda-citas {
+    align-items: center;
+  }
+
+  .mis-citas-v2 .boton-ayuda {
+    width: 100%;
+    max-width: 250px;
+  }
+
+}
+
+/* =========================================================
+   32. RESPETAR MOVIMIENTO REDUCIDO
+========================================================= */
+@media (prefers-reduced-motion: reduce) {
+
+  .mis-citas-v2 *,
+  .mis-citas-v2 *::before,
+  .mis-citas-v2 *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+}
