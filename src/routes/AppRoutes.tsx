@@ -14,7 +14,6 @@ import InicioPage from '../paginas/InicioPage'
 import LoginPage from '../paginas/LoginPage'
 import RegistroPage from '../paginas/RegistroPage'
 import PerfilPage from '../paginas/PerfilPage'
-import PaginaPendiente from '../paginas/PaginaPendiente'
 import NoEncontradoPage from '../paginas/NoEncontradoPage'
 import EquipoPage from '../paginas/EquipoPage'
 import MisMascotasPage from '../paginas/MisMascotasPage'
@@ -26,36 +25,19 @@ import UsuariosPage from '../paginas/admin/UsuariosPage'
 import DetalleUsuarioPage from '../paginas/admin/DetalleUsuarioPage'
 import ReportesPage from '../paginas/admin/ReportesPage'
 import AgendaPage from '../paginas/admin/AgendaPage'
+import CitasPage from '../paginas/admin/CitasPage'
 
 /* =========================================================
    NOSOTROS
    Importamos nuestra página desarrollada en React.
 ========================================================= */
 import NosotrosPage from '../paginas/NosotrosPage'
-
-/* =========================================================
-   NOVEDADES
-========================================================= */
 import NovedadesPage from '../paginas/NovedadesPage'
-
-
-/* Página Mis Citas - módulo desarrollado para EV2 */
 import MisCitasPage from '../paginas/MisCitasPage'
-
-/* =========================================================
-  DETALLE DE NOVEDADES
-========================================================= */
 import DetalleNovedadPage from '../paginas/DetalleNovedadPage'
-
-/* =========================================================
-   CONTACTO
-========================================================= */
 import ContactoPage from '../paginas/ContactoPage'
-
-/* =========================================================
-   SOLICITAR CITA
-========================================================= */
 import SolicitarCitaPage from '../paginas/SolicitarCitaPage'
+
 
 /** Atajo: envuelve una página que solo puede ver el administrador. */
 function SoloAdmin({ children }: { children: ReactNode }) {
@@ -104,7 +86,7 @@ export function AppRoutes() {
 
         {/* SOLICITAR CITA: página migrada a React */}
         <Route path="/solicitar-cita" element={<SolicitarCitaPage />} />
-        
+
         {/* MIS CITAS: página migrada a React */}
         <Route path="/mis-citas" element={<RutaProtegida><MisCitasPage /></RutaProtegida>}/>
 
@@ -127,8 +109,7 @@ export function AppRoutes() {
         <Route path="usuarios/:id" element={<SoloAdmin><DetalleUsuarioPage /></SoloAdmin>} />
         <Route path="reportes" element={<SoloAdmin><ReportesPage /></SoloAdmin>} />
         <Route path="mascotas" element={<MascotasAdminPage />} />
-        <Route path="citas" element={<PaginaPendiente titulo="Citas" modulo="citas" admin />} />
-        {/* Agenda del día (solo lectura): admin y recepcionista */}
+        <Route path="citas" element={<CitasPage />} />
         <Route path="agenda" element={<AgendaPage />} />
       </Route>
     </Routes>

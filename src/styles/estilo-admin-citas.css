@@ -1,0 +1,947 @@
+
+/* =====================================================
+   PATITAS FELICES - ADMINISTRAR CITAS 
+==================================================== */
+
+/* =====================================================
+   1. CONFIGURACIÓN GENERAL
+===================================================== */
+
+.admin-citas-pagina {
+  --fondo-tarjeta: #2a2440;
+  --fondo-oscuro: #211c34;
+  --borde: rgba(255, 255, 255, 0.09);
+  --texto: #f9f5ff;
+  --texto-suave: #b9b1cb;
+  --rosa: #ffd6e7;
+  --celeste: #d6ecfa;
+  --morado: #e6d6f7;
+
+  min-width: 0;
+  color: var(--texto);
+}
+
+.admin-citas-pagina *,
+.admin-citas-pagina *::before,
+.admin-citas-pagina *::after {
+  box-sizing: border-box;
+}
+
+.admin-citas-subtitulo {
+  margin: -12px 0 27px;
+  color: var(--texto-suave);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+
+/* =====================================================
+   2. TARJETAS DE INDICADORES
+
+   Total de citas
+   Pendientes
+   Confirmadas
+   Canceladas
+===================================================== */
+
+.admin-citas-pagina .admin-citas-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.admin-citas-pagina .admin-cita-kpi {
+  min-width: 0;
+  min-height: 165px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  padding: 20px;
+
+  background: linear-gradient(
+    145deg,
+    #302a47,
+    #29233e
+  );
+
+  border: 1px solid var(--borde);
+  border-top: 4px solid var(--rosa);
+  border-radius: 20px;
+}
+
+.admin-citas-pagina .admin-cita-kpi--pendiente {
+  border-top-color: #ffdf9a;
+}
+
+.admin-citas-pagina .admin-cita-kpi--confirmada {
+  border-top-color: #a6e4bb;
+}
+
+.admin-citas-pagina .admin-cita-kpi--cancelada {
+  border-top-color: #ffb5c7;
+}
+
+.admin-citas-icono-contenedor {
+  display: grid;
+  place-items: center;
+
+  width: 46px;
+  height: 46px;
+
+  margin-bottom: 6px;
+
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+}
+
+.admin-citas-kpi-icono {
+  display: block;
+
+  width: 35px;
+  height: 35px;
+
+  object-fit: contain;
+}
+
+.admin-citas-pagina .admin-cita-kpi .admin-kpi-numero {
+  color: white;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.admin-citas-pagina .admin-cita-kpi .admin-kpi-label {
+  color: #d3ccdf;
+  font-size: 12px;
+}
+
+
+/* =====================================================
+   3. PANEL DE FILTROS
+===================================================== */
+
+.admin-citas-panel {
+  padding: 23px;
+  margin-bottom: 25px;
+
+  background: var(--fondo-tarjeta);
+
+  border: 1px solid var(--borde);
+  border-radius: 22px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.admin-citas-panel-titulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.admin-citas-etiqueta {
+  display: inline-block;
+
+  margin-bottom: 8px;
+
+  color: var(--rosa);
+
+  font-size: 11px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.admin-citas-panel h2,
+.admin-citas-tabla-cabecera h2 {
+  margin: 0 0 8px;
+
+  color: white;
+
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.admin-citas-panel-titulo p,
+.admin-citas-tabla-cabecera p {
+  margin: 0;
+
+  color: var(--texto-suave);
+
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.admin-citas-contador {
+  flex-shrink: 0;
+
+  padding: 8px 14px;
+
+  background: rgba(230, 214, 247, 0.12);
+  color: var(--morado);
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* =====================================================
+   4. BUSCADOR Y SELECTORES
+===================================================== */
+
+.admin-citas-filtros {
+  display: grid;
+
+  grid-template-columns:
+    minmax(180px, 1.7fr)
+    repeat(3, minmax(120px, 1fr))
+    auto;
+
+  align-items: end;
+  gap: 12px;
+}
+
+.admin-citas-campo {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+  min-width: 0;
+}
+
+.admin-citas-campo label {
+  color: #ddd7e9;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-citas-campo input,
+.admin-citas-campo select {
+  width: 100%;
+  min-width: 0;
+  min-height: 43px;
+
+  padding: 10px 12px;
+
+  background: var(--fondo-oscuro);
+  color: white;
+
+  border: 1px solid #544b70;
+  border-radius: 11px;
+
+  font-size: 12px;
+  color-scheme: dark;
+  outline: none;
+}
+
+.admin-citas-campo input::placeholder {
+  color: #a9a0bc;
+}
+
+.admin-citas-campo input:focus,
+.admin-citas-campo select:focus {
+  border-color: #cbb1ed;
+
+  box-shadow:
+    0 0 0 3px rgba(203, 177, 237, 0.17);
+}
+
+.admin-citas-campo select option {
+  background: #211c34;
+  color: white;
+}
+
+
+/* Botón limpiar filtros */
+
+.admin-citas-btn-limpiar {
+  min-height: 43px;
+  padding: 10px 17px;
+
+  background: #39304f;
+  color: #eee7f8;
+
+  border: 1px solid #625779;
+  border-radius: 11px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.admin-citas-btn-limpiar:hover {
+  background: #4b405f;
+}
+
+
+/* =====================================================
+   5. MENSAJES DE ÉXITO Y ERROR
+===================================================== */
+
+.admin-citas-aviso {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 14px;
+
+  margin-bottom: 23px;
+  padding: 13px 18px;
+
+  background: #243a35;
+  color: #b7ebca;
+
+  border: 1px solid #77b994;
+  border-radius: 14px;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.admin-citas-aviso--error {
+  background: #422a3b;
+  color: #ffd3df;
+  border-color: #cf829e;
+}
+
+.admin-citas-aviso button {
+  background: transparent;
+  color: inherit;
+
+  border: none;
+
+  font-size: 20px;
+  cursor: pointer;
+}
+
+
+/* =====================================================
+   6. TABLA DE CITAS
+
+   Permite desplazarse horizontalmente en
+   pantallas pequeñas.
+===================================================== */
+
+.admin-citas-tabla-seccion {
+  min-width: 0;
+}
+
+.admin-citas-tabla-cabecera {
+  margin-bottom: 15px;
+}
+
+.admin-citas-pagina .admin-tabla-wrap {
+  display: block;
+
+  width: 100%;
+  max-width: 100%;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  background: var(--fondo-tarjeta);
+
+  border: 1px solid var(--borde);
+  border-radius: 18px;
+}
+
+.admin-citas-pagina .admin-citas-tabla {
+  width: 100%;
+  min-width: 930px;
+
+  border-collapse: collapse;
+}
+
+.admin-citas-pagina .admin-citas-tabla th {
+  padding: 15px 13px;
+
+  background: #221d35;
+  color: #c2b9d1;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  text-align: left;
+  text-transform: uppercase;
+
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.admin-citas-pagina .admin-citas-tabla td {
+  padding: 16px 13px;
+
+  color: #f2edf8;
+
+  border-top:
+    1px solid rgba(255, 255, 255, 0.055);
+
+  vertical-align: top;
+  font-size: 12px;
+}
+
+.admin-citas-pagina .admin-citas-tabla tbody tr:hover {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+
+/* =====================================================
+   7. DATOS DE CADA FILA
+===================================================== */
+
+.admin-citas-cliente,
+.admin-citas-mascota,
+.admin-citas-servicio,
+.admin-citas-fecha {
+  display: block;
+
+  max-width: 220px;
+  margin-bottom: 5px;
+
+  color: white;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  overflow-wrap: anywhere;
+}
+
+.admin-citas-pagina .admin-citas-tabla td small {
+  display: block;
+
+  max-width: 220px;
+
+  color: #aaa1bd;
+
+  font-size: 11px;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+.admin-citas-hora {
+  font-weight: 700;
+}
+
+
+/* =====================================================
+   8. ETIQUETAS DE ESTADO
+===================================================== */
+
+.admin-cita-badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 7px 10px;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+/* Pendiente - amarillo */
+
+.admin-cita-badge--pendiente {
+  background: rgba(255, 221, 158, 0.15);
+  color: #ffdc96;
+}
+
+/* Confirmada - verde */
+
+.admin-cita-badge--confirmada {
+  background: rgba(136, 226, 166, 0.14);
+  color: #a9ebc1;
+}
+
+/* Completada - celeste */
+
+.admin-cita-badge--completada {
+  background: rgba(167, 211, 255, 0.15);
+  color: #c2e5ff;
+}
+
+/* Cancelada - rosa */
+
+.admin-cita-badge--cancelada {
+  background: rgba(255, 169, 191, 0.15);
+  color: #ffc0cf;
+}
+
+
+/* =====================================================
+   9. BOTONES DE ACCIONES
+===================================================== */
+
+.admin-citas-acciones {
+  display: flex;
+  flex-wrap: wrap;
+
+  width: 205px;
+  gap: 7px;
+}
+
+.admin-citas-btn,
+.admin-citas-btn-secundario,
+.admin-citas-btn-confirmar {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 34px;
+  padding: 8px 12px;
+
+  border: 1px solid transparent;
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-citas-btn:hover,
+.admin-citas-btn-secundario:hover,
+.admin-citas-btn-confirmar:hover {
+  transform: translateY(-1px);
+}
+
+
+/* Ver detalle y reagendar */
+
+.admin-citas-btn--ver,
+.admin-citas-btn-secundario {
+  background: rgba(214, 236, 250, 0.12);
+  color: #d6ecfa;
+
+  border-color: rgba(214, 236, 250, 0.23);
+}
+
+.admin-citas-btn--ver:hover,
+.admin-citas-btn-secundario:hover {
+  background: rgba(214, 236, 250, 0.22);
+}
+
+
+/* Confirmar y completar */
+
+.admin-citas-btn--confirmar,
+.admin-citas-btn-confirmar {
+  background: #e6d6f7;
+  color: #39294f;
+}
+
+.admin-citas-btn--confirmar:hover,
+.admin-citas-btn-confirmar:hover {
+  background: #d5b9ed;
+}
+
+
+/* Cancelar */
+
+.admin-citas-btn--cancelar,
+.admin-citas-btn-confirmar--cancelar {
+  background: rgba(255, 169, 191, 0.13);
+  color: #ffc2d2;
+
+  border-color: rgba(255, 169, 191, 0.23);
+}
+
+.admin-citas-btn--cancelar:hover,
+.admin-citas-btn-confirmar--cancelar:hover {
+  background: rgba(255, 169, 191, 0.24);
+}
+
+/* ====================================================
+   10. MENSAJE CUANDO NO HAY CITAS
+===================================================== */
+.admin-citas-vacio {
+  padding: 46px 20px;
+
+  background: var(--fondo-tarjeta);
+
+  border: 1px dashed #6a5b81;
+  border-radius: 18px;
+
+  text-align: center;
+}
+
+.admin-citas-vacio p {
+  color: #cfc5df;
+  font-size: 14px;
+}
+
+.admin-citas-vacio button {
+  margin-top: 10px;
+  padding: 11px 20px;
+
+  background: var(--morado);
+  color: #342444;
+
+  border: none;
+  border-radius: 999px;
+
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* =====================================================
+   11. FONDO DE LAS VENTANAS EMERGENTES
+
+   Se usa al:
+   - Ver detalle.
+   - Reagendar.
+   - Confirmar.
+   - Cancelar.
+===================================================== */
+.admin-citas-modal-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+  overflow-y: auto;
+
+  background: rgba(12, 9, 22, 0.77);
+
+  backdrop-filter: blur(5px);
+}
+
+/* =====================================================
+   12. VENTANA EMERGENTE
+===================================================== */
+.admin-citas-modal {
+  position: relative;
+
+  width: min(610px, 100%);
+  max-height: min(90vh, 850px);
+
+  overflow-y: auto;
+  padding: 28px;
+
+  background: #2a2440;
+  color: white;
+
+  border: 1px solid #635477;
+  border-radius: 24px;
+
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.42);
+}
+
+.admin-citas-modal--confirmacion {
+  width: min(430px, 100%);
+  text-align: center;
+}
+
+
+/* Botón para cerrar ventana */
+.admin-citas-modal-cerrar {
+  position: absolute;
+
+  top: 15px;
+  right: 16px;
+
+  width: 34px;
+  height: 34px;
+
+  background: #3d3453;
+  color: white;
+
+  border: 1px solid #6e617f;
+  border-radius: 50%;
+
+  font-size: 21px;
+  cursor: pointer;
+}
+
+/* =====================================================
+   13. ENCABEZADO DE LAS VENTANAS
+===================================================== */
+.admin-citas-modal-encabezado {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+  padding-right: 30px;
+
+  margin-bottom: 20px;
+}
+
+.admin-citas-modal-icono,
+.admin-citas-confirmacion-icono {
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  width: 51px;
+  height: 51px;
+
+  background: rgba(255, 214, 231, 0.16);
+  border-radius: 16px;
+
+  font-size: 25px;
+}
+
+.admin-citas-modal-encabezado h2,
+.admin-citas-modal--confirmacion h2 {
+  margin: 0;
+
+  color: white;
+
+  font-size: clamp(19px, 3vw, 25px);
+  line-height: 1.3;
+}
+
+.admin-citas-modal-descripcion,
+.admin-citas-modal--confirmacion p {
+  color: #cfc5df;
+
+  font-size: 13px;
+  line-height: 1.7;
+
+  overflow-wrap: anywhere;
+}
+
+.admin-citas-modal-descripcion strong {
+  color: white;
+}
+
+/* =====================================================
+   14. INFORMACIÓN DEL DETALLE DE LA CITA
+===================================================== */
+.admin-citas-modal-contenido {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+.admin-citas-detalle-bloque {
+  min-width: 0;
+
+  padding: 13px 15px;
+
+  background: #211c34;
+
+  border: 1px solid var(--borde);
+  border-radius: 13px;
+}
+
+.admin-citas-detalle-bloque--ancho {
+  grid-column: 1 / -1;
+}
+
+.admin-citas-detalle-bloque span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #b3a7c6;
+
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.admin-citas-detalle-bloque strong,
+.admin-citas-detalle-bloque p {
+  margin: 0;
+
+  color: white;
+
+  font-size: 12px;
+  line-height: 1.6;
+
+  overflow-wrap: anywhere;
+}
+
+/* =====================================================
+   15. FORMULARIO PARA REAGENDAR CITAS
+===================================================== */
+.admin-citas-form-reagendar {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 15px;
+  margin-top: 22px;
+}
+
+
+/* Mensaje de error del formulario */
+
+.admin-citas-error {
+  grid-column: 1 / -1;
+
+  margin: 0;
+  padding: 12px 14px;
+
+  background: #462b3c;
+  color: #ffd6e0;
+
+  border: 1px solid #d88da5;
+  border-radius: 12px;
+
+  font-size: 12px;
+}
+
+
+/* Botones de las ventanas */
+
+.admin-citas-modal-acciones,
+.admin-citas-confirmacion-botones {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.admin-citas-form-reagendar .admin-citas-modal-acciones {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+}
+
+
+/* Icono de confirmación */
+
+.admin-citas-confirmacion-icono {
+  margin: 0 auto 14px;
+
+  border-radius: 50%;
+  color: #ffe0ed;
+}
+
+.admin-citas-modal--confirmacion
+.admin-citas-confirmacion-botones {
+  justify-content: center;
+}
+
+
+/* =====================================================
+   16. ACCESIBILIDAD
+===================================================== */
+
+.admin-citas-pagina button:focus-visible,
+.admin-citas-pagina input:focus-visible,
+.admin-citas-pagina select:focus-visible {
+  outline: 3px solid #e6d6f7;
+  outline-offset: 2px;
+}
+
+.admin-citas-pagina button:disabled,
+.admin-citas-pagina select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   17. DISEÑO RESPONSIVE - TABLET
+===================================================== */
+@media (max-width: 1150px) {
+
+  .admin-citas-filtros {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-citas-campo--buscar {
+    grid-column: 1 / -1;
+  }
+
+}
+
+@media (max-width: 900px) {
+
+  .admin-citas-pagina .admin-citas-kpis {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+/* =====================================================
+   18. DISEÑO RESPONSIVE - CELULARES
+===================================================== */
+@media (max-width: 600px) {
+
+  .admin-citas-subtitulo {
+    margin-top: -8px;
+  }
+
+  .admin-citas-pagina .admin-citas-kpis {
+    gap: 10px;
+  }
+
+  .admin-citas-pagina .admin-cita-kpi {
+    min-height: 142px;
+    padding: 14px;
+  }
+
+  .admin-citas-panel {
+    padding: 17px;
+  }
+
+  .admin-citas-filtros {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-citas-campo--buscar {
+    grid-column: auto;
+  }
+
+  .admin-citas-modal {
+    padding: 22px 16px;
+  }
+
+  .admin-citas-modal-contenido,
+  .admin-citas-form-reagendar {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-citas-detalle-bloque--ancho,
+  .admin-citas-error,
+  .admin-citas-form-reagendar
+  .admin-citas-modal-acciones {
+    grid-column: auto;
+  }
+
+  .admin-citas-confirmacion-botones,
+  .admin-citas-modal-acciones {
+    justify-content: stretch;
+  }
+
+  .admin-citas-confirmacion-botones button,
+  .admin-citas-modal-acciones button {
+    flex: 1 1 auto;
+  }
+
+}
