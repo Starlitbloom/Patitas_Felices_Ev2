@@ -25,6 +25,7 @@ import DashboardPage from '../paginas/admin/DashboardPage'
 import UsuariosPage from '../paginas/admin/UsuariosPage'
 import DetalleUsuarioPage from '../paginas/admin/DetalleUsuarioPage'
 import ReportesPage from '../paginas/admin/ReportesPage'
+import AgendaPage from '../paginas/admin/AgendaPage'
 
 /* =========================================================
    NOSOTROS
@@ -127,6 +128,8 @@ export function AppRoutes() {
         <Route path="reportes" element={<SoloAdmin><ReportesPage /></SoloAdmin>} />
         <Route path="mascotas" element={<MascotasAdminPage />} />
         <Route path="citas" element={<PaginaPendiente titulo="Citas" modulo="citas" admin />} />
+        {/* Agenda del día (solo lectura): admin y recepcionista */}
+        <Route path="agenda" element={<AgendaPage />} />
       </Route>
     </Routes>
   )

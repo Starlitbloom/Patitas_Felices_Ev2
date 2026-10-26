@@ -1,6 +1,6 @@
 /* PÁGINA (contenedor) — Registro (antes registro.html).
    Crea el usuario con el servicio, inicia sesión y lleva al perfil. */
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { crearUsuario } from '../services/usuariosService'
 import { FormularioUsuario, type DatosFormularioUsuario } from '../componentes/organismos/FormularioUsuario'
@@ -9,6 +9,8 @@ import { Etiqueta } from '../componentes/atomos/Etiqueta'
 export default function RegistroPage() {
   const { iniciarSesion } = useAuth()
   const navigate = useNavigate()
+  // Página que la persona quería ver antes de registrarse (ej.: Solicitar cita con una hora elegida)
+  const desde = (useLocation().state as { desde?: string } | null)?.desde
 
   const registrar = (datos: DatosFormularioUsuario) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -17,7 +19,7 @@ export default function RegistroPage() {
     if (!resultado.ok) return { campo: resultado.campo, mensaje: resultado.mensaje }
 
     iniciarSesion(datos.correo, datos.password) // registro exitoso = sesión iniciada
-    navigate('/perfil')
+    navigate(desde ?? '/perfil')
   }
 
   return (
@@ -32,7 +34,7 @@ export default function RegistroPage() {
           <FormularioUsuario modo="registro" onSubmit={registrar} />
         </div>
         <p className="formulario-pie">
-          ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
+          ¿Ya tienes cuenta? <Link to="/login" state={{ desde }}>Inicia sesión</Link>
         </p>
       </div>
     </main>

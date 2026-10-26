@@ -1132,3 +1132,286 @@
     font-size: 12.5px;
     cursor: pointer;
 }
+/* =========================================================
+   Agenda del día para recepción (/admin/agenda) — EP2
+========================================================= */
+
+.agenda-kpis {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.agenda-selector {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.agenda-selector-dias {
+    display: flex;
+    gap: 8px;
+    flex: 1 1 0;
+    min-width: 0; /* permite que los días se achiquen y hagan scroll en vez de empujar las flechas */
+    overflow-x: auto;
+}
+
+.agenda-selector-dia {
+    flex: 1 0 96px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 10px 8px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: #2A2440;
+    color: rgba(255, 255, 255, 0.85);
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.agenda-selector-dia span {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.agenda-selector-dia:hover {
+    transform: translateY(-2px);
+}
+
+.agenda-selector-dia--activo {
+    background: linear-gradient(135deg, var(--rosa), var(--morado));
+    color: #2A2440;
+}
+
+.agenda-selector-dia--activo span {
+    color: #2A2440;
+}
+
+.agenda-selector-flecha {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: #2A2440;
+    color: var(--blanco);
+    font-size: 22px;
+    line-height: 1;
+}
+
+.agenda-selector-filtro {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+}
+
+/* Grilla hora × médico (scroll horizontal en pantallas chicas) */
+.agenda-dia-wrap {
+    overflow-x: auto;
+    background-color: #2A2440;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 14px;
+}
+
+.agenda-dia-grilla {
+    display: grid;
+    gap: 6px;
+    min-width: 640px;
+}
+
+.agenda-dia-medico {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px 12px;
+}
+
+.agenda-dia-medico img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--rosa);
+}
+
+.agenda-dia-medico strong {
+    display: block;
+    color: var(--blanco);
+    font-size: 14px;
+}
+
+.agenda-dia-medico span {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+}
+
+.agenda-dia-hora {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    font-weight: bold;
+    padding-top: 10px;
+}
+
+.agenda-celda {
+    min-height: 54px;
+    border-radius: 12px;
+    padding: 8px 10px;
+    font-size: 12.5px;
+    text-align: left;
+    border: none;
+}
+
+.agenda-celda--libre {
+    border: 1px dashed rgba(214, 236, 250, 0.25);
+    color: rgba(214, 236, 250, 0.45);
+    display: flex;
+    align-items: center;
+}
+
+.agenda-celda--fuera,
+.agenda-punto--fuera {
+    background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0 8px, rgba(255, 255, 255, 0.07) 8px 16px);
+}
+
+.agenda-celda--continua {
+    background-color: rgba(230, 214, 247, 0.08);
+    color: rgba(255, 255, 255, 0.45);
+    display: flex;
+    align-items: center;
+}
+
+.agenda-celda--cita {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    cursor: pointer;
+    color: #2A2440;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.agenda-celda--cita:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
+.agenda-celda-mascota {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.agenda-celda-detalle {
+    opacity: 0.8;
+}
+
+.agenda-celda-estado {
+    margin-top: 4px;
+    font-size: 10.5px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Colores por estado de la cita */
+.agenda-estado--pendiente { background-color: #FFD6A5; }
+.agenda-estado--confirmada { background-color: var(--celeste); }
+.agenda-estado--completada { background-color: #CDEFD3; }
+.agenda-estado--cancelada { background-color: #E5E5E5; }
+
+.agenda-leyenda--admin {
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 28px !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0;
+    font-size: 13px;
+}
+
+.agenda-leyenda--admin li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.agenda-leyenda--admin .agenda-punto {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.agenda-sin-asignar {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.agenda-sin-asignar .agenda-celda--cita {
+    background-color: #FFD6A5;
+}
+
+/* Modal de detalle */
+.agenda-modal {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.agenda-modal strong {
+    color: var(--blanco);
+}
+
+.agenda-modal ul {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+}
+
+.agenda-modal li {
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.agenda-modal-mascota {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    margin: 0;
+}
+
+.agenda-modal-estado {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 3px 12px;
+    border-radius: 50px;
+    color: #2A2440;
+}
+
+@media (max-width: 767px) {
+    .agenda-kpis {
+        grid-template-columns: 1fr;
+    }
+
+    .agenda-selector {
+        gap: 8px;
+    }
+
+    .agenda-selector-flecha {
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .agenda-selector-dia {
+        flex-basis: 84px;
+    }
+
+    .agenda-selector-filtro {
+        width: 100%;
+    }
+}

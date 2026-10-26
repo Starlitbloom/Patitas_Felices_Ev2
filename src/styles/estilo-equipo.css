@@ -368,3 +368,9 @@
 .cita-preseleccion--aviso {
     background: #FFF4D6;
 }
+
+.ayuda-servicio-medico {
+    display: block;
+    margin-top: 8px;
+    color: #6F6F78;
+}

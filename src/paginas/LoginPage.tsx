@@ -35,7 +35,7 @@ export default function LoginPage() {
       <div className="login-split-formulario">
         <FormularioLogin onSubmit={manejarLogin} />
         <p className="formulario-pie">
-          ¿No tienes cuenta? <Link to="/registro">Regístrate aquí</Link>
+          ¿No tienes cuenta? <Link to="/registro" state={{ desde }}>Regístrate aquí</Link>
         </p>
       </div>
     </main>

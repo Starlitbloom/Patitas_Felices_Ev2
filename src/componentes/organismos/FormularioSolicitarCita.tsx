@@ -671,6 +671,21 @@ export default function FormularioSolicitarCita() {
     especie
   )
 
+  /* Si viene una hora elegida en la agenda, solo se ofrecen
+     los servicios que realiza ese médico para esta especie. */
+  const serviciosVisibles = preferencia
+    ? Object.fromEntries(
+        Object.entries(gruposServicio)
+          .map(([grupo, servicios]) => [
+            grupo,
+            servicios.filter((servicio) =>
+              citaCompatibleConCatalogo(especie, servicio.nombre, preferencia.veterinarioId)
+            )
+          ] as const)
+          .filter(([, servicios]) => servicios.length > 0)
+      )
+    : gruposServicio
+
   /* Información del servicio seleccionado. */
   const servicioActual = obtenerServicioCita(
     datos.servicio
@@ -884,6 +899,13 @@ const ocupadas =
   const medicoPreferido = preferencia
     ? obtenerVeterinarioPorId(preferencia.veterinarioId)
     : null
+
+  /* El médico elegido no atiende a la especie seleccionada. */
+  const medicoSinServicios = Boolean(
+    preferencia &&
+    especie &&
+    Object.keys(serviciosVisibles).length === 0
+  )
 
   const preferenciaNoCalza = Boolean(
     preferencia &&
@@ -1245,16 +1267,18 @@ const ocupadas =
         ========================================= */}
         {preferencia && medicoPreferido && !enviada && (
           <div
-            className={`cita-preseleccion ${preferenciaNoCalza ? 'cita-preseleccion--aviso' : ''}`}
+            className={`cita-preseleccion ${preferenciaNoCalza || medicoSinServicios ? 'cita-preseleccion--aviso' : ''}`}
             role="status"
           >
             <strong>
               📅 Hora elegida: {medicoPreferido.nombre} · {fechaLarga(preferencia.fecha)} · {preferencia.hora} hrs
             </strong>
             <p>
-              {preferenciaNoCalza
-                ? `${medicoPreferido.nombre} no realiza el servicio elegido para esta especie. Elige otro profesional en el paso 3 o cambia el servicio.`
-                : 'Completa tus datos, los de tu mascota y el servicio: el médico, la fecha y la hora se completarán solos.'}
+              {medicoSinServicios
+                ? `${medicoPreferido.nombre} no atiende a esta especie (atiende a ${medicoPreferido.especies.join(' y ').toLowerCase()}). Elige otra mascota o quita esta hora para ver a todos los profesionales.`
+                : preferenciaNoCalza
+                  ? `${medicoPreferido.nombre} no realiza el servicio elegido para esta especie. Elige otro profesional en el paso 3 o cambia el servicio.`
+                  : `Completa tus datos y los de tu mascota. En el paso 3 verás solo los servicios que realiza ${medicoPreferido.nombre}; al elegir uno, la fecha y la hora se completarán solas.`}
             </p>
             <button
               type="button"
@@ -1674,7 +1698,7 @@ const ocupadas =
 
 
                   {/* Recorremos los grupos del catálogo. */}
-                  {Object.entries(gruposServicio).map(
+                  {Object.entries(serviciosVisibles).map(
                     ([grupo, servicios]) => (
 
                       <optgroup
@@ -1702,6 +1726,16 @@ const ocupadas =
                 </select>
 
                 {errorDe('servicio')}
+
+                {/* Aviso cuando la lista está filtrada por la hora elegida en la agenda */}
+                {preferencia && medicoPreferido && especie && !medicoSinServicios && (
+                  <small className="ayuda-servicio-medico">
+                    Mostrando solo los servicios que realiza {medicoPreferido.nombre}.{' '}
+                    <button type="button" className="btn btn-link btn-sm p-0 align-baseline" onClick={() => setPreferencia(null)}>
+                      Ver todos los servicios
+                    </button>
+                  </small>
+                )}
 
               </div>
 

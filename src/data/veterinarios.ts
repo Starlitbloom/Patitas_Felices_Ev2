@@ -37,7 +37,7 @@ export const VETERINARIOS: Veterinario[] = [
     descripcion: 'A cargo de las cirugías menores, como esterilizaciones y suturas, y de los controles postoperatorios.',
     dias: ['Martes', 'Jueves'],
     horario: '10:00 - 19:00',
-    imagen: '/img/Dr-Matías.jpg',
+    imagen: '/img/Dr-Matias.jpg',
     correo: 'm.contreras@patitasfelices.cl',
   },
   {
