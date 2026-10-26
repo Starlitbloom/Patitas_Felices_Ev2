@@ -9,7 +9,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
 import { useAuth } from '../../context/AuthContext'
 
@@ -532,6 +532,48 @@ function validar(
   }
 }
 /* =========================================================
+   9.1 HORA ELEGIDA DESDE LA AGENDA DEL MÉDICO
+   Lee y valida los parámetros de la URL. Si algo no
+   corresponde (médico, fecha u hora), se ignora.
+========================================================= */
+interface PreferenciaAgenda {
+  veterinarioId: number
+  fecha: string
+  hora: string
+}
+
+function leerPreferencia(
+  parametros: URLSearchParams
+): PreferenciaAgenda | null {
+
+  const veterinarioId = Number(parametros.get('veterinario'))
+  const fecha = parametros.get('fecha') ?? ''
+  const hora = parametros.get('hora') ?? ''
+
+  const medico = obtenerVeterinarioPorId(veterinarioId)
+
+  if (
+    !medico ||
+    medico.cargo !== 'Médico veterinario' ||
+    !convertirFecha(fecha) ||
+    fecha < fechaLocalHoy() ||
+    !HORARIOS_CITAS.some((opcion) => opcion === hora)
+  ) {
+    return null
+  }
+
+  return { veterinarioId, fecha, hora }
+}
+
+/* "2026-10-27" → "martes 27 de octubre" */
+function fechaLarga(fecha: string): string {
+  const objeto = convertirFecha(fecha)
+  return objeto
+    ? objeto.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })
+    : fecha
+}
+
+/* =========================================================
    10. COMPONENTE PRINCIPAL
 ========================================================= */
 export default function FormularioSolicitarCita() {
@@ -539,6 +581,13 @@ export default function FormularioSolicitarCita() {
   const { usuario } = useAuth()
 
   const formularioRef = useRef<HTMLFormElement>(null)
+
+  /* Hora elegida desde la agenda del médico (/equipo/:id).
+     Llega en la URL: /solicitar-cita?veterinario=2&fecha=2026-10-27&hora=10:00 */
+  const [parametros] = useSearchParams()
+  const [preferencia, setPreferencia] = useState<PreferenciaAgenda | null>(
+    () => leerPreferencia(parametros)
+  )
   /* Valores iniciales. */
   const [datos, setDatos] = useState<DatosCita>(() => ({
 
@@ -767,6 +816,23 @@ const ocupadas =
       nuevos.fecha = ''
 
       nuevos.hora = ''
+
+      /* Si viene una hora elegida en la agenda y el médico
+         realiza este servicio, se completa automáticamente. */
+      if (
+        preferencia &&
+        citaCompatibleConCatalogo(
+          obtenerEspecieCita(nuevos.tipoMascota, nuevos.otraEspecie),
+          nuevos.servicio,
+          preferencia.veterinarioId
+        )
+      ) {
+        nuevos.veterinarioId = preferencia.veterinarioId
+        nuevos.fecha = preferencia.fecha
+        nuevos.hora = preferencia.hora
+        aplicarPreferencia(nuevos)
+        return
+      }
     }
 
 
@@ -784,6 +850,47 @@ const ocupadas =
 
     actualizar(nuevos)
   }
+  /* =====================================================
+     17.1 APLICAR LA HORA ELEGIDA EN LA AGENDA
+     Guarda los datos y valida de inmediato médico, fecha
+     y hora (por si el bloque se ocupó mientras tanto).
+  ===================================================== */
+  function aplicarPreferencia(nuevos: DatosCita) {
+
+    actualizar(nuevos)
+
+    const camposAgenda: Campo[] = ['veterinarioId', 'fecha', 'hora']
+
+    const ocupadasAgenda =
+      nuevos.veterinarioId != null
+        ? horasOcupadas(nuevos.fecha, undefined, nuevos.veterinarioId, nuevos.servicio)
+        : []
+
+    setVisitados((anteriores) => [
+      ...anteriores,
+      ...camposAgenda.filter((campo) => !anteriores.includes(campo))
+    ])
+
+    setErrores((anteriores) => {
+      const resultado = { ...anteriores }
+      for (const campo of camposAgenda) {
+        resultado[campo] = validar(campo, nuevos, ocupadasAgenda)
+      }
+      return resultado
+    })
+  }
+
+  /* Médico de la hora elegida (para el aviso) y si calza con el servicio actual. */
+  const medicoPreferido = preferencia
+    ? obtenerVeterinarioPorId(preferencia.veterinarioId)
+    : null
+
+  const preferenciaNoCalza = Boolean(
+    preferencia &&
+    datos.servicio &&
+    !citaCompatibleConCatalogo(especie, datos.servicio, preferencia.veterinarioId)
+  )
+
   /* =====================================================
      18. SELECCIONAR VETERINARIO
      Guarda el ID del veterinario elegido.
@@ -1133,6 +1240,31 @@ const ocupadas =
           </span>
 
         </div>
+        {/* =========================================
+            HORA ELEGIDA DESDE LA AGENDA DEL MÉDICO
+        ========================================= */}
+        {preferencia && medicoPreferido && !enviada && (
+          <div
+            className={`cita-preseleccion ${preferenciaNoCalza ? 'cita-preseleccion--aviso' : ''}`}
+            role="status"
+          >
+            <strong>
+              📅 Hora elegida: {medicoPreferido.nombre} · {fechaLarga(preferencia.fecha)} · {preferencia.hora} hrs
+            </strong>
+            <p>
+              {preferenciaNoCalza
+                ? `${medicoPreferido.nombre} no realiza el servicio elegido para esta especie. Elige otro profesional en el paso 3 o cambia el servicio.`
+                : 'Completa tus datos, los de tu mascota y el servicio: el médico, la fecha y la hora se completarán solos.'}
+            </p>
+            <button
+              type="button"
+              className="btn btn-link btn-sm p-0 mt-1"
+              onClick={() => setPreferencia(null)}
+            >
+              Quitar esta hora y elegir otra
+            </button>
+          </div>
+        )}
         {/* =========================================
             FORMULARIO
         ========================================= */}

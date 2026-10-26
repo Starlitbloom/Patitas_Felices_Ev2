@@ -20,7 +20,7 @@ export function RutaProtegida({ children, roles }: RutaProtegidaProps) {
   const { usuario } = useAuth()
   const location = useLocation()
 
-  if (!usuario) return <Navigate to="/login" replace state={{ desde: location.pathname }} />
+  if (!usuario) return <Navigate to="/login" replace state={{ desde: location.pathname + location.search }} />
   if (roles && !roles.includes(usuario.rol)) return <Navigate to="/" replace />
   return <>{children}</>
 }
