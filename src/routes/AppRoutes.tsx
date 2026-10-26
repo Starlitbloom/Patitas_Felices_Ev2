@@ -37,6 +37,10 @@ import NosotrosPage from '../paginas/NosotrosPage'
 ========================================================= */
 import NovedadesPage from '../paginas/NovedadesPage'
 
+
+/* Página Mis Citas - módulo desarrollado para EV2 */
+import MisCitasPage from '../paginas/MisCitasPage'
+
 /* =========================================================
   DETALLE DE NOVEDADES
 ========================================================= */
@@ -99,8 +103,9 @@ export function AppRoutes() {
 
         {/* SOLICITAR CITA: página migrada a React */}
         <Route path="/solicitar-cita" element={<SolicitarCitaPage />} />
-
-        <Route path="/mis-citas" element={<PaginaPendiente titulo="Mis citas" modulo="citas" />} />
+        
+        {/* MIS CITAS: página migrada a React */}
+        <Route path="/mis-citas" element={<RutaProtegida><MisCitasPage /></RutaProtegida>}/>
 
         <Route path="*" element={<NoEncontradoPage />} />
       </Route>
