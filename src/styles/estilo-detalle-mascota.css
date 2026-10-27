@@ -628,3 +628,262 @@
     padding: 56px 0 70px;
     background: linear-gradient(90deg, #ddbdff 0%, #f1dcf1 50%, #ffcfe6 100%);
 }
+
+/* =========================================================
+   DISEÑO DE CITAS EN LA FICHA CLÍNICA
+========================================================= */
+
+
+/* TARJETA PRINCIPAL */
+
+.seccion-detalle-mascota .cita-mascota-card {
+  width: 100%;
+  display: block;
+  padding: 28px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid #f5deeb;
+  box-shadow: 0 10px 30px rgba(102, 65, 95, 0.09);
+  box-sizing: border-box;
+  transition: transform 0.25s ease,
+              box-shadow 0.25s ease;
+}
+
+.seccion-detalle-mascota .cita-mascota-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(102, 65, 95, 0.13);
+}
+
+
+/* ENCABEZADO */
+
+.cita-mascota-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 22px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid #f2e6ed;
+}
+
+.cita-mascota-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  background: #ffe6f0;
+  font-size: 28px;
+}
+
+.cita-mascota-titulo {
+  flex: 1;
+  min-width: 0;
+}
+
+.seccion-detalle-mascota .cita-mascota-titulo h4 {
+  margin: 0 0 6px;
+  font-size: 19px;
+  font-weight: 800;
+  color: #30263b;
+}
+
+.seccion-detalle-mascota .cita-mascota-titulo p {
+  margin: 0;
+  color: #817489;
+  font-size: 13px;
+}
+
+
+/* ETIQUETA DE ESTADO */
+
+.cita-mascota-estado {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.cita-mascota-estado--pendiente {
+  background: #fff0d6;
+  color: #96600b;
+}
+
+.cita-mascota-estado--confirmada {
+  background: #dff1ff;
+  color: #317ba9;
+}
+
+.cita-mascota-estado--completada {
+  background: #e2f5e8;
+  color: #31794c;
+}
+
+.cita-mascota-estado--cancelada {
+  background: #ffe4e8;
+  color: #b34d61;
+}
+
+
+/* DATOS ORGANIZADOS EN COLUMNAS */
+
+.cita-mascota-datos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.cita-mascota-dato {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  min-height: 85px;
+  padding: 18px;
+  border-radius: 16px;
+}
+
+.cita-mascota-dato--rosa {
+  background: #fff0f6;
+}
+
+.cita-mascota-dato--celeste {
+  background: #eaf6ff;
+}
+
+.cita-mascota-dato--lila {
+  background: #f3edff;
+  grid-column: 1 / -1;
+}
+
+.cita-mascota-dato-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.75);
+  font-size: 21px;
+}
+
+.cita-mascota-dato > div {
+  min-width: 0;
+}
+
+.cita-mascota-dato small {
+  display: block;
+  margin-bottom: 6px;
+  color: #817489;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.cita-mascota-dato strong {
+  display: block;
+  color: #352942;
+  font-size: 15px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+
+/* MOTIVO DE LA CONSULTA */
+
+.cita-mascota-motivo {
+  padding: 19px 21px;
+  margin-bottom: 18px;
+  border: 1px solid #f0e9f3;
+  border-radius: 16px;
+  background: #fcfaff;
+}
+
+.cita-mascota-motivo-titulo {
+  margin-bottom: 9px;
+  color: #5c4372;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.seccion-detalle-mascota .cita-mascota-motivo p {
+  margin: 0;
+  color: #6c6475;
+  font-size: 14px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+
+/* AVISO DE ESTADO */
+
+.cita-mascota-aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px 18px;
+  border-radius: 14px;
+  background: #eef7fd;
+  border-left: 4px solid #87bfe1;
+}
+
+.cita-mascota-aviso span {
+  flex-shrink: 0;
+}
+
+.seccion-detalle-mascota .cita-mascota-aviso p {
+  margin: 0;
+  color: #47718b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* DISEÑO RESPONSIVE PARA CELULARES */
+
+@media (max-width: 650px) {
+
+  .seccion-detalle-mascota .cita-mascota-card {
+    padding: 18px;
+    border-radius: 19px;
+  }
+
+  .cita-mascota-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .cita-mascota-icono {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+
+  .cita-mascota-estado {
+    margin-left: 0;
+  }
+
+  .cita-mascota-datos {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .cita-mascota-dato--lila {
+    grid-column: auto;
+  }
+
+  .cita-mascota-dato {
+    padding: 14px;
+    min-height: 72px;
+  }
+
+}

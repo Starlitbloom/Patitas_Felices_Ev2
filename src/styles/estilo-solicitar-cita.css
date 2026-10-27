@@ -1779,3 +1779,341 @@
   }
 
 }
+/* =========================================
+   1. FICHA DEL SERVICIO
+========================================= */
+
+.solicitar-cita-v2 .cita-ficha-servicio {
+  margin-top: 14px;
+  padding: 17px 19px;
+
+  background: #f8f4ff;
+  color: #443656;
+
+  border: 1px solid #dcd0ef;
+  border-radius: 16px;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* Nombre del servicio seleccionado */
+
+.solicitar-cita-v2 .cita-ficha-servicio-nombre {
+  display: block;
+
+  margin-bottom: 9px;
+
+  color: #443656;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+
+/* Precio y duración */
+
+.solicitar-cita-v2 .cita-ficha-servicio-datos {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px 22px;
+}
+
+.solicitar-cita-v2 .cita-ficha-servicio-datos span {
+  color: #443656;
+  font-size: 13px;
+}
+
+.solicitar-cita-v2 .cita-ficha-servicio-datos b {
+  font-weight: 700;
+}
+
+
+/* Observaciones del servicio */
+
+.solicitar-cita-v2 .cita-ficha-servicio-nota {
+  margin: 10px 0 0;
+
+  color: #6c5b75;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   2. PRECIO Y DURACIÓN EN EL RESUMEN
+========================================= */
+
+.solicitar-cita-v2 .cita-resumen-precio {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px 22px;
+  margin-top: 9px;
+}
+
+.solicitar-cita-v2 .cita-resumen-precio span {
+  color: #443656;
+  font-size: 13px;
+}
+
+.solicitar-cita-v2 .cita-resumen-precio strong {
+  font-weight: 700;
+}
+
+
+/* Observaciones del resumen */
+
+.solicitar-cita-v2 .cita-resumen-nota {
+  margin: 10px 0 0;
+
+  color: #6c5b75;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   3. AVISO DE PAGO PRESENCIAL
+========================================= */
+
+.solicitar-cita-v2 .cita-aviso-pago {
+  margin-top: 18px;
+  padding: 17px 18px;
+
+  background: #edf8ff;
+  color: #36536a;
+
+  border: 1px solid #b9dcf1;
+  border-left: 5px solid #72a9d0;
+  border-radius: 14px;
+
+  text-align: left;
+}
+
+
+/* Título del aviso */
+
+.solicitar-cita-v2 .cita-aviso-pago > strong {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #2d5777;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* Texto de pago */
+
+.solicitar-cita-v2
+.mensaje-exito-contenido
+.cita-aviso-pago p {
+  margin: 5px 0 0;
+
+  color: #36536a;
+
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+
+/* Valor y duración de la consulta */
+
+.solicitar-cita-v2
+.cita-aviso-pago
+.cita-aviso-pago-importe {
+  margin-top: 8px;
+
+  color: #2d5777;
+
+  font-weight: 600;
+}
+
+
+/* =========================================
+   4. ADAPTACIÓN A CELULARES
+========================================= */
+
+@media (max-width: 600px) {
+
+  .solicitar-cita-v2 .cita-ficha-servicio-datos,
+  .solicitar-cita-v2 .cita-resumen-precio {
+    flex-direction: column;
+
+    gap: 5px;
+  }
+
+  .solicitar-cita-v2 .cita-aviso-pago {
+    padding: 14px;
+  }
+
+}
+
+
+/* =========================================
+   VOLVER A SOLICITAR CITA
+   PATITAS FELICES
+========================================= */
+
+/* Ocultar campos repetidos en modo registrada. */
+
+.solicitar-cita-v2
+.cita-modo-registrada
+.indicador-pasos,
+
+.solicitar-cita-v2
+.cita-modo-registrada
+.bloque-celeste,
+
+.solicitar-cita-v2
+.cita-modo-registrada
+.bloque-rosa {
+  display: none;
+}
+
+
+/* Panel para elegir mascota. */
+
+.solicitar-cita-v2 .cita-repetir-panel {
+  margin-bottom: 26px;
+  padding: 28px;
+  border: 1px solid #f0d9e8;
+  border-radius: 24px;
+  background: linear-gradient(
+    135deg,
+    #fff7fb,
+    #f1f7ff
+  );
+  box-shadow: 0 10px 28px rgba(81, 59, 94, 0.07);
+}
+
+.solicitar-cita-v2 .cita-repetir-panel h3 {
+  margin-bottom: 10px;
+  color: #352b41;
+  font-size: 21px;
+}
+
+.solicitar-cita-v2 .cita-repetir-panel p {
+  color: #777080;
+  font-size: 14px;
+}
+
+
+/* Botones para elegir tipo de reserva. */
+
+.solicitar-cita-v2 .cita-repetir-opciones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.solicitar-cita-v2 .cita-repetir-opcion {
+  min-height: 64px;
+  padding: 15px;
+  border: 2px solid #e8dfe9;
+  border-radius: 16px;
+  background: white;
+  color: #594a64;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.solicitar-cita-v2 .cita-repetir-opcion.activa {
+  border-color: #eca7c9;
+  background: #ffe3f0;
+  color: #a94f80;
+}
+
+
+/* Selector y ficha de mascota registrada. */
+
+.solicitar-cita-v2 .cita-repetir-seleccion {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid #e9d8e5;
+}
+
+.solicitar-cita-v2 .cita-repetir-seleccion > label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.solicitar-cita-v2 .cita-repetir-seleccion > select {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ded5e5;
+  border-radius: 13px;
+  background: white;
+}
+
+.solicitar-cita-v2 .cita-repetir-mascota {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 18px;
+  background: white;
+}
+
+.solicitar-cita-v2 .cita-repetir-mascota img {
+  width: 90px;
+  height: 90px;
+  padding: 8px;
+  object-fit: contain;
+  border-radius: 16px;
+  background: #f4ebfb;
+}
+
+.solicitar-cita-v2 .cita-repetir-mascota strong {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 18px;
+}
+
+.solicitar-cita-v2 .cita-repetir-mascota small {
+  color: #47856a;
+}
+
+.solicitar-cita-v2 .cita-repetir-edad {
+  margin-top: 18px;
+}
+
+.solicitar-cita-v2 .cita-repetir-edad input,
+.solicitar-cita-v2 .cita-repetir-edad select {
+  max-width: 150px;
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid #d9d0df;
+  border-radius: 10px;
+}
+
+.solicitar-cita-v2 .cita-repetir-medico {
+  margin: 20px 0;
+  padding: 17px;
+  border-radius: 14px;
+  background: #e8f4fc;
+  color: #376b8c;
+  font-size: 14px;
+}
+
+
+/* Adaptación a celulares. */
+
+@media (max-width: 650px) {
+  .solicitar-cita-v2 .cita-repetir-opciones {
+    grid-template-columns: 1fr;
+  }
+
+  .solicitar-cita-v2 .cita-repetir-mascota {
+    flex-wrap: wrap;
+  }
+}
