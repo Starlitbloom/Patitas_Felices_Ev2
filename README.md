@@ -100,12 +100,21 @@ se pueden cambiar para comprobar que la prueba falla.
 
 | Archivo | Prueba | Qué verifica |
 |---|---|---|
-| `responsivo.test.tsx` | Responsivo *(obligatoria)* | `GrillaEquipo` tiene `col-12`, `col-md-6` y `col-lg-4`; falla si se borra una de las clases |
 | `usuarios.test.tsx` | P01 CREATE | `crearUsuario` agrega un usuario y la lista pasa de 8 a 9 |
-| `usuarios.test.tsx` | P02 DELETE | Eliminar un usuario con confirmación lo quita de la tabla y de los datos |
-| `equipo.test.tsx` | P03 Filtro | Filtrar el equipo por cargo deja 3 médicos; sin resultados muestra un mensaje |
+| `usuarios-eliminar.test.tsx` | P02 DELETE | Eliminar un usuario con confirmación lo quita de la tabla y de los datos |
+| `equipo.test.tsx` | P03 Filtro + responsivo *(obligatoria)* | Las tarjetas del equipo tienen `col-12`, `col-md-6` y `col-lg-4`; filtrar por cargo deja 3 médicos y sin resultados muestra un mensaje |
 | `login.test.tsx` | P04 Validación + espía | El login con datos inválidos muestra errores y no envía (`vi.fn()`) |
 | `agenda.test.ts` | P05 Agenda | Una hora con cita aparece ocupada y los días sin atención no tienen horas |
+| `mascotas.test.tsx` | P06 Filtro | En Mis mascotas, elegir una especie o buscar por nombre reduce la lista; sin resultados muestra "0 mascotas encontradas" |
+| `detalle-mascota.test.tsx` | P07 READ | El detalle de una mascota muestra su ficha y, si el id no existe, el aviso "Mascota no encontrada" |
+| `admin-editar-mascota.test.tsx` | P08 UPDATE | Editar la raza de una mascota en el panel actualiza la tabla y los datos guardados |
+| `admin-eliminar-mascota.test.tsx` | P09 DELETE | Eliminar una mascota con confirmación la quita de la tabla y de los datos |
+| `ficha-clinica.test.tsx` | P10 CREATE + espía | El formulario de atención no guarda con datos vacíos y, al completarlo, llama una vez a `onSubmit` (`vi.fn()`) |
+| `solicitar-cita-registro.test.tsx` | P11 CREATE | `crearCita` registra una cita Pendiente de 30 minutos, la lista del usuario tiene 1 y la consulta general cuesta $15.000 |
+| `solicitar-cita-veterinario.test.tsx` | P12 Validación | Un veterinario que no atiende el servicio es rechazado y no se guarda ninguna cita |
+| `solicitar-cita-horarios.test.tsx` | P13 Horarios | Una cirugía de 10:00 deja ocupadas las 11:00 y una segunda cita a esa hora es rechazada |
+| `solicitar-cita-cancelacion.test.tsx` | P14 UPDATE | Cancelar una cita libera el horario y permite reservarlo de nuevo |
+| `solicitar-cita-mascota-registrada.test.tsx` | P15 Sin duplicados | Registrar la misma mascota dos veces (aunque cambie mayúsculas o espacios) deja una sola ficha |
 
 
 ## Integrantes
@@ -113,5 +122,5 @@ se pueden cambiar para comprobar que la prueba falla.
 | Integrante | Módulo |
 |---|---|
 | Maria Calfileo 1
-| [Sandra Chamorro]
-| [Rocio Cruces] 
+| Stephanie Chamorro
+| Rocio Cruces
