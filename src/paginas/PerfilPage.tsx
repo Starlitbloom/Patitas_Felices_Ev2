@@ -6,8 +6,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { actualizarUsuario } from '../services/usuariosService'
-import { listarCitasDe, listarMascotasDe } from '../services/datosEquipoService'
-import { obtenerMascotaPorId } from '../services/mascotasService'
+import { listarCitasDe } from '../services/datosEquipoService'
+import { listarMascotasPorDueno } from '../services/mascotasService'
 import { redimensionarImagen, validarArchivoAvatar } from '../utils/imagen'
 import { CabeceraPerfil } from '../componentes/organismos/CabeceraPerfil'
 import { FormularioUsuario, type DatosFormularioUsuario } from '../componentes/organismos/FormularioUsuario'
@@ -25,21 +25,21 @@ export default function PerfilPage() {
 
   if (!usuario) return null // la ruta ya está protegida; esto solo satisface a TypeScript
 
-    const mascotas = listarMascotasDe(usuario.correo).map((m, i) => {
-    const ficha = m.id ? obtenerMascotaPorId(m.id) : null
-    return {
-      id: m.id ?? String(i),
-      titulo: m.nombre || 'Mascota',
-      detalle: [m.especie, m.raza].filter(Boolean).join(' · '),
-      extra: ficha ? (
-        <BloqueCompletarMascota
-          mascota={ficha}
-          correoSolicitante={usuario.correo}
-          onGuardado={() => setVersion((v) => v + 1)}
-        />
-      ) : null,
-    }
-  })
+  /* Leer las fichas completas del dueño desde el servicio de mascotas.
+     Así también aparecen los controles de edición para mascotas
+     registradas al solicitar una cita, sin depender de un resumen. */
+  const mascotas = listarMascotasPorDueno(usuario.correo).map((m) => ({
+    id: m.id,
+    titulo: m.nombre || 'Mascota',
+    detalle: [m.especie, m.raza].filter(Boolean).join(' · '),
+    extra: (
+      <BloqueCompletarMascota
+        mascota={m}
+        correoSolicitante={usuario.correo}
+        onGuardado={() => setVersion((v) => v + 1)}
+      />
+    ),
+  }))
   const citas = listarCitasDe(usuario.correo).map((c, i) => ({
     id: c.id ?? String(i),
     titulo: `${c.fecha || 'Fecha por confirmar'} — ${c.motivo || c.servicio || 'Consulta'}`,

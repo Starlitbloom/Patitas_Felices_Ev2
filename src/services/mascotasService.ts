@@ -206,29 +206,33 @@ export function obtenerSolicitudPendiente(mascotaId: string): SolicitudCambio | 
 }
 
 /**
- * El dueño/a envía los datos de su mascota. Igual que en la EP1:
- * - si la ficha estaba incompleta, los cambios se aplican directo ('aplicado');
- * - si ya estaba completa, se crea una solicitud pendiente de aprobación ('solicitud').
+ * El dueño/a propone cambios desde su perfil.
+ * Tanto el primer completado como las ediciones posteriores esperan
+ * aprobación del personal. Los cambios no se aplican hasta aprobarlos.
  */
 export function enviarCambiosMascota(
   idMascota: string,
   correoSolicitante: string,
   cambios: CambiosSolicitud,
-): ResultadoOperacion<'aplicado' | 'solicitud'> {
+): ResultadoOperacion<'solicitud'> {
   const errorRaza = validarRequerido(cambios.raza, 'La raza', 40)
   if (errorRaza) return { ok: false, campo: 'raza', mensaje: errorRaza }
 
   const mascota = obtenerMascotaPorId(idMascota)
   if (!mascota) return { ok: false, campo: 'id', mensaje: 'La mascota no existe.' }
 
-  if (!mascota.completo) {
-    actualizarMascota(idMascota, { ...cambios, completo: true })
-    return { ok: true, dato: 'aplicado' }
+  // Asegurar que quien solicita los cambios sea el dueño de la mascota.
+  if (mascota.correoDueño.trim().toLowerCase() !== correoSolicitante.trim().toLowerCase()) {
+    return { ok: false, campo: 'general', mensaje: 'Solo el dueño puede modificar esta mascota.' }
   }
 
   const solicitudes = listarSolicitudes()
+  if (solicitudes.some((s) => s.mascotaId === idMascota && s.estado === 'pendiente')) {
+    return { ok: false, campo: 'general', mensaje: 'Ya hay una solicitud pendiente de aprobación.' }
+  }
+
   solicitudes.push({
-    id: `sol-${Date.now()}`,
+    id: `sol-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
     mascotaId: idMascota,
     correoSolicitante,
     cambios,

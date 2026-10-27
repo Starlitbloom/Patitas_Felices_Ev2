@@ -1,10 +1,9 @@
-/* ORGANISMO — Bloque "Completar datos / Editar" de una mascota.
+/* ORGANISMO — Bloque "Editar" de una mascota.
    Se usa en el perfil del cliente y en el detalle de la mascota.
-   Ficha incompleta: los datos se guardan directo. Ficha completa: se envían
-   como solicitud y el personal los aprueba desde el panel admin. */
+   Todo cambio requiere aprobación del personal desde el panel admin. */
 import { useRef, useState, type FormEvent, type MouseEvent } from 'react'
 import type { CambiosSolicitud, Mascota, Sexo } from '../../types/mascota'
-import { enviarCambiosMascota, obtenerSolicitudPendiente } from '../../services/mascotasService'
+import { enviarCambiosMascota, listarSolicitudes, obtenerSolicitudPendiente } from '../../services/mascotasService'
 import { redimensionarImagen, validarArchivoAvatar } from '../../utils/imagen'
 import { Boton } from '../atomos/Boton'
 import { MensajeError } from '../atomos/MensajeError'
@@ -45,6 +44,18 @@ export function BloqueCompletarMascota({ mascota, correoSolicitante, onGuardado 
   /* Si ya envió cambios y aún no se resuelven, no puede enviar otros */
   const pendiente = obtenerSolicitudPendiente(id)
 
+  /* Última respuesta de administración para esta mascota y este dueño.
+     Se consulta de nuevo al volver a Mi perfil tras iniciar sesión. */
+  const ultimaRespuesta = listarSolicitudes()
+    .filter((solicitud) =>
+      solicitud.mascotaId === id &&
+      solicitud.correoSolicitante.trim().toLowerCase() === correoSolicitante.trim().toLowerCase() &&
+      solicitud.estado !== 'pendiente'
+    )
+    .sort((a, b) =>
+      (b.fechaResolucion ?? '').localeCompare(a.fechaResolucion ?? '')
+    )[0]
+
   /* Abre o cierra el formulario; al abrir parte con los datos actuales */
   const alternar = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
@@ -76,7 +87,7 @@ export function BloqueCompletarMascota({ mascota, correoSolicitante, onGuardado 
     }
   }
 
-  /* Al guardar: el servicio decide si aplica los cambios directo o crea una solicitud */
+  /* Al guardar: se genera una solicitud que debe revisar administración. */
   const enviar = (e: FormEvent) => {
     e.preventDefault()
     const resultado = enviarCambiosMascota(id, correoSolicitante, {
@@ -100,15 +111,29 @@ export function BloqueCompletarMascota({ mascota, correoSolicitante, onGuardado 
 
   return (
     <>
+      {/* Aviso de guardado y respuesta del administrador, solo al dueño. */}
+      {!pendiente && ultimaRespuesta && (
+        <p
+          className={`alerta-mascota ${ultimaRespuesta.estado === 'aprobada' ? 'alerta-mascota--info' : ''}`}
+          role="status"
+        >
+          {ultimaRespuesta.estado === 'aprobada'
+            ? `✅ Administración aprobó los cambios de ${mascota.nombre}. La ficha ya está actualizada.`
+            : `❌ Administración rechazó los cambios de ${mascota.nombre}. Puedes volver a editarlos.`}
+        </p>
+      )}
+
       {/* Aviso y botones según el estado de la ficha */}
       <div className="mascota-acciones">
         {pendiente ? (
-          <p className="alerta-mascota alerta-mascota--info">🕒 Cambios enviados, pendiente de aprobación.</p>
+          <p className="alerta-mascota alerta-mascota--info" role="status">
+            🕒 Solicitud enviada para {mascota.nombre}, pendiente de aprobación.
+          </p>
         ) : (
           <>
             {!mascota.completo && <p className="alerta-mascota">⚠️ Datos incompletos.</p>}
             <a href="#" className="enlace-completar" onClick={alternar}>
-              {mascota.completo ? 'Editar' : 'Completar datos'}
+              Editar
             </a>
             {/* Cancelar solo aparece con el formulario abierto */}
             {abierto && (
