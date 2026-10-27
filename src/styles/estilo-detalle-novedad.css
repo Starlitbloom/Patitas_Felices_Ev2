@@ -28,10 +28,13 @@
   );
   overflow: hidden;
 }
-
 .hero-detalle .detalle-hero-contenido {
   position: relative;
   z-index: 2;
+
+  /* Evita el conflicto con detalle de mascotas */
+  display: block;
+
   width: 90%;
   max-width: 900px;
   margin: 0 auto;

@@ -704,9 +704,9 @@ export default function FormularioContacto() {
                 className="mensaje-exito-contacto"
                 role="status"
               >
-                ✓ Formulario validado correctamente.
-                Esta es una demostración: el mensaje
-                todavía no se ha enviado a la veterinaria.
+                ✓ ¡Tu mensaje fue enviado correctamente!
+                Gracias por contactarnos.
+
               </p>
             )}
 

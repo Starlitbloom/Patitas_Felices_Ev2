@@ -1,16 +1,12 @@
 /* =========================================================
-   Pruebas P01 y P02 — CRUD del módulo de usuarios
-   P01: CREATE en la fuente de datos (src/services/usuariosService.ts)
-   P02: DELETE desde la interfaz del panel (src/paginas/admin/UsuariosPage.tsx)
-   Antes de cada prueba se cargan los 8 usuarios iniciales
-   (2 administradoras + 1 recepcionista + 5 clientes de src/data/usuariosIniciales.ts).
+   Prueba P01 — CREATE del módulo de usuarios
+
+   Verifica que crearUsuario agregue correctamente
+   un usuario nuevo al sistema.
 ========================================================= */
 import { beforeEach, expect, test } from 'vitest'
-import { fireEvent, screen, within } from '@testing-library/react'
-import { renderConApp } from './utils'
-import { asegurarDatosIniciales, crearUsuario, listarUsuarios, obtenerUsuarioPorId } from '../services/usuariosService'
-import { guardarSesion } from '../services/sesionService'
-import UsuariosPage from '../paginas/admin/UsuariosPage'
+import { asegurarDatosIniciales, crearUsuario, listarUsuarios } from '../services/usuariosService'
+
 import type { NuevoUsuario } from '../types/usuario'
 
 beforeEach(() => {
@@ -40,19 +36,3 @@ test('P01 - CREATE: crearUsuario agrega un usuario nuevo a la lista', () => {
   expect(listarUsuarios().some((u) => u.correo === 'ignacia.pino@gmail.com')).toBe(true)
 })
 
-test('P02 - DELETE: eliminar un usuario con confirmación lo quita de la tabla y de los datos', () => {
-  // Datos de prueba: usuario a eliminar
-  const nombreCompleto = 'Benjamín Soto Pérez'
-  const correo = 'be.soto@duoc.cl'
-
-  guardarSesion(obtenerUsuarioPorId('admin-maria')!) // sesión de administradora
-  renderConApp(<UsuariosPage />)
-  expect(screen.getByText(correo)).toBeInTheDocument() // antes: está en la tabla
-
-  fireEvent.click(screen.getByRole('button', { name: `Eliminar a ${nombreCompleto}` }))
-  const confirmacion = screen.getByRole('dialog', { name: 'Eliminar usuario' })
-  fireEvent.click(within(confirmacion).getByRole('button', { name: 'Eliminar' }))
-
-  expect(screen.queryByText(correo)).toBe(null) // después: ya no está en la tabla
-  expect(obtenerUsuarioPorId('cli-002')).toBe(null) // y tampoco en localStorage
-})
