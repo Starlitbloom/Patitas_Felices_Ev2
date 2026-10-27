@@ -319,3 +319,7 @@ button.admin-nav-item {
     background-color: rgba(139, 214, 160, 0.16);
     color: #A8E6BC;
 }
+/* Perfil: la imagen de fondo (2016px de ancho) generaba scroll horizontal en celular y tablet */
+.perfil-header-imagen {
+    overflow: hidden;
+}
