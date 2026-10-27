@@ -1,5 +1,5 @@
 /* =========================================================
-   Prueba P08 — UPDATE en el panel de mascotas (Fanny Chamorro)
+   Prueba P08 — UPDATE en el panel de mascotas 
    Archivo probado: src/paginas/admin/MascotasPage.tsx
    (formulario de edición + guardado en localStorage)
    Antes de la prueba se cargan las 6 mascotas iniciales

@@ -6,6 +6,7 @@ export interface DatoPerfilProps {
   vacio?: string
 }
 
+/** Fila "etiqueta: valor" del perfil; si el valor está vacío muestra un guion. */
 export function DatoPerfil({ etiqueta, valor, vacio = '—' }: DatoPerfilProps) {
   return (
     <div className="perfil-dato-fila">

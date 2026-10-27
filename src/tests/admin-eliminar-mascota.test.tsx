@@ -1,5 +1,5 @@
 /* =========================================================
-   Prueba P09 — DELETE en el panel de mascotas (Fanny Chamorro)
+   Prueba P09 — DELETE en el panel de mascotas
    Archivo probado: src/paginas/admin/MascotasPage.tsx
    (confirmación antes de eliminar + borrado en localStorage)
    Antes de la prueba se cargan las 6 mascotas iniciales

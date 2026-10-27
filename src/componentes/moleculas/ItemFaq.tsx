@@ -3,6 +3,7 @@
    y recibe el clic con "onAlternar". */
 import { useRef } from 'react'
 
+/** Props de una pregunta frecuente: textos, si está abierta y la función para abrir/cerrar. */
 export interface ItemFaqProps {
   icono: string
   pregunta: string

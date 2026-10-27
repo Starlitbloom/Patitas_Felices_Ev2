@@ -1,5 +1,5 @@
 /* =========================================================
-   Pruebas P01 y P02 — CRUD del módulo de usuarios (Maria)
+   Pruebas P01 y P02 — CRUD del módulo de usuarios
    P01: CREATE en la fuente de datos (src/services/usuariosService.ts)
    P02: DELETE desde la interfaz del panel (src/paginas/admin/UsuariosPage.tsx)
    Antes de cada prueba se cargan los 8 usuarios iniciales

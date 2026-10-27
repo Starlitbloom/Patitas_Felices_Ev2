@@ -1,5 +1,5 @@
 /* =========================================================
-   Prueba P04 — Formulario controlado con validación (Maria)
+   Prueba P04 — Formulario controlado con validación
    Archivo probado: src/componentes/organismos/FormularioLogin.tsx
    Usa un espía (vi.fn) en lugar de la función real de inicio de sesión.
 ========================================================= */

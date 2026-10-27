@@ -8,6 +8,7 @@ export interface TarjetaServicioProps {
   variante?: 'servicio' | 'flotante'
 }
 
+/** Tarjeta de servicio del inicio; la variante "flotante" se usa sobre el hero. */
 export function TarjetaServicio({ imagen, titulo, descripcion, variante = 'servicio' }: TarjetaServicioProps) {
   if (variante === 'flotante') {
     return (
@@ -29,7 +30,7 @@ export function TarjetaServicio({ imagen, titulo, descripcion, variante = 'servi
 
 
 /* =========================================================
-   MI PARTE — PÁGINA NOSOTROS
+   PÁGINA NOSOTROS
    MOLÉCULA: TARJETA MISIÓN Y VISIÓN
 
    Componente reutilizable para mostrar:

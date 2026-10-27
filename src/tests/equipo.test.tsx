@@ -1,5 +1,5 @@
 /* =========================================================
-   Prueba P03 — Vista nueva "Nuestro equipo" (Maria)
+   Prueba P03 — Vista nueva "Nuestro equipo"
    Archivo probado: src/paginas/EquipoPage.tsx
    (filtros + estado + renderizado condicional)
 ========================================================= */

@@ -8,6 +8,7 @@ export interface TarjetaVeterinarioProps {
   veterinario: Veterinario
 }
 
+/** Tarjeta de un integrante del equipo: foto, título, área, especies que atiende y botón "Ver perfil". */
 export function TarjetaVeterinario({ veterinario }: TarjetaVeterinarioProps) {
   const { id, nombre, titulo, area, especies, experiencia, imagen } = veterinario
   return (

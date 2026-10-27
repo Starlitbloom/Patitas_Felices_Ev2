@@ -1,5 +1,5 @@
 /* =========================================================
-   Prueba P10 — Registrar una atención en la ficha clínica (Fanny Chamorro)
+   Prueba P10 — Registrar una atención en la ficha clínica
    Archivo probado: src/componentes/organismos/FormularioAtencion.tsx
    Usa un espía (vi.fn) en lugar de la función real que guarda la atención.
 ========================================================= */

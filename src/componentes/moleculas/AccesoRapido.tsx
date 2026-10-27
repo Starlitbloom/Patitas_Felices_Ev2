@@ -2,6 +2,7 @@
    Navega con "to" o ejecuta una acción con "onClick". */
 import { Link } from 'react-router-dom'
 
+/** Props del acceso rápido: navega con "to" o ejecuta "onClick". */
 export interface AccesoRapidoProps {
   icono: string // emoji o ruta de imagen (/img/...)
   titulo: string
@@ -10,6 +11,7 @@ export interface AccesoRapidoProps {
   onClick?: () => void
 }
 
+/** Tarjeta de acceso rápido del dashboard. Es un Link si recibe "to"; si no, un botón. */
 export function AccesoRapido({ icono, titulo, descripcion, to, onClick }: AccesoRapidoProps) {
   const contenido = (
     <>

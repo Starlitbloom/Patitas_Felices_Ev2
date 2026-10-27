@@ -1,6 +1,7 @@
 /* MOLÉCULA — Campo de selección (etiqueta + select + error). Controlado. */
 import { MensajeError } from '../atomos/MensajeError'
 
+/** Una opción del selector (valor que se guarda y texto que se muestra). */
 export interface OpcionSelector {
   valor: string
   texto: string
@@ -8,6 +9,7 @@ export interface OpcionSelector {
   deshabilitada?: boolean
 }
 
+/** Props del selector controlado. */
 export interface CampoSelectorProps {
   id: string
   etiqueta: string
@@ -20,6 +22,7 @@ export interface CampoSelectorProps {
   disabled?: boolean
 }
 
+/** Selector controlado (label + select + mensaje de error), equivalente a CampoFormulario pero con opciones. */
 export function CampoSelector({
   id,
   etiqueta,

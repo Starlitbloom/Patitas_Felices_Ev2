@@ -1,5 +1,5 @@
 /* =========================================================
-   Prueba P05 — Agenda de disponibilidad del médico (Maria)
+   Prueba P05 — Agenda de disponibilidad del médico
    Archivo probado: src/services/agendaService.ts
    Se simula una cita guardada en localStorage (datos simulados)
    y se usan fechas fijas para que el resultado no dependa del día real.

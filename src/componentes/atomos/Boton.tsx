@@ -3,6 +3,7 @@
    decide qué clase CSS de la EP1 se aplica. */
 import type { ReactNode } from 'react'
 
+/** Estilos disponibles para el botón (cada uno corresponde a una clase CSS). */
 export type VarianteBoton =
   | 'principal' // botón morado del sitio público
   | 'degradado' // botón principal con degradado (login)
@@ -24,19 +25,21 @@ const CLASES: Record<VarianteBoton, string> = {
   accion: 'admin-btn-accion',
 }
 
+/** Props del botón reutilizable. */
 export interface BotonProps {
   children: ReactNode
   variante?: VarianteBoton
   type?: 'button' | 'submit'
   onClick?: () => void
   disabled?: boolean
-  /** Muestra la flecha ⟶ al final (estilo de la EP1). */
+  /** Muestra la flecha -> al final */
   flecha?: boolean
   title?: string
   className?: string
   'aria-label'?: string
 }
 
+/** Botón genérico del sitio: el texto llega como children y el estilo con "variante". */
 export function Boton({
   children,
   variante = 'principal',

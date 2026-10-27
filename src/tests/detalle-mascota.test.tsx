@@ -1,5 +1,5 @@
 /* =========================================================
-   Prueba P07 — Detalle de una mascota (Fanny Chamorro)
+   Prueba P07 — Detalle de una mascota
    Archivo probado: src/paginas/DetalleMascotaPage.tsx
    (muestra la ficha de la mascota y un mensaje si no existe)
    Se inicia sesión como Maria Calfileo, dueña de Rocky.

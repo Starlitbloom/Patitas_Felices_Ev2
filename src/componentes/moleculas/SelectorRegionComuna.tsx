@@ -4,6 +4,7 @@
 import { REGIONES, comunasDeRegion } from '../../data/regiones'
 import { CampoSelector } from './CampoSelector'
 
+/** Props del selector doble: región y comuna elegidas, función de cambio y errores. */
 export interface SelectorRegionComunaProps {
   idPrefijo: string
   region: string
@@ -15,6 +16,7 @@ export interface SelectorRegionComunaProps {
 
 const OPCIONES_REGION = REGIONES.map((r) => ({ valor: r.nombre, texto: r.nombre }))
 
+/** Selectores enlazados: al elegir una región se cargan solo sus comunas. */
 export function SelectorRegionComuna({
   idPrefijo,
   region,

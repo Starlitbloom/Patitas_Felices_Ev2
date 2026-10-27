@@ -3,6 +3,7 @@ import type { Usuario } from '../../types/usuario'
 import { Boton } from '../atomos/Boton'
 import { Insignia } from '../atomos/Insignia'
 
+/** Props de una fila de la tabla de usuarios, con las acciones que avisan al padre. */
 export interface FilaUsuarioProps {
   usuario: Usuario
   seleccionado: boolean
@@ -14,6 +15,7 @@ export interface FilaUsuarioProps {
   onEliminar: (usuario: Usuario) => void
 }
 
+/** Fila de la tabla de usuarios: selección, datos, insignias de rol/estado y botones ver, editar y eliminar. */
 export function FilaUsuario({
   usuario,
   seleccionado,

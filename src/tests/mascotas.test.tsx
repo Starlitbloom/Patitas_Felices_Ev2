@@ -1,5 +1,5 @@
 /* =========================================================
-   Prueba P06 — Catálogo "Mis mascotas" (Fanny Chamorro)
+   Prueba P06 — Catálogo "Mis mascotas"
    Archivo probado: src/paginas/MisMascotasPage.tsx
    (filtro por especie + buscador por nombre + mensaje de resultados)
    Se inicia sesión como Maria Calfileo, dueña de 3 mascotas:

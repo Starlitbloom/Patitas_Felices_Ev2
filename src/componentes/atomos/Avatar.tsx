@@ -7,10 +7,12 @@ export interface AvatarProps {
   className?: string
 }
 
+/** Devuelve las iniciales en mayúscula (ej: "Maria", "Calfileo" -> "MC"). */
 export function obtenerIniciales(nombre = '', apellidos = ''): string {
   return `${nombre.trim()[0] ?? ''}${apellidos.trim()[0] ?? ''}`.toUpperCase()
 }
 
+/** Muestra la foto de perfil; si no hay, las iniciales; si tampoco hay nombre, una huellita. */
 export function Avatar({ src, nombre = '', apellidos = '', className = '' }: AvatarProps) {
   const iniciales = obtenerIniciales(nombre, apellidos)
   return (

@@ -3,6 +3,7 @@
    entra en pantalla (IntersectionObserver) el número sube de 0 a "hasta". */
 import { useEffect, useRef, useState } from 'react'
 
+/** Props de la estadística: ícono, número final, sufijo opcional (ej: "+") y texto. */
 export interface EstadisticaProps {
   icono: string
   hasta: number
@@ -10,6 +11,7 @@ export interface EstadisticaProps {
   etiqueta: string
 }
 
+/** Número animado de 0 a "hasta" cuando la tarjeta aparece en pantalla (IntersectionObserver). */
 export function Estadistica({ icono, hasta, sufijo = '', etiqueta }: EstadisticaProps) {
   const [valor, setValor] = useState(0)
   const [visible, setVisible] = useState(false)

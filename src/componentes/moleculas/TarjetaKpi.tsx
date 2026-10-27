@@ -2,6 +2,7 @@
    Si recibe "to", la tarjeta completa funciona como enlace. */
 import { Link } from 'react-router-dom'
 
+/** Props del indicador: ícono, número, texto y enlace opcional. */
 export interface TarjetaKpiProps {
   icono: string
   numero: number
@@ -9,6 +10,7 @@ export interface TarjetaKpiProps {
   to?: string
 }
 
+/** Tarjeta de indicador (KPI) del panel. Si recibe "to", toda la tarjeta es un enlace. */
 export function TarjetaKpi({ icono, numero, etiqueta, to }: TarjetaKpiProps) {
   const contenido = (
     <>

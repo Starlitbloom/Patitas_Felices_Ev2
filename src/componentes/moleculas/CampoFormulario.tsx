@@ -4,6 +4,7 @@
 import type { HTMLInputTypeAttribute } from 'react'
 import { MensajeError } from '../atomos/MensajeError'
 
+/** Props del campo: id, etiqueta, valor controlado, función de cambio y error opcional. */
 export interface CampoFormularioProps {
   id: string
   etiqueta: string
@@ -20,6 +21,7 @@ export interface CampoFormularioProps {
   autoComplete?: string
 }
 
+/** Campo controlado (label + input + mensaje de error). El valor vive en el estado del formulario padre. */
 export function CampoFormulario({
   id,
   etiqueta,
